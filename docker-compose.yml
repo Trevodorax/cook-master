@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    networks:
+      - network-cookmaster
+
+  backend:
+    build: ./backend
+    ports:
+      - "8081:80"
+    depends_on:
+      - mariadb
+    networks:
+      - network-cookmaster
+    
+  mariadb:
+    image: mariadb
+    restart: always
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./database:/docker-entrypoint-initdb.d/
+    environment: 
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: main_database
+      MYSQL_USER: username
+      MYSQL_PASSWORD: password
+    # uncomment following lines to access db locally
+    ports:
+      - 3306:3306
+    networks:
+      - network-cookmaster
+
+networks:
+  network-cookmaster:
+
+volumes:
+  mariadb-data:
