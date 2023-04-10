@@ -1,0 +1,34 @@
+import Link from 'next/link'
+
+import styles from './Navigation.module.scss'
+
+function Navigation({ containerClassname, itemsClassname }) {
+  const navigationItems = [
+    {
+        address: "/",
+        displayedName: "Home"
+    },
+    {
+        address: "/login",
+        displayedName: "Login"
+    }
+  ]
+  
+  return (
+    <div className={containerClassname}>
+      {navigationItems.map((route, index) => {
+        return (
+          <div className={itemsClassname} key={index}>
+            <Link
+              href={route.address}
+            >
+              {route.displayedName}
+            </Link>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+export default Navigation;
