@@ -1,6 +1,6 @@
 import styles from './Login.module.scss'
 
-function Login() {
+function Login () {
   return (
     <div className={styles.container}>
       <h2>Login</h2>
@@ -8,4 +8,4 @@ function Login() {
   )
 }
 
-export default Login;
+export default Login

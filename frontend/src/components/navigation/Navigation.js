@@ -1,19 +1,17 @@
 import Link from 'next/link'
 
-import styles from './Navigation.module.scss'
-
-function Navigation({ containerClassname, itemsClassname }) {
+function Navigation ({ containerClassname, itemsClassname }) {
   const navigationItems = [
     {
-        address: "/",
-        displayedName: "Home"
+      address: '/',
+      displayedName: 'Home'
     },
     {
-        address: "/login",
-        displayedName: "Login"
+      address: '/login',
+      displayedName: 'Login'
     }
   ]
-  
+
   return (
     <div className={containerClassname}>
       {navigationItems.map((route, index) => {
@@ -31,4 +29,4 @@ function Navigation({ containerClassname, itemsClassname }) {
   )
 }
 
-export default Navigation;
+export default Navigation
