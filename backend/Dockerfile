@@ -1,21 +1,19 @@
-# Use the official PHP image with Apache support
-FROM php:7.4-apache
+ARG  PHP_VERSION=8.2
+FROM shinsenter/slim:php${PHP_VERSION}
+
+# Control your timezone
+ENV TZ="UTC"
+
+# sets GID and UID
+ENV PUID=9999
+ENV PGID=9999
+
+# sets web server root path
+ENV WEBHOME="/var/www/html"
 
 # Copy the API file to the document root
-COPY index.php /var/www/html/
-
-# Install required system packages and PHP extensions
-RUN docker-php-ext-install pdo_mysql mysqli
-
-# Copy the custom Apache configuration file
-COPY custom.conf /etc/apache2/conf-available/
-
-# Enable the custom configuration and URL rewriting for Apache
-RUN a2enconf custom \
-    && a2enmod rewrite \
-    && a2enmod headers
+COPY ./public /var/www/html/public
 
 EXPOSE 80
 
-# Set the working directory to the document root
 WORKDIR /var/www/html
