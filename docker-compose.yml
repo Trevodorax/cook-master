@@ -4,11 +4,9 @@ services:
   frontend:
     build: ./frontend
     ports:
-      - "8080:80"
+      - "8080:3000"
     depends_on:
       - backend
-    networks:
-      - network-cookmaster
 
   backend:
     build: ./backend
@@ -16,8 +14,6 @@ services:
       - "8081:80"
     depends_on:
       - mariadb
-    networks:
-      - network-cookmaster
     
   mariadb:
     image: mariadb
@@ -33,11 +29,6 @@ services:
     # uncomment following lines to access db locally
     ports:
       - 3306:3306
-    networks:
-      - network-cookmaster
-
-networks:
-  network-cookmaster:
 
 volumes:
   mariadb-data:

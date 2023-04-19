@@ -10,6 +10,12 @@ $app = AppFactory::create();
 
 $app->get('/', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Hello world!");
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*');
+});
+
+$app->get('/test', function (Request $request, Response $response, $args) {
+    $response->getBody()->write("Test");
     return $response;
 });
 
