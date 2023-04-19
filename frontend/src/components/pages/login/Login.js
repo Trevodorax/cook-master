@@ -3,7 +3,7 @@ import styles from './Login.module.scss'
 function Login () {
   const callAPI = async () => {
     try {
-      const res = await fetch(`http://localhost:8081/`);
+      const res = await fetch(`http://localhost:8081/users`);
       const data = await res.json();
       console.log(data);
     } catch (err) {

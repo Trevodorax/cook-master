@@ -7,6 +7,8 @@ services:
       - "8080:3000"
     depends_on:
       - backend
+    networks:
+      - cook-master-network
 
   backend:
     build: ./backend
@@ -14,21 +16,24 @@ services:
       - "8081:80"
     depends_on:
       - mariadb
+    networks:
+      - cook-master-network
     
   mariadb:
     image: mariadb
     restart: always
     volumes:
-      - mariadb-data:/var/lib/mysql
       - ./database:/docker-entrypoint-initdb.d/
     environment: 
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: main_database
       MYSQL_USER: username
       MYSQL_PASSWORD: password
+    networks:
+      - cook-master-network
     # uncomment following lines to access db locally
-    ports:
-      - 3306:3306
+    # ports:
+    #   - 3306:3306
 
-volumes:
-  mariadb-data:
+networks:
+  cook-master-network:
