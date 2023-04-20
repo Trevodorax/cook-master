@@ -1,7 +1,5 @@
 import Login from '@/components/pages/login/Login'
 
-function LoginPage () {
+export default function Index () {
   return <Login />
 }
-
-export default LoginPage

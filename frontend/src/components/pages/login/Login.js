@@ -1,6 +1,6 @@
 import styles from './Login.module.scss'
 
-function Login () {
+export default function Login () {
   const callAPI = async () => {
     try {
       const res = await fetch(`http://localhost:8081/users`);
@@ -18,5 +18,3 @@ function Login () {
     </div>
   )
 }
-
-export default Login

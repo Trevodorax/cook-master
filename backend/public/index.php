@@ -27,7 +27,7 @@ $app->get('/users', function (Request $request, Response $response, array $args)
 
     try {
         $pdo = getPDO();
-        $queryString = "SELECT * FROM test_table";
+        $queryString = "SELECT (email, password, firstName, lastName) FROM USERS";
         $query = $pdo->prepare($queryString);
         $query->execute();
     
@@ -35,13 +35,14 @@ $app->get('/users', function (Request $request, Response $response, array $args)
     
         // Display the users
         foreach ($users as $user) {
-            echo "First name: " . $user['first_name'] . " - Last name: " . $user['last_name'] . " - email: " . $user['email'] . "<br>";
+            echo "Email: " . $user['email'] . " - Password: " . $user['password'] . " - First name: " . $user['firstName'] . " - Last name: " . $user['lastName'] . "<br>";
         }
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
 
-    return $response;
+    return $response
+        ->withHeader('Access-Control-Allow-Origin', '*');
 });
 
 // Run application
