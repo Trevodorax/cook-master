@@ -21,7 +21,6 @@ services:
     
   mariadb:
     image: mariadb
-    restart: always
     volumes:
       - ./database:/docker-entrypoint-initdb.d/
     environment: 
