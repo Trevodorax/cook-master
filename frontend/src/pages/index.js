@@ -1,7 +1,5 @@
 import Home from '@/components/pages/home/Home'
 
-function HomePage () {
+export default function Index () {
   return <Home />
 }
-
-export default HomePage

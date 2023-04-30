@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-function Navigation ({ containerClassname, itemsClassname }) {
+export default function Navigation ({ containerClassname, itemsClassname }) {
   const navigationItems = [
     {
       address: '/',
@@ -28,5 +28,3 @@ function Navigation ({ containerClassname, itemsClassname }) {
     </div>
   )
 }
-
-export default Navigation

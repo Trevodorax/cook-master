@@ -1,7 +1,7 @@
 import Header from '@/components/header/Header'
 import styles from './Layout.module.scss'
 
-function Layout ({ children }) {
+export default function Layout ({ children }) {
   return (
     <div className={styles.container}>
       <Header />
@@ -9,5 +9,3 @@ function Layout ({ children }) {
     </div>
   )
 }
-
-export default Layout

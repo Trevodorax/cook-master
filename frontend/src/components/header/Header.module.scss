@@ -1,10 +1,12 @@
+@import "@/styles/theme.scss";
+
 .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 32px;
 
-    background-color: #fafafa;
+    background-color: $primary_5;
     color: black;
 
     h1 {

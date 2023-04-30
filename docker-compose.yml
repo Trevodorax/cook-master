@@ -21,7 +21,6 @@ services:
     
   mariadb:
     image: mariadb
-    restart: always
     volumes:
       - ./database:/docker-entrypoint-initdb.d/
     environment: 
@@ -32,8 +31,8 @@ services:
     networks:
       - cook-master-network
     # uncomment following lines to access db locally
-    # ports:
-    #   - 3306:3306
+    ports:
+      - 3306:3306
 
 networks:
   cook-master-network:
