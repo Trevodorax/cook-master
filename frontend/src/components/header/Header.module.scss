@@ -7,7 +7,7 @@
     align-items: center;
     padding: 0 8px;
 
-    background-color: $primary_5;
+    background-color: $primary_4;
     color: $neutral_1;
 
     .mainLogo{
@@ -40,30 +40,50 @@
 
     .navigationContainer {
         position: absolute;
+        display: flex;
         top: 64px;
         right: 0px;
         width: 100%;
         max-width: 0px;
-        display: flex;
-
+        
         flex-direction: column;
         overflow-x: hidden;
 
-        background-color: $neutral_1;
+        background-color: $primary_1;
+        border-radius: 8px;
 
-        transition: max-width .2s;
+        transition: max-width .3s;
 
-        &.open {
-            max-width: 500px;
-        }
-
+        
         .navigationItem {
+            display: flex;
+            
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+
             font-size: 24px;
-            text-align: center;
+            
             a {
                 color: $neutral_5;
                 text-decoration: none;
             }
+
+            &:hover {
+                background-color: $primary_2;
+            }
+
+            &:first-child {
+                padding-top: 24px;
+            }
+
+            &:last-child {
+                padding-bottom: 24px;
+            }
+        }
+
+        &.open {
+            max-width: 500px;
         }
     }
 }
