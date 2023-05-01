@@ -1,11 +1,20 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { cookMasterAPI } from "@/axios/axiosConfig";
+import { setEmail } from "@/store/user/userSlice";
+import { AppDispatch, RootState } from "@/store/store";
 
 import styles from "./Login.module.scss";
 
 export default function Login() {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const userEmail = useSelector((state: RootState) => state.user.email);
   const [fetchedData, setFetchedData] = useState(null);
+  const [emailInput, setEmailInput] = useState("");
+  const [passwordInput, setPasswordInput] = useState("");
 
   useEffect(() => {
     cookMasterAPI.get("bookmarks/test").then((response) => {
@@ -13,19 +22,22 @@ export default function Login() {
     });
   }, []);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  useEffect(() => {
+    console.log("user email in store", userEmail);
+    console.log("user email in useState", emailInput);
+  }, [userEmail, emailInput]);
 
-  const handleEmailChange = (e: ChangeEvent) => {
-    setEmail((e.target as HTMLInputElement).value);
+  const handleEmailInputChange = (e: ChangeEvent) => {
+    setEmailInput((e.target as HTMLInputElement).value);
   };
 
-  const handlePasswordChange = (e: ChangeEvent) => {
-    setPassword((e.target as HTMLInputElement).value);
+  const handlePasswordInputChange = (e: ChangeEvent) => {
+    setPasswordInput((e.target as HTMLInputElement).value);
   };
 
   const submitForm = () => {
-    console.log("submit", email, password);
+    console.log("submit", emailInput, passwordInput);
+    dispatch(setEmail(emailInput));
   };
 
   return (
@@ -33,14 +45,14 @@ export default function Login() {
       <input
         type="email"
         className={styles.input}
-        onChange={handleEmailChange}
-        value={email}
+        onChange={handleEmailInputChange}
+        value={emailInput}
       />
       <input
         type="password"
         className={styles.input}
-        onChange={handlePasswordChange}
-        value={password}
+        onChange={handlePasswordInputChange}
+        value={passwordInput}
       />
       <button className={styles.submitButton} onClick={submitForm}>
         Log in

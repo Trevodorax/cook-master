@@ -25,10 +25,8 @@ export default function Navigation({
     <div className={containerClassname}>
       {navigationItems.map((route, index) => {
         return (
-          <Link href={route.address}>
-            <div className={itemsClassname} key={index}>
-              {route.displayedName}
-            </div>
+          <Link href={route.address} key={index}>
+            <div className={itemsClassname}>{route.displayedName}</div>
           </Link>
         );
       })}
