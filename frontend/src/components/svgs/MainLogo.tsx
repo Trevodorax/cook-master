@@ -1,3 +1,5 @@
+import React from "react"
+
 export const MainLogo = () => (
   <svg width='110' height='110' viewBox='0 0 110 110' fill='none' xmlns='http://www.w3.org/2000/svg'>
     <path d='M55 23L25 36.5L34.5 43V54H76V43L80.5 40V54H85.5V36.5L55 23Z' fill='currentColor' stroke='currentColor' />

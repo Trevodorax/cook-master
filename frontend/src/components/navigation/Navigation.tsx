@@ -1,6 +1,12 @@
+import React from 'react'
 import Link from 'next/link'
 
-export default function Navigation ({ containerClassname, itemsClassname }) {
+type Props = {
+  containerClassname: string,
+  itemsClassname: string
+}
+
+export default function Navigation ({ containerClassname, itemsClassname }: Props) {
   const navigationItems = [
     {
       address: '/',

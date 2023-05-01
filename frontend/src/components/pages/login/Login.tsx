@@ -1,3 +1,4 @@
+import React, { ChangeEvent } from 'react'
 import { useEffect, useState } from 'react'
 
 import { cookMasterAPI } from '@/axios/axiosConfig'
@@ -18,12 +19,12 @@ export default function Login () {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value)
+  const handleEmailChange = (e: ChangeEvent) => {
+    setEmail((e.target as HTMLInputElement).value)
   }
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value)
+  const handlePasswordChange = (e: ChangeEvent) => {
+    setPassword((e.target as HTMLInputElement).value)
   }
 
   const submitForm = () => {
