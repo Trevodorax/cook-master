@@ -1,36 +1,37 @@
-import React from 'react'
-import Link from 'next/link'
+import React from "react";
+import Link from "next/link";
 
-type Props = {
-  containerClassname: string,
-  itemsClassname: string
+interface Props {
+  containerClassname: string;
+  itemsClassname: string;
 }
 
-export default function Navigation ({ containerClassname, itemsClassname }: Props) {
+export default function Navigation({
+  containerClassname,
+  itemsClassname,
+}: Props) {
   const navigationItems = [
     {
-      address: '/',
-      displayedName: 'Home'
+      address: "/",
+      displayedName: "Home",
     },
     {
-      address: '/login',
-      displayedName: 'Login'
-    }
-  ]
+      address: "/login",
+      displayedName: "Login",
+    },
+  ];
 
   return (
     <div className={containerClassname}>
       {navigationItems.map((route, index) => {
         return (
-          <div className={itemsClassname} key={index}>
-            <Link
-              href={route.address}
-            >
+          <Link href={route.address}>
+            <div className={itemsClassname} key={index}>
               {route.displayedName}
-            </Link>
-          </div>
-        )
+            </div>
+          </Link>
+        );
       })}
     </div>
-  )
+  );
 }

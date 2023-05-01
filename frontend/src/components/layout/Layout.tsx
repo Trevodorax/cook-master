@@ -1,16 +1,16 @@
-import React, { ReactNode } from 'react'
-import Header from '@/components/header/Header'
-import styles from './Layout.module.scss'
+import React, { ReactNode } from "react";
+import Header from "@/components/header/Header";
+import styles from "./Layout.module.scss";
 
-type Props = {
-  children: ReactNode
+interface Props {
+  children: ReactNode;
 }
 
-export default function Layout ({ children }: Props) {
+export default function Layout({ children }: Props) {
   return (
     <div className={styles.container}>
       <Header />
       {children}
     </div>
-  )
+  );
 }

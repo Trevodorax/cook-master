@@ -1,19 +1,18 @@
-import React from 'react'
-import { useState } from 'react'
-import cx from 'classnames'
+import React, { useState } from "react";
+import cx from "classnames";
 
-import Navigation from '@/components/navigation/Navigation'
-import { MainLogo } from '../svgs/MainLogo'
+import Navigation from "@/components/navigation/Navigation";
+import { MainLogo } from "../svgs/MainLogo";
 
-import styles from './Header.module.scss'
-import { BurgerIcon } from '../svgs/BurgerIcon'
+import styles from "./Header.module.scss";
+import { BurgerIcon } from "../svgs/BurgerIcon";
 
-export default function Header () {
-  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false)
+export default function Header() {
+  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
 
   const toggleBurgerMenu = () => {
-    setIsBurgerMenuOpen((isOpen) => !isOpen)
-  }
+    setIsBurgerMenuOpen((isOpen) => !isOpen);
+  };
 
   return (
     <header className={styles.container}>
@@ -23,7 +22,7 @@ export default function Header () {
       <h1 className={styles.title}>Cook Master</h1>
       <div
         className={cx(styles.burgerIcon, {
-          [styles.open]: isBurgerMenuOpen
+          [styles.open]: isBurgerMenuOpen,
         })}
         onClick={toggleBurgerMenu}
       >
@@ -31,10 +30,10 @@ export default function Header () {
       </div>
       <Navigation
         containerClassname={cx(styles.navigationContainer, {
-          [styles.open]: isBurgerMenuOpen
+          [styles.open]: isBurgerMenuOpen,
         })}
         itemsClassname={styles.navigationItem}
       />
     </header>
-  )
+  );
 }
