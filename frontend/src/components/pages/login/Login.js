@@ -6,7 +6,7 @@ import { cookMasterAPI } from '@/axios/axiosConfig'
 import styles from './Login.module.scss'
 
 export default function Login () {
-  const { data: fetchedData, error, isError, isLoading } = useQuery('cookMaster', () => cookMasterAPI.get(''))
+  const { data: fetchedData, error, isError, isLoading } = useQuery('cookMaster', () => cookMasterAPI.get('bookmarks/test'))
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -35,7 +35,7 @@ export default function Login () {
       <div>
         {isLoading && 'Loading...'}
         {isError && `Error: ${error.message}`}
-        {fetchedData && fetchedData.data.quote}
+        {fetchedData && fetchedData.data.message}
       </div>
     </div>
   )
