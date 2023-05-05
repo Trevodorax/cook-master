@@ -2,7 +2,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import { cookMasterAPI } from "@/axios/axiosConfig";
+import { useGetTestQuery } from "@/store/services/cookMaster/api";
 import { setEmail } from "@/store/user/userSlice";
 import { AppDispatch, RootState } from "@/store/store";
 
@@ -11,16 +11,11 @@ import styles from "./Login.module.scss";
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
 
+  const { data: fetchedData, error, isLoading } = useGetTestQuery({});
+
   const userEmail = useSelector((state: RootState) => state.user.email);
-  const [fetchedData, setFetchedData] = useState(null);
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-
-  useEffect(() => {
-    cookMasterAPI.get("bookmarks/test").then((response) => {
-      setFetchedData(response.data.message);
-    });
-  }, []);
 
   useEffect(() => {
     console.log("user email in store", userEmail);
@@ -57,7 +52,13 @@ export default function Login() {
       <button className={styles.submitButton} onClick={submitForm}>
         Log in
       </button>
-      <div>{fetchedData || "Loading..."}</div>
+      <div>
+        {fetchedData
+          ? fetchedData.message
+          : isLoading
+          ? "Loading..."
+          : error?.data}
+      </div>
     </div>
   );
 }
