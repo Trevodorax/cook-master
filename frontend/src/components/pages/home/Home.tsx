@@ -1,19 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from "./Home.module.scss";
-import {
-  useGetUserInfoMutation,
-  UserInfo,
-} from "@/store/services/cookMaster/api";
+import { useGetUserInfoMutation } from "@/store/services/cookMaster/api";
 
 export default function Home() {
   const [getUserInfo, { data, error, isLoading }] = useGetUserInfoMutation();
 
-  const fetchUserInfo = async () => {
-    try {
-      const userInfo = await getUserInfo();
-    } catch (err) {
-      console.log("Get user info error: ", err);
-    }
+  const fetchUserInfo = () => {
+    getUserInfo();
   };
 
   return (

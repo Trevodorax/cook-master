@@ -1,0 +1,68 @@
+@import "@/styles/theme.scss";
+
+$height: 30px;
+$width: 60px;
+$roundMargin: 6px;
+$transitionTime: .4s;
+
+$roundSize: $height - 2 * $roundMargin;
+
+.container {
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: $width;
+    height: $height;
+
+    .slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      
+      background-color: #fff;
+      border-radius: $height;
+      cursor: pointer;
+      
+      transition: $transitionTime;
+  
+      &:before {
+        position: absolute;
+        height: $roundSize;
+        width: $roundSize;
+        left: $roundMargin;
+        bottom: $roundMargin;
+  
+        content: "";
+        background-color: white;
+        border-radius: 50%;
+  
+        transition: $transitionTime;
+      }
+    }
+  
+    input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      
+      &:checked {
+        & + .slider {
+          background-color: $secondary_4;
+        }
+  
+        & + .slider:before {
+          transform: translateX($width - $roundSize - 2 * $roundMargin);
+        }
+      }
+  
+      &:focus {
+        & + .slider {
+          box-shadow: 0 0 1px $secondary_4;
+        }
+      }
+    }
+  }
+
+}

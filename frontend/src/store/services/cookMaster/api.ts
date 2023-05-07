@@ -44,7 +44,7 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-const baseQueryWithRetry = retry(baseQuery, { maxRetries: 3 });
+const baseQueryWithRetry = retry(baseQuery, { maxRetries: 1 });
 
 export const api = createApi({
   reducerPath: "cookMaster",
