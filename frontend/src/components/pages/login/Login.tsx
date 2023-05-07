@@ -2,8 +2,12 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import { useGetTestQuery } from "@/store/services/cookMaster/api";
-import { setEmail } from "@/store/user/userSlice";
+import {
+  LoginRequest,
+  useGetTestQuery,
+  useLoginMutation,
+} from "@/store/services/cookMaster/api";
+import { setToken } from "@/store/user/userSlice";
 import { AppDispatch, RootState } from "@/store/store";
 
 import styles from "./Login.module.scss";
@@ -11,7 +15,8 @@ import styles from "./Login.module.scss";
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { data: fetchedData, isLoading } = useGetTestQuery();
+  const { data: fetchedData, isLoading: isTestLoading } = useGetTestQuery();
+  const [login] = useLoginMutation();
 
   const userEmail = useSelector((state: RootState) => state.user.email);
   const [emailInput, setEmailInput] = useState("");
@@ -30,9 +35,19 @@ export default function Login() {
     setPasswordInput((e.target as HTMLInputElement).value);
   };
 
-  const submitForm = () => {
+  const submitForm = async () => {
     console.log("submit", emailInput, passwordInput);
-    dispatch(setEmail(emailInput));
+    const credentials: LoginRequest = {
+      email: emailInput,
+      password: passwordInput,
+    };
+
+    try {
+      const user = await login(credentials).unwrap();
+      dispatch(setToken(user.access_token));
+    } catch (err) {
+      console.log("Login error", err);
+    }
   };
 
   return (
@@ -55,7 +70,7 @@ export default function Login() {
       <div>
         {fetchedData
           ? fetchedData.message
-          : isLoading
+          : isTestLoading
           ? "Loading..."
           : "Couldn't fetch test string"}
       </div>
