@@ -11,7 +11,7 @@ import styles from "./Login.module.scss";
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
 
-  const { data: fetchedData, error, isLoading } = useGetTestQuery({});
+  const { data: fetchedData, isLoading } = useGetTestQuery();
 
   const userEmail = useSelector((state: RootState) => state.user.email);
   const [emailInput, setEmailInput] = useState("");
@@ -57,7 +57,7 @@ export default function Login() {
           ? fetchedData.message
           : isLoading
           ? "Loading..."
-          : error?.data}
+          : "Couldn't fetch test string"}
       </div>
     </div>
   );
