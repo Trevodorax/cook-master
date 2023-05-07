@@ -33,4 +33,10 @@
       margin: 16px;
     }
   }
+
+  .errorMessage {
+    text-align: center;
+    font-size: 20px;
+    color: $info_error;
+  }
 }

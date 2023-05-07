@@ -26,12 +26,10 @@ $inputHeight: 40px;
 
   .input {
     height: $inputHeight;
+
+    text-indent: 8px;
   
     border: none;
     font-size: 20px;
-
-    &::placeholder {
-      padding-left: 8px;
-    }
   }
 }

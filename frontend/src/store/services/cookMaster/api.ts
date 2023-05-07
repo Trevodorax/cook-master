@@ -33,6 +33,11 @@ export interface GenericError {
   };
 }
 
+export interface CreateAccountRequest {
+  email: string;
+  password: string;
+}
+
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://localhost:3333/api/",
   prepareHeaders: (headers, { getState }) => {
@@ -60,11 +65,22 @@ export const api = createApi({
         body: credentials,
       }),
     }),
+    createAccount: builder.mutation<LoginResponse, CreateAccountRequest>({
+      query: (credentials) => ({
+        url: "auth/signup",
+        method: "POST",
+        body: credentials,
+      }),
+    }),
     getUserInfo: builder.mutation<UserInfo, void>({
       query: () => "users/me",
     }),
   }),
 });
 
-export const { useGetTestQuery, useLoginMutation, useGetUserInfoMutation } =
-  api;
+export const {
+  useGetTestQuery,
+  useLoginMutation,
+  useGetUserInfoMutation,
+  useCreateAccountMutation,
+} = api;

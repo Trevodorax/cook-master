@@ -3,8 +3,10 @@ import { useDispatch } from "react-redux";
 import cx from "classnames";
 
 import {
+  CreateAccountRequest,
   GenericError,
   LoginRequest,
+  useCreateAccountMutation,
   useLoginMutation,
 } from "@/store/services/cookMaster/api";
 import { setToken } from "@/store/user/userSlice";
@@ -19,18 +21,29 @@ export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
 
   const [alreadyHasAccount, setAlreadyHasAccount] = useState<boolean>(true);
-  const [login, { error }] = useLoginMutation();
+  const [login, { error: loginError }] = useLoginMutation();
+  const [createAccount, { error: createAccountError }] =
+    useCreateAccountMutation();
 
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
-    const credentials: LoginRequest = {
-      email: emailInput,
-      password: passwordInput,
-    };
-    const user = await login(credentials).unwrap();
+    let user;
+    if (alreadyHasAccount) {
+      const credentials: LoginRequest = {
+        email: emailInput,
+        password: passwordInput,
+      };
+      user = await login(credentials).unwrap();
+    } else {
+      const credentials: CreateAccountRequest = {
+        email: emailInput,
+        password: passwordInput,
+      };
+      user = await createAccount(credentials).unwrap();
+    }
     dispatch(setToken(user.access_token));
   };
 
@@ -74,11 +87,14 @@ export default function Login() {
           {alreadyHasAccount ? "Log in" : "Sign in"}
         </Button>
       </form>
-      {error && (
-        <div className={styles.errorMessage}>
-          {(error as GenericError).data.message}
-        </div>
-      )}
+      <div className={styles.errorMessage}>
+        {loginError &&
+          alreadyHasAccount &&
+          (loginError as GenericError).data.message}
+        {createAccountError &&
+          !alreadyHasAccount &&
+          (createAccountError as GenericError).data.message}
+      </div>
     </div>
   );
 }
