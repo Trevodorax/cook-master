@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import cx from "classnames";
 
 import Navigation from "@/components/navigation/Navigation";
-import { MainLogo } from "../svgs/MainLogo";
+import { MainLogo } from "@/components/svgs";
+import { BurgerIcon } from "@/components/svgs";
 
 import styles from "./Header.module.scss";
-import { BurgerIcon } from "../svgs/BurgerIcon";
 
 export default function Header() {
   const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);

@@ -1,0 +1,37 @@
+@import "@/styles/theme.scss";
+
+.button {
+  height: fit-content;
+  width: fit-content;
+
+  padding: 16px 32px;
+  
+  border-radius: 16px;
+  border: 0px;
+  font-size: 24px;
+
+  &.primary {
+    background-color: $primary_5;
+    color: $neutral_1;
+  }
+
+  &.secondary {
+    background-color: $secondary_5;
+    color: $neutral_1;
+  }
+
+  &.error {
+    background-color: $info_error;
+    color: $neutral_1;
+  }
+
+  &.warning {
+    background-color: $info_warning;
+    color: $neutral_5;
+  }
+
+  &.ok {
+    background-color: $info_ok;
+    color: $neutral_1;
+  }
+}

@@ -1,6 +1,6 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
+import cx from "classnames";
 
 import {
   GenericError,
@@ -8,10 +8,12 @@ import {
   useLoginMutation,
 } from "@/store/services/cookMaster/api";
 import { setToken } from "@/store/user/userSlice";
-import { AppDispatch, RootState } from "@/store/store";
+import { AppDispatch } from "@/store/store";
+import { SwitchInput } from "@/components/switchInput/SwitchInput";
+import { Button } from "@/components/button/Button";
+import { TextInput } from "@/components/textInput/TextInput";
 
 import styles from "./Login.module.scss";
-import { SwitchInput } from "@/components/switchInput/SwitchInput";
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,22 +21,8 @@ export default function Login() {
   const [alreadyHasAccount, setAlreadyHasAccount] = useState<boolean>(true);
   const [login, { error }] = useLoginMutation();
 
-  const userEmail = useSelector((state: RootState) => state.user.email);
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
-
-  useEffect(() => {
-    console.log("user email in store", userEmail);
-    console.log("user email in useState", emailInput);
-  }, [userEmail, emailInput]);
-
-  const handleEmailInputChange = (e: ChangeEvent) => {
-    setEmailInput((e.target as HTMLInputElement).value);
-  };
-
-  const handlePasswordInputChange = (e: ChangeEvent) => {
-    setPasswordInput((e.target as HTMLInputElement).value);
-  };
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -46,38 +34,51 @@ export default function Login() {
     dispatch(setToken(user.access_token));
   };
 
-  if (error) {
-    console.log("ERROR: ", error);
-  }
-
   return (
     <div className={styles.container}>
+      <form onSubmit={submitForm} className={styles.form}>
+        <div className={styles.signinSignup}>
+          <div
+            className={cx(styles.text, {
+              [styles.selected]: !alreadyHasAccount,
+            })}
+          >
+            Sign in
+          </div>
+          <SwitchInput
+            isChecked={alreadyHasAccount}
+            setIsChecked={setAlreadyHasAccount}
+          />
+          <div
+            className={cx(styles.text, {
+              [styles.selected]: alreadyHasAccount,
+            })}
+          >
+            Log in
+          </div>
+        </div>
+        <TextInput
+          type="email"
+          value={emailInput}
+          setValue={setEmailInput}
+          placeholder="Email"
+        />
+        <TextInput
+          type="password"
+          value={passwordInput}
+          setValue={setPasswordInput}
+          placeholder="Password"
+        />
+
+        <Button type="secondary" isFormSubmit className={styles.submitButton}>
+          {alreadyHasAccount ? "Log in" : "Sign in"}
+        </Button>
+      </form>
       {error && (
         <div className={styles.errorMessage}>
           {(error as GenericError).data.message}
         </div>
       )}
-      <form onSubmit={submitForm} className={styles.form}>
-        <SwitchInput
-          isChecked={alreadyHasAccount}
-          setIsChecked={setAlreadyHasAccount}
-        />
-        <input
-          type="email"
-          className={styles.input}
-          onChange={handleEmailInputChange}
-          value={emailInput}
-        />
-        <input
-          type="password"
-          className={styles.input}
-          onChange={handlePasswordInputChange}
-          value={passwordInput}
-        />
-        <button type="submit" className={styles.submitButton}>
-          Log in
-        </button>
-      </form>
     </div>
   );
 }

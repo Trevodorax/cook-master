@@ -1,4 +1,36 @@
+@import "@/styles/theme.scss";
+
 .container {
   .form {
+    display: flex;
+    margin: 16px;
+
+    flex-direction: column;
+    align-items: center;
+
+    .signinSignup {
+      display: flex;
+      width: 100%;
+      margin: 32px;
+
+      justify-content: center;
+
+      align-items: center;
+
+      .text {
+        margin: 0 16px;
+
+        font-size: 20px;
+        color: $neutral_3;
+
+        &.selected {
+          color: $neutral_5;
+        }
+      }
+    }
+
+    .submitButton {
+      margin: 16px;
+    }
   }
 }

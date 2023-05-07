@@ -1,0 +1,37 @@
+@import "@/styles/theme.scss";
+
+$inputHeight: 40px;
+
+.container {
+  display: flex;
+  margin: 8px;
+
+  align-items: center;
+
+  border: 1.5px solid $neutral_5;
+  border-radius: 4px;
+
+  .icon {
+    height: $inputHeight;
+    width: $inputHeight;
+
+    padding: 8px;
+    border-right: 1.5px solid $neutral_5;
+
+    svg {
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .input {
+    height: $inputHeight;
+  
+    border: none;
+    font-size: 20px;
+
+    &::placeholder {
+      padding-left: 8px;
+    }
+  }
+}
