@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { BookmarkController } from './Bookmark.controller';
 
-@Module({})
+@Module({
+  controllers: [BookmarkController],
+})
 export class BookmarkModule {}
