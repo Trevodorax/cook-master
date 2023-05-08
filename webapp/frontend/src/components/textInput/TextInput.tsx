@@ -9,6 +9,7 @@ interface Props {
   setValue: React.Dispatch<React.SetStateAction<string>>;
   type: "text" | "email" | "password" | "tel";
   placeholder?: string;
+  icon?: React.ReactNode;
 }
 
 export const TextInput = ({
@@ -16,6 +17,7 @@ export const TextInput = ({
   setValue,
   type,
   placeholder = "",
+  icon,
 }: Props) => {
   const handleChange = (e: ChangeEvent) => {
     setValue((e.target as HTMLInputElement).value);
@@ -30,7 +32,7 @@ export const TextInput = ({
 
   return (
     <div className={styles.container}>
-      <div className={styles.icon}>{iconsPerType[type]}</div>
+      <div className={styles.icon}>{icon ?? iconsPerType[type]}</div>
       <input
         className={styles.input}
         type={type}

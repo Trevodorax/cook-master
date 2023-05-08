@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import cx from "classnames";
@@ -15,6 +15,8 @@ import { AppDispatch } from "@/store/store";
 import { SwitchInput } from "@/components/switchInput/SwitchInput";
 import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/textInput/TextInput";
+import { getNewAccountInformationsErrors } from "./checkCredentials";
+import { UserIcon } from "@/components/svgs";
 
 import styles from "./Login.module.scss";
 
@@ -29,6 +31,12 @@ export default function Login() {
 
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
+  const [passwordConfirmationInput, setPasswordConfirmationInput] =
+    useState("");
+  const [firstNameInput, setFirstNameInput] = useState("");
+  const [lastNameInput, setLastNameInput] = useState("");
+
+  const [formSuccessMessage, setFormSuccessMessage] = useState("");
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -41,15 +49,53 @@ export default function Login() {
       user = await login(credentials).unwrap();
       router.back();
     } else {
+      if (inputValuesError !== "") {
+        return;
+      }
+
       const credentials: CreateAccountRequest = {
         email: emailInput,
         password: passwordInput,
+        firstName: firstNameInput,
+        lastName: lastNameInput,
       };
       user = await createAccount(credentials).unwrap();
       setAlreadyHasAccount(true);
+      setFormSuccessMessage("Account created successfully");
     }
     dispatch(setToken(user.access_token));
   };
+
+  const inputValuesError = useMemo(() => {
+    return getNewAccountInformationsErrors(
+      emailInput,
+      passwordInput,
+      passwordConfirmationInput,
+      firstNameInput,
+      lastNameInput
+    );
+  }, [
+    emailInput,
+    passwordInput,
+    passwordConfirmationInput,
+    firstNameInput,
+    lastNameInput,
+  ]);
+
+  const formErrorMessage = useMemo(() => {
+    if (inputValuesError !== "" && !alreadyHasAccount) {
+      return inputValuesError;
+    }
+
+    if (loginError) {
+      return (loginError as GenericError).data?.message;
+    }
+
+    if (createAccountError) {
+      return (createAccountError as GenericError).data?.message;
+    }
+    return "";
+  }, [inputValuesError, loginError, createAccountError, alreadyHasAccount]);
 
   return (
     <div className={styles.container}>
@@ -86,19 +132,36 @@ export default function Login() {
           setValue={setPasswordInput}
           placeholder="Password"
         />
-
+        {!alreadyHasAccount && (
+          <>
+            <TextInput
+              type="password"
+              value={passwordConfirmationInput}
+              setValue={setPasswordConfirmationInput}
+              placeholder="Confirm password"
+            />
+            <TextInput
+              type="text"
+              value={firstNameInput}
+              setValue={setFirstNameInput}
+              placeholder="First name"
+              icon={<UserIcon />}
+            />
+            <TextInput
+              type="text"
+              value={lastNameInput}
+              setValue={setLastNameInput}
+              placeholder="Last name"
+              icon={<UserIcon />}
+            />
+          </>
+        )}
         <Button type="secondary" isFormSubmit className={styles.submitButton}>
           {alreadyHasAccount ? "Log in" : "Sign in"}
         </Button>
       </form>
-      <div className={styles.errorMessage}>
-        {loginError &&
-          alreadyHasAccount &&
-          (loginError as GenericError).data.message}
-        {createAccountError &&
-          !alreadyHasAccount &&
-          (createAccountError as GenericError).data.message}
-      </div>
+      <div className={styles.errorMessage}>{formErrorMessage}</div>
+      <div className={styles.successMessage}>{formSuccessMessage}</div>
     </div>
   );
 }

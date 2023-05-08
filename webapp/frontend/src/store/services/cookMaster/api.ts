@@ -44,6 +44,8 @@ export interface GenericError {
 export interface CreateAccountRequest {
   email: string;
   password: string;
+  firstName: string;
+  lastName: string;
 }
 
 const baseQuery = fetchBaseQuery({
@@ -86,10 +88,10 @@ export const api = createApi({
       }),
     }),
     createAccount: builder.mutation<LoginResponse, CreateAccountRequest>({
-      query: (credentials) => ({
+      query: (accountInformations) => ({
         url: "auth/signup",
         method: "POST",
-        body: credentials,
+        body: accountInformations,
       }),
     }),
     getUserInfo: builder.mutation<UserInfo, void>({

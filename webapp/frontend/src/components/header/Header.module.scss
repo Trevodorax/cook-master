@@ -32,6 +32,8 @@
         width: 30px;
         margin-left: auto;
 
+        cursor: pointer;
+
         svg {
             height: 100%;
             width: 100%;
@@ -45,12 +47,12 @@
         right: 0px;
         width: 100%;
         max-width: 0px;
+        z-index: 2;
         
         flex-direction: column;
         overflow-x: hidden;
 
-        background-color: $primary_1;
-        border-radius: 8px;
+        border-bottom-left-radius: 8px;
 
         transition: max-width .3s;
 
@@ -63,6 +65,7 @@
             padding: 16px;
 
             font-size: 24px;
+            background-color: $primary_1;
             
             a {
                 color: $neutral_5;
@@ -70,7 +73,7 @@
             }
 
             &:hover {
-                background-color: $primary_2;
+                filter: brightness(90%);
             }
 
             &:first-child {
