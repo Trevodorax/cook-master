@@ -1,5 +1,6 @@
 import React, { FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useRouter } from "next/router";
 import cx from "classnames";
 
 import {
@@ -19,6 +20,7 @@ import styles from "./Login.module.scss";
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
+  const router = useRouter();
 
   const [alreadyHasAccount, setAlreadyHasAccount] = useState<boolean>(true);
   const [login, { error: loginError }] = useLoginMutation();
@@ -37,12 +39,14 @@ export default function Login() {
         password: passwordInput,
       };
       user = await login(credentials).unwrap();
+      router.back();
     } else {
       const credentials: CreateAccountRequest = {
         email: emailInput,
         password: passwordInput,
       };
       user = await createAccount(credentials).unwrap();
+      setAlreadyHasAccount(true);
     }
     dispatch(setToken(user.access_token));
   };
