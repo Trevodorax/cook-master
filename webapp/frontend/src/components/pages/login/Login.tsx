@@ -9,16 +9,20 @@ import {
   LoginRequest,
   useCreateAccountMutation,
   useLoginMutation,
+  userType,
 } from "@/store/services/cookMaster/api";
 import { setToken } from "@/store/user/userSlice";
 import { AppDispatch } from "@/store/store";
 import { SwitchInput } from "@/components/switchInput/SwitchInput";
 import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/textInput/TextInput";
-import { getNewAccountInformationsErrors } from "./checkCredentials";
+import { getNewAccountInformationsErrors } from "./utils/checkCredentials";
 import { UserIcon } from "@/components/svgs";
+import { SelectInput } from "@/components/selectInput/SelectInput";
 
 import styles from "./Login.module.scss";
+
+const userTypes: Array<userType> = ["contractor", "client", "manager"];
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -35,6 +39,7 @@ export default function Login() {
     useState("");
   const [firstNameInput, setFirstNameInput] = useState("");
   const [lastNameInput, setLastNameInput] = useState("");
+  const [userTypeInput, setUserTypeInput] = useState<userType>(userTypes[0]);
 
   const [formSuccessMessage, setFormSuccessMessage] = useState("");
 
@@ -42,6 +47,7 @@ export default function Login() {
     event.preventDefault();
     let user;
     if (alreadyHasAccount) {
+      // login
       const credentials: LoginRequest = {
         email: emailInput,
         password: passwordInput,
@@ -49,6 +55,7 @@ export default function Login() {
       user = await login(credentials).unwrap();
       router.back();
     } else {
+      // create an account
       if (inputValuesError !== "") {
         return;
       }
@@ -58,7 +65,7 @@ export default function Login() {
         password: passwordInput,
         firstName: firstNameInput,
         lastName: lastNameInput,
-        userType: "contractor",
+        userType: userTypeInput,
       };
       user = await createAccount(credentials).unwrap();
       setAlreadyHasAccount(true);
@@ -121,6 +128,19 @@ export default function Login() {
             Log in
           </div>
         </div>
+        {!alreadyHasAccount && (
+          <div className={styles.userType}>
+            <p className={styles.userTypeText}>I am a </p>
+            <SelectInput
+              options={userTypes}
+              value={userTypeInput}
+              setValue={
+                setUserTypeInput as React.Dispatch<React.SetStateAction<string>>
+              }
+              className={styles.selectInput}
+            />
+          </div>
+        )}
         <TextInput
           type="email"
           value={emailInput}

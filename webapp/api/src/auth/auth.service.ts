@@ -23,23 +23,48 @@ export class AuthService {
       lastName: dto.lastName,
     };
 
+    let managerData = undefined;
+    let clientData = undefined;
+    let contractorData = undefined;
+
     switch (dto.userType) {
       case 'client':
-        // TODO create client
+        clientData = {
+          create: {
+            fidelityPoints: 0,
+            Address: {},
+          },
+        };
         break;
+
       case 'contractor':
-        // TODO create contractor
+        contractorData = {
+          create: {},
+        };
         break;
+
       case 'manager':
-        // TODO create manager
+        managerData = {
+          create: {
+            isConfirmed: false,
+            isItemManager: false,
+            isClientManager: false,
+            isContractorManager: false,
+          },
+        };
         break;
     }
 
-    console.log('User type: ', dto.userType);
+    const newUserDataWithUserType = {
+      ...newUserData,
+      manager: managerData,
+      client: clientData,
+      contractor: contractorData,
+    };
 
     try {
       const user = await this.prisma.user.create({
-        data: newUserData,
+        data: newUserDataWithUserType,
         select: {
           id: true,
           email: true,

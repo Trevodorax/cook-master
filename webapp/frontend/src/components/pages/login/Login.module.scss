@@ -1,9 +1,10 @@
 @import "@/styles/theme.scss";
 
 .container {
+  margin-bottom: 64px;
   .form {
     display: flex;
-    margin: 16px;
+    margin: 64px 0 32px;
 
     flex-direction: column;
     align-items: center;
@@ -11,10 +12,9 @@
     .signinSignup {
       display: flex;
       width: 100%;
-      margin: 32px;
+      margin-bottom: 16px;
 
       justify-content: center;
-
       align-items: center;
 
       .text {
@@ -26,6 +26,28 @@
         &.selected {
           color: $neutral_5;
         }
+      }
+    }
+
+    .userType {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 24px;
+
+      justify-content: center;
+      align-items: center;
+
+      .userTypeText {
+        font-size: 20px;
+        color: $neutral_5;
+        margin: 8px 0;
+      }
+
+      .selectInput {
+        border-radius: 4px;
+        padding: 16px;
+
+        font-size: 20px;
       }
     }
 

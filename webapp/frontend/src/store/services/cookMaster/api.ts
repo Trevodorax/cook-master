@@ -9,9 +9,7 @@ import {
   retry,
 } from "@reduxjs/toolkit/query/react";
 
-interface TestResponse {
-  message: string;
-}
+export type userType = "contractor" | "client" | "manager";
 
 export interface UserInfo {
   data: {
@@ -46,7 +44,7 @@ export interface CreateAccountRequest {
   password: string;
   firstName: string;
   lastName: string;
-  userType: "client" | "contractor" | "manager";
+  userType: userType;
 }
 
 const baseQuery = fetchBaseQuery({
@@ -78,9 +76,6 @@ export const api = createApi({
   reducerPath: "cookMaster",
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
-    getTest: builder.query<TestResponse, void>({
-      query: () => "bookmarks/test",
-    }),
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
         url: "auth/signin",
@@ -102,7 +97,6 @@ export const api = createApi({
 });
 
 export const {
-  useGetTestQuery,
   useLoginMutation,
   useGetUserInfoMutation,
   useCreateAccountMutation,

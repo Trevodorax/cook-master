@@ -13,12 +13,13 @@ datasource db {
 model User {
   id Int @id @default(autoincrement())
 
-  email     String   @unique
-  hash      String
-  firstName String?
-  lastName  String?
-  manager   Manager?
-  client    Client?
+  email      String      @unique
+  hash       String
+  firstName  String?
+  lastName   String?
+  manager    Manager?
+  client     Client?
+  contractor Contractor?
 
   @@map("users")
 }
@@ -55,7 +56,11 @@ model Client {
 model Contractor {
   id Int @id @default(autoincrement())
 
-  presentation String
+  user         User    @relation(fields: [userId], references: [id])
+  presentation String?
+
+  // relation fileds
+  userId Int @unique
 
   @@map("contractors")
 }
