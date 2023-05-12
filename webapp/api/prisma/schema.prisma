@@ -12,32 +12,61 @@ datasource db {
 
 model User {
   id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  email String @unique
-  hash String
-  
+  email     String   @unique
+  hash      String
   firstName String?
-  lastName String?
-  
-  Bookmarks Bookmark[]
+  lastName  String?
+  manager   Manager?
+  client    Client?
 
   @@map("users")
 }
 
-model Bookmark {
+model Manager {
   id Int @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  title String
-  description String?
-  link String
+  user                User    @relation(fields: [userId], references: [id])
+  isConfirmed         Boolean @default(false)
+  isItemManager       Boolean @default(false)
+  isClientManager     Boolean @default(false)
+  isContractorManager Boolean @default(false)
 
-  userId Int
-  user User @relation(fields: [userId], references: [id])
+  // relation fileds
+  userId Int @unique
 
-  @@map("bookmarks")
+  @@map("managers")
 }
 
+model Client {
+  id Int @id @default(autoincrement())
+
+  user           User     @relation(fields: [userId], references: [id])
+  fidelityPoints Int      @default(0)
+  Address        Address? @relation(fields: [addressId], references: [id])
+
+  // relation fileds
+  userId    Int  @unique
+  addressId Int? @unique
+
+  @@map("clients")
+}
+
+model Contractor {
+  id Int @id @default(autoincrement())
+
+  presentation String
+
+  @@map("contractors")
+}
+
+model Address {
+  id Int @id @default(autoincrement())
+
+  streetNumber String
+  streetName   String
+  city         String
+  postalCode   String
+  country      String
+  Client       Client?
+}

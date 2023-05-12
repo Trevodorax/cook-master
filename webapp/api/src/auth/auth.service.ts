@@ -16,14 +16,30 @@ export class AuthService {
   async signup(dto: SignUpDto) {
     const passwordHash = await argon.hash(dto.password);
 
+    const newUserData = {
+      email: dto.email,
+      hash: passwordHash,
+      firstName: dto.firstName,
+      lastName: dto.lastName,
+    };
+
+    switch (dto.userType) {
+      case 'client':
+        // TODO create client
+        break;
+      case 'contractor':
+        // TODO create contractor
+        break;
+      case 'manager':
+        // TODO create manager
+        break;
+    }
+
+    console.log('User type: ', dto.userType);
+
     try {
       const user = await this.prisma.user.create({
-        data: {
-          email: dto.email,
-          hash: passwordHash,
-          firstName: dto.firstName,
-          lastName: dto.lastName,
-        },
+        data: newUserData,
         select: {
           id: true,
           email: true,

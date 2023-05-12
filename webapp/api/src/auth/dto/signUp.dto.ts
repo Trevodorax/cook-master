@@ -1,4 +1,7 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
+
+const userTypes = ['client', 'contractor', 'manager'];
+export type UserType = (typeof userTypes)[number];
 
 export class SignUpDto {
   @IsEmail()
@@ -16,4 +19,7 @@ export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   lastName: string;
+
+  @IsIn(userTypes)
+  userType: UserType;
 }

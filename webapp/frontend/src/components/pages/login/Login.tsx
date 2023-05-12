@@ -58,6 +58,7 @@ export default function Login() {
         password: passwordInput,
         firstName: firstNameInput,
         lastName: lastNameInput,
+        userType: "contractor",
       };
       user = await createAccount(credentials).unwrap();
       setAlreadyHasAccount(true);

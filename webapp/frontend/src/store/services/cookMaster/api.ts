@@ -46,6 +46,7 @@ export interface CreateAccountRequest {
   password: string;
   firstName: string;
   lastName: string;
+  userType: "client" | "contractor" | "manager";
 }
 
 const baseQuery = fetchBaseQuery({
