@@ -1,0 +1,12 @@
+@import "@/styles/theme.scss";
+
+.select {
+  border: none;
+  outline: none;
+
+  background-color: $primary_1;
+
+  .option {
+    background-color: $neutral_1;
+  }
+}

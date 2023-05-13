@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email      String      @unique
+  hash       String
+  firstName  String?
+  lastName   String?
+  admin      Admin?
+  client     Client?
+  contractor Contractor?
+
+  @@map("users")
+}
+
+model Admin {
+  id Int @id @default(autoincrement())
+
+  user              User    @relation(fields: [userId], references: [id])
+  isConfirmed       Boolean @default(false)
+  isItemAdmin       Boolean @default(false)
+  isClientAdmin     Boolean @default(false)
+  isContractorAdmin Boolean @default(false)
+
+  // relation fileds
+  userId Int @unique
+
+  @@map("admins")
+}
+
+model Client {
+  id Int @id @default(autoincrement())
+
+  user           User     @relation(fields: [userId], references: [id])
+  fidelityPoints Int      @default(0)
+  Address        Address? @relation(fields: [addressId], references: [id])
+
+  // relation fileds
+  userId    Int  @unique
+  addressId Int? @unique
+
+  @@map("clients")
+}
+
+model Contractor {
+  id Int @id @default(autoincrement())
+
+  user         User    @relation(fields: [userId], references: [id])
+  presentation String?
+
+  // relation fileds
+  userId Int @unique
+
+  @@map("contractors")
+}
+
+model Address {
+  id Int @id @default(autoincrement())
+
+  streetNumber String
+  streetName   String
+  city         String
+  postalCode   String
+  country      String
+  Client       Client?
+}
