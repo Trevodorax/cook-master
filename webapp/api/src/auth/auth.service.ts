@@ -1,10 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SignInDto, SignUpDto } from './dto';
 import * as argon from 'argon2';
-import { Prisma } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
+
+import { SignInDto, SignUpDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
       lastName: dto.lastName,
     };
 
-    let managerData = undefined;
+    let adminData = undefined;
     let clientData = undefined;
     let contractorData = undefined;
 
@@ -43,13 +44,13 @@ export class AuthService {
         };
         break;
 
-      case 'manager':
-        managerData = {
+      case 'admin':
+        adminData = {
           create: {
             isConfirmed: false,
-            isItemManager: false,
-            isClientManager: false,
-            isContractorManager: false,
+            isItemAdmin: false,
+            isClientAdmin: false,
+            isContractorAdmin: false,
           },
         };
         break;
@@ -57,7 +58,7 @@ export class AuthService {
 
     const newUserDataWithUserType = {
       ...newUserData,
-      manager: managerData,
+      admin: adminData,
       client: clientData,
       contractor: contractorData,
     };

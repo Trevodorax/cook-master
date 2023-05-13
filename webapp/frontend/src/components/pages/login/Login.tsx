@@ -8,10 +8,11 @@ import {
   GenericError,
   LoginRequest,
   useCreateAccountMutation,
+  useGetUserInfoMutation,
   useLoginMutation,
   userType,
 } from "@/store/services/cookMaster/api";
-import { setToken } from "@/store/user/userSlice";
+import { setToken, setUserInfo } from "@/store/user/userSlice";
 import { AppDispatch } from "@/store/store";
 import { SwitchInput } from "@/components/switchInput/SwitchInput";
 import { Button } from "@/components/button/Button";
@@ -22,7 +23,7 @@ import { SelectInput } from "@/components/selectInput/SelectInput";
 
 import styles from "./Login.module.scss";
 
-const userTypes: Array<userType> = ["contractor", "client", "manager"];
+const userTypes: Array<userType> = ["contractor", "client", "admin"];
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
@@ -32,6 +33,7 @@ export default function Login() {
   const [login, { error: loginError }] = useLoginMutation();
   const [createAccount, { error: createAccountError }] =
     useCreateAccountMutation();
+  const [getUserInfo] = useGetUserInfoMutation();
 
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
@@ -72,6 +74,15 @@ export default function Login() {
       setFormSuccessMessage("Account created successfully");
     }
     dispatch(setToken(user.access_token));
+
+    const userInfo = await getUserInfo();
+    if ("error" in userInfo) {
+      console.log("Couldn't get user info : ", userInfo.error);
+    }
+
+    if ("data" in userInfo) {
+      dispatch(setUserInfo(userInfo.data));
+    }
   };
 
   const inputValuesError = useMemo(() => {

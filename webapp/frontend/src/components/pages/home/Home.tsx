@@ -16,10 +16,7 @@ export default function Home() {
       <div>
         {error && `Error: ${JSON.stringify(error)}`}
         {isLoading && "Loading..."}
-        {data &&
-          Object.entries(data).map((info, index) => (
-            <div key={index}>{info}</div>
-          ))}
+        {data && <pre>{JSON.stringify(data, null, 4)}</pre>}
       </div>
     </div>
   );

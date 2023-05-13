@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { UserInfo } from "../services/cookMaster/api";
 
 export interface UserState {
-  email: string;
+  userInfo: UserInfo | null;
   token: string | null;
 }
 
 const initialState: UserState = {
-  email: "",
+  userInfo: null,
   token: null,
 };
 
@@ -14,18 +15,15 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setEmail: (state, action: PayloadAction<string>) => {
-      state.email = action.payload;
-    },
-    resetEmail: (state) => {
-      state.email = "";
-    },
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
+    },
+    setUserInfo: (state, action: PayloadAction<UserInfo>) => {
+      state.userInfo = action.payload;
     },
   },
 });
 
-export const { setEmail, resetEmail, setToken } = userSlice.actions;
+export const { setToken, setUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;

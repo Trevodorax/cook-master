@@ -19,6 +19,10 @@ export default function Navigation({
       address: "/login",
       displayedName: "Login",
     },
+    {
+      address: "/dashboard",
+      displayedName: "Dashboard",
+    },
   ];
 
   return (

@@ -9,17 +9,14 @@ import {
   retry,
 } from "@reduxjs/toolkit/query/react";
 
-export type userType = "contractor" | "client" | "manager";
+export type userType = "contractor" | "client" | "admin";
 
 export interface UserInfo {
-  data: {
-    id: number;
-    createdAt: string;
-    updatedAt: string;
-    email: string;
-    firstName: string | null;
-    lastName: string | null;
-  };
+  id: number;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  userType: userType;
 }
 
 export interface LoginRequest {
@@ -93,6 +90,9 @@ export const api = createApi({
     getUserInfo: builder.mutation<UserInfo, void>({
       query: () => "users/me",
     }),
+    getAllUsers: builder.query<UserInfo[], void>({
+      query: () => "users",
+    }),
   }),
 });
 
@@ -100,4 +100,5 @@ export const {
   useLoginMutation,
   useGetUserInfoMutation,
   useCreateAccountMutation,
+  useGetAllUsersQuery,
 } = api;

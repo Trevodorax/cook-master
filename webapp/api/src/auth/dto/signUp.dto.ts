@@ -1,6 +1,6 @@
 import { IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
 
-const userTypes = ['client', 'contractor', 'manager'];
+const userTypes = ['client', 'contractor', 'admin'];
 export type UserType = (typeof userTypes)[number];
 
 export class SignUpDto {

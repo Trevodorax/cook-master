@@ -17,26 +17,26 @@ model User {
   hash       String
   firstName  String?
   lastName   String?
-  manager    Manager?
+  admin      Admin?
   client     Client?
   contractor Contractor?
 
   @@map("users")
 }
 
-model Manager {
+model Admin {
   id Int @id @default(autoincrement())
 
-  user                User    @relation(fields: [userId], references: [id])
-  isConfirmed         Boolean @default(false)
-  isItemManager       Boolean @default(false)
-  isClientManager     Boolean @default(false)
-  isContractorManager Boolean @default(false)
+  user              User    @relation(fields: [userId], references: [id])
+  isConfirmed       Boolean @default(false)
+  isItemAdmin       Boolean @default(false)
+  isClientAdmin     Boolean @default(false)
+  isContractorAdmin Boolean @default(false)
 
   // relation fileds
   userId Int @unique
 
-  @@map("managers")
+  @@map("admins")
 }
 
 model Client {
