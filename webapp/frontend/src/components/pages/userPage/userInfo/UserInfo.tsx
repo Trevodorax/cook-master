@@ -1,4 +1,3 @@
-import { SelectInput } from "@/components/selectInput/SelectInput";
 import { TextInput } from "@/components/textInput/TextInput";
 import {
   GenericError,
@@ -24,14 +23,12 @@ export const UserInfo = ({ userId }: Props) => {
   const [firstName, setFirstName] = useState(userData?.firstName || "");
   const [lastName, setLastName] = useState(userData?.lastName || "");
   const [email, setEmail] = useState(userData?.email || "");
-  const [userType, setUserType] = useState(userData?.userType || "");
 
   useEffect(() => {
     if (userData) {
       setFirstName(userData.firstName || "");
       setLastName(userData.lastName || "");
       setEmail(userData.email);
-      setUserType(userData.userType);
     }
   }, [userData]);
 
@@ -102,13 +99,7 @@ export const UserInfo = ({ userId }: Props) => {
             </tr>
             <tr>
               <td>User type: </td>
-              <td>
-                <SelectInput
-                  options={["client", "contractor", "admin"]}
-                  value={userType}
-                  setValue={setUserType}
-                />
-              </td>
+              <td>{userData.userType}</td>
             </tr>
           </table>
           <button onClick={handleSave}>
