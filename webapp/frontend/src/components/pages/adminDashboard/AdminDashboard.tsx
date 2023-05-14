@@ -17,6 +17,7 @@ export const AdminDashboard = () => {
               <th>First Name</th>
               <th>Last Name</th>
               <th>Email</th>
+              <th>Type</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -26,6 +27,7 @@ export const AdminDashboard = () => {
                 <td>{user.firstName}</td>
                 <td>{user.lastName}</td>
                 <td>{user.email}</td>
+                <td>{user.userType}</td>
                 <td>
                   <Link href={`/user/${user.id}`} className={styles.aze}>
                     See this user

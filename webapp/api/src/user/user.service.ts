@@ -7,6 +7,7 @@ import { User } from '@prisma/client';
 import { JwtUser } from 'src/auth/strategy';
 
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getUserType } from 'src/utils/getUserType';
 
 @Injectable()
 export class UserService {
@@ -44,10 +45,21 @@ export class UserService {
         email: true,
         firstName: true,
         lastName: true,
+        adminId: true,
+        clientId: true,
+        contractorId: true,
       },
     });
 
-    return users;
+    const usersWithType = users.map((user) => ({
+      ...user,
+      adminId: undefined,
+      clientId: undefined,
+      contractorId: undefined,
+      userType: getUserType(user),
+    }));
+
+    return usersWithType;
   }
 
   async getUserById(user: JwtUser, id: string) {
@@ -71,11 +83,7 @@ export class UserService {
 
     const foundUserWithType = {
       ...foundUser,
-      userType: foundUser.adminId
-        ? 'admin'
-        : foundUser.clientId
-        ? 'client'
-        : 'contractor',
+      userType: getUserType(foundUser),
     };
 
     return foundUserWithType;
