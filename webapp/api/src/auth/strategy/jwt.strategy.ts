@@ -29,6 +29,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'paul-jwt') {
     });
     delete user.hash;
 
+    if (!user) {
+      return null;
+    }
+
     const userType = getUserType(user);
 
     const userData = {

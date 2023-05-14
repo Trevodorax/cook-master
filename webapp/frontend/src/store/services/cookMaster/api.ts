@@ -45,7 +45,7 @@ export interface CreateAccountRequest {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3333/api/",
+  baseUrl: "http://127.0.0.1:3333/api/",
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).user.token;
     if (token) {
