@@ -1,7 +1,11 @@
 import { SelectInput } from "@/components/selectInput/SelectInput";
 import { TextInput } from "@/components/textInput/TextInput";
-import { useGetUserByIdQuery } from "@/store/services/cookMaster/api";
-import { useState } from "react";
+import {
+  GenericError,
+  useGetUserByIdQuery,
+  usePatchUserMutation,
+} from "@/store/services/cookMaster/api";
+import { useEffect, useState } from "react";
 
 interface Props {
   userId: string;
@@ -14,10 +18,33 @@ export const UserInfo = ({ userId }: Props) => {
     error: userError,
   } = useGetUserByIdQuery(userId);
 
+  const [patchUser, { isLoading: isPatchLoading, error: patchError }] =
+    usePatchUserMutation();
+
   const [firstName, setFirstName] = useState(userData?.firstName || "");
   const [lastName, setLastName] = useState(userData?.lastName || "");
   const [email, setEmail] = useState(userData?.email || "");
   const [userType, setUserType] = useState(userData?.userType || "");
+
+  useEffect(() => {
+    if (userData) {
+      setFirstName(userData.firstName || "");
+      setLastName(userData.lastName || "");
+      setEmail(userData.email);
+      setUserType(userData.userType);
+    }
+  }, [userData]);
+
+  const handleSave = () => {
+    patchUser({
+      id: userId,
+      data: {
+        firstName,
+        lastName,
+        email,
+      },
+    });
+  };
 
   if (isUserLoading) return <div>Loading...</div>;
 
@@ -84,6 +111,14 @@ export const UserInfo = ({ userId }: Props) => {
               </td>
             </tr>
           </table>
+          <button onClick={handleSave}>
+            {isPatchLoading ? "Loading..." : "Save modifications"}
+          </button>
+          {patchError && (
+            <div>
+              <div>{(patchError as GenericError).data?.message || "Error"}</div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -106,6 +106,17 @@ export const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+    patchUser: builder.mutation<
+      UserInfo,
+      { id: string; data: Partial<UserInfo> }
+    >({
+      query: ({ id, data }) => ({
+        url: `users/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -116,4 +127,5 @@ export const {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
   useDeleteUserMutation,
+  usePatchUserMutation,
 } = api;

@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { JwtUser } from 'src/auth/strategy';
 
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -101,8 +102,31 @@ export class UserService {
       where: { id: idAsNumber },
     });
 
-    console.log(deletedUser);
-
     return deletedUser;
+  }
+
+  async patchUser(user: JwtUser, id: string, data: Partial<User>) {
+    if (user.userType !== 'admin') {
+      throw new ForbiddenException(
+        'Admin rights are required to perform this operation',
+      );
+    }
+
+    const idAsNumber = parseInt(id);
+
+    const foundUser = await this.prisma.user.findUnique({
+      where: { id: idAsNumber },
+    });
+
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: idAsNumber },
+      data,
+    });
+
+    return updatedUser;
   }
 }
