@@ -74,6 +74,7 @@ export default function Login() {
       setFormSuccessMessage("Account created successfully");
     }
     dispatch(setToken(user.access_token));
+    localStorage.setItem("token", user.access_token);
 
     const userInfo = await getUserInfo();
     if ("error" in userInfo) {
