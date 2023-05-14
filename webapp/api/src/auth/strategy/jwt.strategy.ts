@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 
 import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { getUserType } from 'src/utils/getUserType';
 
 export interface JwtUser {
   user: User;
@@ -25,19 +26,10 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'paul-jwt') {
       where: {
         id: payload.sub,
       },
-      include: {
-        admin: true,
-        client: true,
-        contractor: true,
-      },
     });
     delete user.hash;
 
-    const userType = user.admin
-      ? 'admin'
-      : user.client
-      ? 'client'
-      : 'contractor';
+    const userType = getUserType(user);
 
     const userData = {
       user,

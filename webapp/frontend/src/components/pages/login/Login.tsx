@@ -55,7 +55,7 @@ export default function Login() {
         password: passwordInput,
       };
       user = await login(credentials).unwrap();
-      router.back();
+      router.push("/");
     } else {
       // create an account
       if (inputValuesError !== "") {
@@ -157,12 +157,14 @@ export default function Login() {
           value={emailInput}
           setValue={setEmailInput}
           placeholder="Email"
+          className={styles.textInput}
         />
         <TextInput
           type="password"
           value={passwordInput}
           setValue={setPasswordInput}
           placeholder="Password"
+          className={styles.textInput}
         />
         {!alreadyHasAccount && (
           <>
@@ -171,6 +173,7 @@ export default function Login() {
               value={passwordConfirmationInput}
               setValue={setPasswordConfirmationInput}
               placeholder="Confirm password"
+              className={styles.textInput}
             />
             <TextInput
               type="text"
@@ -178,6 +181,7 @@ export default function Login() {
               setValue={setFirstNameInput}
               placeholder="First name"
               icon={<UserIcon />}
+              className={styles.textInput}
             />
             <TextInput
               type="text"
@@ -185,6 +189,7 @@ export default function Login() {
               setValue={setLastNameInput}
               placeholder="Last name"
               icon={<UserIcon />}
+              className={styles.textInput}
             />
           </>
         )}

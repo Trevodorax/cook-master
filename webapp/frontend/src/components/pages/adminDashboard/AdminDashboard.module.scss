@@ -1,0 +1,39 @@
+@import "@/styles/theme.scss";
+
+.container {
+  table {
+    border-collapse: collapse;
+
+    thead {
+      tr {
+        background-color: $neutral_2;
+      }
+      th {
+        border: none;
+        padding: 8px;
+        text-align: left;
+      }
+    }
+
+    tbody {
+      tr {
+        background-color: $neutral_1;
+  
+        &:nth-child(odd) {
+          filter: brightness(0.95);
+        }
+  
+        &:hover {
+          filter: none;
+          background-color: $primary_1;
+        }
+      }
+  
+      td {
+        border: none;
+        padding: 8px;
+        padding-right: 32px;
+      }
+    }
+  }
+}

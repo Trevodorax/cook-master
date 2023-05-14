@@ -11,17 +11,7 @@ export default function Index() {
     if (!userInfo) {
       router.push("/login");
     } else {
-      switch (userInfo.userType) {
-        case "admin":
-          router.push("/dashboard/admin");
-          break;
-        case "client":
-          router.push("/dashboard/client");
-          break;
-        case "contractor":
-          router.push("/dashboard/contractor");
-          break;
-      }
+      router.push(`/dashboard/${userInfo.userType}`);
     }
   }, []);
 }
