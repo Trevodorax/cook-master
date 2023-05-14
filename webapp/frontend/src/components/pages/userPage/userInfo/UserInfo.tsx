@@ -1,10 +1,14 @@
+import { useEffect, useState } from "react";
+
+import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/textInput/TextInput";
 import {
   GenericError,
   useGetUserByIdQuery,
   usePatchUserMutation,
 } from "@/store/services/cookMaster/api";
-import { useEffect, useState } from "react";
+
+import styles from "./UserInfo.module.scss";
 
 interface Props {
   userId: string;
@@ -54,7 +58,7 @@ export const UserInfo = ({ userId }: Props) => {
   }
 
   return (
-    <div>
+    <div className={styles.container}>
       {isUserLoading && <div>Loading...</div>}
       {userError && (
         <div>
@@ -72,6 +76,7 @@ export const UserInfo = ({ userId }: Props) => {
                   setValue={setFirstName}
                   type="text"
                   hideIcon
+                  className={styles.textField}
                 />
               </td>
             </tr>
@@ -83,6 +88,7 @@ export const UserInfo = ({ userId }: Props) => {
                   setValue={setLastName}
                   type="text"
                   hideIcon
+                  className={styles.textField}
                 />
               </td>
             </tr>
@@ -94,6 +100,7 @@ export const UserInfo = ({ userId }: Props) => {
                   setValue={setEmail}
                   type="text"
                   hideIcon
+                  className={styles.textField}
                 />
               </td>
             </tr>
@@ -102,9 +109,9 @@ export const UserInfo = ({ userId }: Props) => {
               <td>{userData.userType}</td>
             </tr>
           </table>
-          <button onClick={handleSave}>
+          <Button onClick={handleSave} type="ok">
             {isPatchLoading ? "Loading..." : "Save modifications"}
-          </button>
+          </Button>
           {patchError && (
             <div>
               <div>{(patchError as GenericError).data?.message || "Error"}</div>

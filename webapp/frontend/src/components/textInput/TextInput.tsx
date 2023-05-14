@@ -1,10 +1,12 @@
 import { ChangeEvent } from "react";
+import cx from "classnames";
 
 import { CursorIcon, KeyIcon, LetterIcon, PhoneIcon } from "../svgs";
 
 import styles from "./TextInput.module.scss";
 
 interface Props {
+  className?: string;
   value: string;
   setValue: React.Dispatch<React.SetStateAction<string>>;
   type: "text" | "email" | "password" | "tel";
@@ -14,6 +16,7 @@ interface Props {
 }
 
 export const TextInput = ({
+  className = "",
   value,
   setValue,
   type,
@@ -33,7 +36,7 @@ export const TextInput = ({
   };
 
   return (
-    <div className={styles.container}>
+    <div className={cx(styles.container, className)}>
       {!hideIcon && (
         <div className={styles.icon}>{icon ?? iconsPerType[type]}</div>
       )}

@@ -10,13 +10,12 @@
       }
       th {
         border: none;
-        padding: 8px 0px;
+        padding: 8px;
         text-align: left;
       }
     }
 
     tbody {
-
       tr {
         background-color: $neutral_1;
   
@@ -32,7 +31,8 @@
   
       td {
         border: none;
-        padding: 8px 64px 8px 0px;
+        padding: 8px;
+        padding-right: 32px;
       }
     }
   }
