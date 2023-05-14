@@ -10,6 +10,7 @@ interface Props {
   type: "text" | "email" | "password" | "tel";
   placeholder?: string;
   icon?: React.ReactNode;
+  hideIcon?: boolean;
 }
 
 export const TextInput = ({
@@ -18,6 +19,7 @@ export const TextInput = ({
   type,
   placeholder = "",
   icon,
+  hideIcon = false,
 }: Props) => {
   const handleChange = (e: ChangeEvent) => {
     setValue((e.target as HTMLInputElement).value);
@@ -32,7 +34,9 @@ export const TextInput = ({
 
   return (
     <div className={styles.container}>
-      <div className={styles.icon}>{icon ?? iconsPerType[type]}</div>
+      {!hideIcon && (
+        <div className={styles.icon}>{icon ?? iconsPerType[type]}</div>
+      )}
       <input
         className={styles.input}
         type={type}

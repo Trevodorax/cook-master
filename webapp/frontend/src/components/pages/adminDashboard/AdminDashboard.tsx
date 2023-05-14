@@ -2,7 +2,6 @@ import { useGetAllUsersQuery } from "@/store/services/cookMaster/api";
 
 import styles from "./AdminDashboard.module.scss";
 import Link from "next/link";
-import { Button } from "@/components/button/Button";
 
 export const AdminDashboard = () => {
   const { data, error, isLoading } = useGetAllUsersQuery();

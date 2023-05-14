@@ -25,17 +25,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'paul-jwt') {
       where: {
         id: payload.sub,
       },
-      include: {
-        admin: true,
-        client: true,
-        contractor: true,
-      },
     });
     delete user.hash;
 
-    const userType = user.admin
+    const userType = user.adminId
       ? 'admin'
-      : user.client
+      : user.clientId
       ? 'client'
       : 'contractor';
 

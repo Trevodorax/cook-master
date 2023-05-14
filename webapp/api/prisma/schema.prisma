@@ -17,9 +17,14 @@ model User {
   hash       String
   firstName  String?
   lastName   String?
-  admin      Admin?
-  client     Client?
-  contractor Contractor?
+  admin      Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  client     Client?     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  contractor Contractor? @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+
+  // relation fields
+  clientId     Int? @unique
+  adminId      Int? @unique
+  contractorId Int? @unique
 
   @@map("users")
 }
@@ -27,14 +32,11 @@ model User {
 model Admin {
   id Int @id @default(autoincrement())
 
-  user              User    @relation(fields: [userId], references: [id])
+  user              User?
   isConfirmed       Boolean @default(false)
   isItemAdmin       Boolean @default(false)
   isClientAdmin     Boolean @default(false)
   isContractorAdmin Boolean @default(false)
-
-  // relation fileds
-  userId Int @unique
 
   @@map("admins")
 }
@@ -42,12 +44,11 @@ model Admin {
 model Client {
   id Int @id @default(autoincrement())
 
-  user           User     @relation(fields: [userId], references: [id])
+  user           User?
   fidelityPoints Int      @default(0)
   Address        Address? @relation(fields: [addressId], references: [id])
 
   // relation fileds
-  userId    Int  @unique
   addressId Int? @unique
 
   @@map("clients")
@@ -56,11 +57,8 @@ model Client {
 model Contractor {
   id Int @id @default(autoincrement())
 
-  user         User    @relation(fields: [userId], references: [id])
+  user         User?
   presentation String?
-
-  // relation fileds
-  userId Int @unique
 
   @@map("contractors")
 }

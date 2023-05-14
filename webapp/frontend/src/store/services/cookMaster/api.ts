@@ -72,6 +72,7 @@ const baseQueryWithReauth: BaseQueryFn<
 export const api = createApi({
   reducerPath: "cookMaster",
   baseQuery: baseQueryWithReauth,
+  tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
@@ -86,12 +87,24 @@ export const api = createApi({
         method: "POST",
         body: accountInformations,
       }),
+      invalidatesTags: ["User"],
     }),
     getUserInfo: builder.mutation<UserInfo, void>({
       query: () => "users/me",
     }),
     getAllUsers: builder.query<UserInfo[], void>({
       query: () => "users",
+      providesTags: ["User"],
+    }),
+    getUserById: builder.query<UserInfo, string>({
+      query: (id) => `users/${id}`,
+    }),
+    deleteUser: builder.mutation<void, string>({
+      query: (id) => ({
+        url: `users/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User"],
     }),
   }),
 });
@@ -101,4 +114,6 @@ export const {
   useGetUserInfoMutation,
   useCreateAccountMutation,
   useGetAllUsersQuery,
+  useGetUserByIdQuery,
+  useDeleteUserMutation,
 } = api;

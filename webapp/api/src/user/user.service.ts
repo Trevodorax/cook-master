@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { JwtUser } from 'src/auth/strategy';
 
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -43,5 +47,62 @@ export class UserService {
     });
 
     return users;
+  }
+
+  async getUserById(user: JwtUser, id: string) {
+    if (user.userType !== 'admin') {
+      throw new ForbiddenException(
+        'Admin rights are required to perform this operation',
+      );
+    }
+
+    const idAsNumber = parseInt(id);
+
+    const foundUser = await this.prisma.user.findUnique({
+      where: { id: idAsNumber },
+    });
+
+    delete foundUser.hash;
+
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const foundUserWithType = {
+      ...foundUser,
+      userType: foundUser.adminId
+        ? 'admin'
+        : foundUser.clientId
+        ? 'client'
+        : 'contractor',
+    };
+
+    return foundUserWithType;
+  }
+
+  async deleteUserById(user: JwtUser, id: string) {
+    if (user.userType !== 'admin') {
+      throw new ForbiddenException(
+        'Admin rights are required to perform this operation',
+      );
+    }
+
+    const idAsNumber = parseInt(id);
+
+    const foundUser = await this.prisma.user.findUnique({
+      where: { id: idAsNumber },
+    });
+
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    const deletedUser = await this.prisma.user.delete({
+      where: { id: idAsNumber },
+    });
+
+    console.log(deletedUser);
+
+    return deletedUser;
   }
 }
