@@ -34,10 +34,11 @@ export class UserService {
     }
 
     const users = await this.prisma.user.findMany({
-      include: {
-        admin: true,
-        client: true,
-        contractor: true,
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
       },
     });
 

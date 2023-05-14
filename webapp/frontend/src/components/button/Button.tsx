@@ -7,14 +7,14 @@ interface Props {
   children: ReactNode;
   className?: string;
   type: "primary" | "secondary" | "error" | "warning" | "ok";
-  isFormSubmit: boolean;
+  isFormSubmit?: boolean;
 }
 
 export const Button = ({
   children,
   className = "",
   type,
-  isFormSubmit,
+  isFormSubmit = false,
 }: Props) => {
   return (
     <button
