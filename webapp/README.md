@@ -2,13 +2,38 @@
 
 ## create the .env files
 
-- Find all the .env.example files
-- create a .env with the right values for each, located in the same folder as the .env.example
+Find all the .env.example files
 
-## launch the containers
+create a .env with the right values for each, located in the same folder as the .env.example
 
-- `docker-compose up --build`
+## run with docker-compose
+### In the api's .env
 
-## run the migration
+Use the database container name in the URL
 
-- `docker-compose exec api npx prisma migrate dev --preview-feature`
+### Launch the docker-compose and run migrations
+
+`docker-compose up --build`
+
+`docker-compose exec <backend-container> npx prisma migrate dev --preview-feature`
+
+## run with npm
+### In the api's .env
+
+Use 127.0.0.1 for the database instead of the db container name
+### In frontend folder
+
+`npm install`
+
+`npm run dev`
+
+### In api folder
+
+`npm install`
+
+`npx prisma generate`
+
+`npm run db:dev:restart`
+
+`npm run start:dev`
+
