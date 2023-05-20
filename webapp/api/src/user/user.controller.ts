@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { GetUser } from 'src/auth/decorator';
@@ -19,8 +20,16 @@ export class UserController {
 
   @UseGuards(PaulJwtGuard)
   @Get()
-  getAllUsers(@GetUser() user: JwtUser) {
-    return this.userService.getAllUsers(user);
+  async getAllUsers(
+    @GetUser() user: JwtUser,
+    @Query('search') search: string,
+    @Query('userType') userType: string,
+  ) {
+    if (search || userType) {
+      return this.userService.searchUsers(user, search, userType);
+    } else {
+      return this.userService.getAllUsers(user);
+    }
   }
 
   @UseGuards(PaulJwtGuard)
