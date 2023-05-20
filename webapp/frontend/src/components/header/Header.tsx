@@ -7,11 +7,17 @@ import { BurgerIcon } from "@/components/svgs";
 
 import styles from "./Header.module.scss";
 
-export default function Header() {
-  const [isBurgerMenuOpen, setIsBurgerMenuOpen] = useState(false);
+interface Props {
+  isNavigationOpen: boolean;
+  setIsNavigationOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-  const toggleBurgerMenu = () => {
-    setIsBurgerMenuOpen((isOpen) => !isOpen);
+export default function Header({
+  isNavigationOpen,
+  setIsNavigationOpen,
+}: Props) {
+  const toggleNavigation = () => {
+    setIsNavigationOpen((isOpen) => !isOpen);
   };
 
   return (
@@ -22,15 +28,15 @@ export default function Header() {
       <h1 className={styles.title}>Cook Master</h1>
       <div
         className={cx(styles.burgerIcon, {
-          [styles.open]: isBurgerMenuOpen,
+          [styles.open]: isNavigationOpen,
         })}
-        onClick={toggleBurgerMenu}
+        onClick={toggleNavigation}
       >
         <BurgerIcon />
       </div>
       <Navigation
         containerClassname={cx(styles.navigationContainer, {
-          [styles.open]: isBurgerMenuOpen,
+          [styles.open]: isNavigationOpen,
         })}
         itemsClassname={styles.navigationItem}
       />

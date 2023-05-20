@@ -1,7 +1,16 @@
 @import "@/styles/theme.scss";
 
 .container {
+
+  .searchZone {
+    display: flex;
+    margin-bottom: 32px;
+    justify-content: space-between;
+  }
+
   table {
+    width: 100%;
+
     border-collapse: collapse;
 
     thead {

@@ -4,10 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
+import { UserType } from 'src/auth/dto';
 import { JwtUser } from 'src/auth/strategy';
 
 import { PrismaService } from 'src/prisma/prisma.service';
-import { getUserType } from 'src/utils/getUserType';
 
 @Injectable()
 export class UserService {
@@ -45,21 +45,11 @@ export class UserService {
         email: true,
         firstName: true,
         lastName: true,
-        adminId: true,
-        clientId: true,
-        contractorId: true,
+        userType: true,
       },
     });
 
-    const usersWithType = users.map((user) => ({
-      ...user,
-      adminId: undefined,
-      clientId: undefined,
-      contractorId: undefined,
-      userType: getUserType(user),
-    }));
-
-    return usersWithType;
+    return users;
   }
 
   async getUserById(user: JwtUser, id: string) {
@@ -81,12 +71,7 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    const foundUserWithType = {
-      ...foundUser,
-      userType: getUserType(foundUser),
-    };
-
-    return foundUserWithType;
+    return foundUser;
   }
 
   async deleteUserById(user: JwtUser, id: string) {
@@ -136,5 +121,58 @@ export class UserService {
     });
 
     return updatedUser;
+  }
+
+  async searchUsers(user: JwtUser, search: string, userType: UserType) {
+    if (user.userType !== 'admin') {
+      throw new ForbiddenException(
+        'Admin rights are required to perform this operation',
+      );
+    }
+
+    const users = await this.prisma.user.findMany({
+      where: {
+        AND: [
+          userType
+            ? {
+                userType: userType,
+              }
+            : null,
+          search
+            ? {
+                OR: [
+                  {
+                    firstName: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    lastName: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                  {
+                    email: {
+                      contains: search,
+                      mode: 'insensitive',
+                    },
+                  },
+                ],
+              }
+            : null,
+        ],
+      },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        userType: true,
+      },
+    });
+
+    return users;
   }
 }

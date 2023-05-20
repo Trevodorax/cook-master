@@ -8,8 +8,9 @@ import {
   fetchBaseQuery,
   retry,
 } from "@reduxjs/toolkit/query/react";
+import { buildQueryParams } from "../utils/buildQueryParams";
 
-export type userType = "contractor" | "client" | "admin";
+export type userType = "any" | "contractor" | "client" | "admin";
 
 export interface UserInfo {
   id: number;
@@ -42,6 +43,11 @@ export interface CreateAccountRequest {
   firstName: string;
   lastName: string;
   userType: userType;
+}
+
+export interface UserSearchParams {
+  search: string | null;
+  userType: userType | null;
 }
 
 const baseQuery = fetchBaseQuery({
@@ -92,8 +98,11 @@ export const api = createApi({
     getUserInfo: builder.mutation<UserInfo, void>({
       query: () => "users/me",
     }),
-    getAllUsers: builder.query<UserInfo[], void>({
-      query: () => "users",
+    getAllUsers: builder.query<UserInfo[], UserSearchParams>({
+      query: (searchParams) => {
+        const queryParams = buildQueryParams(searchParams);
+        return "users" + queryParams;
+      },
       providesTags: ["User"],
     }),
     getUserById: builder.query<UserInfo, string>({

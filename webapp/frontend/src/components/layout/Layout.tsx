@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import Header from "@/components/header/Header";
 import styles from "./Layout.module.scss";
 
@@ -7,10 +7,20 @@ interface Props {
 }
 
 export default function Layout({ children }: Props) {
+  const [isNavigationOpen, setIsNavigationOpen] = useState(false);
+
   return (
     <div className={styles.container}>
-      <Header />
-      <div className={styles.content}>{children}</div>
+      <Header
+        isNavigationOpen={isNavigationOpen}
+        setIsNavigationOpen={setIsNavigationOpen}
+      />
+      <div
+        className={styles.content}
+        onClick={() => setIsNavigationOpen(false)}
+      >
+        {children}
+      </div>
     </div>
   );
 }

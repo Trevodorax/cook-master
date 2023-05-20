@@ -58,6 +58,7 @@ export class AuthService {
 
     const newUserDataWithUserType = {
       ...newUserData,
+      userType: dto.userType,
       admin: adminData,
       client: clientData,
       contractor: contractorData,
