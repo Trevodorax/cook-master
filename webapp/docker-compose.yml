@@ -10,7 +10,7 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - postgres-nestjs-tutorial:/var/lib/postgresql/data
+      - postgres-volume:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -33,7 +33,7 @@ services:
       - app-network
 
 volumes:
-  postgres-nestjs-tutorial:
+  postgres-volume:
 
 
 networks:

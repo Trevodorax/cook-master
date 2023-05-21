@@ -1,0 +1,16 @@
+setup:
+  addons:
+    - plan: heroku-postgresql
+      as: DATABASE
+  config:
+    POSTGRES_USER: user
+    POSTGRES_PASSWORD: Respons11
+    POSTGRES_DB: maindatabase
+build:
+  docker:
+    api: webapp/api/Dockerfile
+    frontend: webapp/frontend/Dockerfile
+release:
+  image: api
+  command:
+    npx prisma migrate dev
