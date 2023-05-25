@@ -11,7 +11,6 @@ import {
 import { GetUser } from 'src/auth/decorator';
 import { PaulJwtGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
-import { JwtUser } from 'src/auth/strategy';
 import { User } from '@prisma/client';
 
 @Controller('users')
@@ -21,7 +20,7 @@ export class UserController {
   @UseGuards(PaulJwtGuard)
   @Get()
   async getAllUsers(
-    @GetUser() user: JwtUser,
+    @GetUser() user: User,
     @Query('search') search: string,
     @Query('userType') userType: string,
   ) {
@@ -34,26 +33,26 @@ export class UserController {
 
   @UseGuards(PaulJwtGuard)
   @Get('me')
-  getMe(@GetUser() user: JwtUser) {
+  getMe(@GetUser() user: User) {
     return this.userService.getMe(user);
   }
 
   @UseGuards(PaulJwtGuard)
   @Get(':id')
-  async getUserById(@GetUser() user: JwtUser, @Param('id') id: string) {
+  async getUserById(@GetUser() user: User, @Param('id') id: string) {
     return await this.userService.getUserById(user, id);
   }
 
   @UseGuards(PaulJwtGuard)
   @Delete(':id')
-  async deleteUserById(@GetUser() user: JwtUser, @Param('id') id: string) {
+  async deleteUserById(@GetUser() user: User, @Param('id') id: string) {
     return await this.userService.deleteUserById(user, id);
   }
 
   @UseGuards(PaulJwtGuard)
   @Patch(':id')
   async patchUser(
-    @GetUser() user: JwtUser,
+    @GetUser() user: User,
     @Param('id') id: string,
     @Body() data: Partial<User>,
   ) {

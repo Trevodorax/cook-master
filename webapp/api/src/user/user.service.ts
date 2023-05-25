@@ -5,17 +5,16 @@ import {
 } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { UserType } from 'src/auth/dto';
-import { JwtUser } from 'src/auth/strategy';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
-  async getMe(user: JwtUser) {
+  async getMe(user: User) {
     const userData = await this.prisma.user.findUnique({
       where: {
-        id: user.user.id,
+        id: user.id,
       },
       include: {
         admin: true,
@@ -24,15 +23,10 @@ export class UserService {
       },
     });
 
-    const modifiedUserData = {
-      ...userData,
-      userType: user.userType,
-    };
-
-    return modifiedUserData;
+    return userData;
   }
 
-  async getAllUsers(user: JwtUser) {
+  async getAllUsers(user: User) {
     if (user.userType !== 'admin') {
       throw new ForbiddenException(
         'Admin rights are required to perform this operation',
@@ -52,7 +46,7 @@ export class UserService {
     return users;
   }
 
-  async getUserById(user: JwtUser, id: string) {
+  async getUserById(user: User, id: string) {
     if (user.userType !== 'admin') {
       throw new ForbiddenException(
         'Admin rights are required to perform this operation',
@@ -74,7 +68,7 @@ export class UserService {
     return foundUser;
   }
 
-  async deleteUserById(user: JwtUser, id: string) {
+  async deleteUserById(user: User, id: string) {
     if (user.userType !== 'admin') {
       throw new ForbiddenException(
         'Admin rights are required to perform this operation',
@@ -98,7 +92,7 @@ export class UserService {
     return deletedUser;
   }
 
-  async patchUser(user: JwtUser, id: string, data: Partial<User>) {
+  async patchUser(user: User, id: string, data: Partial<User>) {
     if (user.userType !== 'admin') {
       throw new ForbiddenException(
         'Admin rights are required to perform this operation',
@@ -123,7 +117,7 @@ export class UserService {
     return updatedUser;
   }
 
-  async searchUsers(user: JwtUser, search: string, userType: UserType) {
+  async searchUsers(user: User, search: string, userType: UserType) {
     if (user.userType !== 'admin') {
       throw new ForbiddenException(
         'Admin rights are required to perform this operation',

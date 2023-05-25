@@ -18,7 +18,7 @@ model User {
   hash       String
   firstName  String?
   lastName   String?
-  userType String
+  userType   String
   admin      Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
   client     Client?     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   contractor Contractor? @relation(fields: [contractorId], references: [id], onDelete: Cascade)

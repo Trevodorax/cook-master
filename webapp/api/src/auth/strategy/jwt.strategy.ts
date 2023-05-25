@@ -3,14 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { getUserType } from 'src/utils/getUserType';
-
-export interface JwtUser {
-  user: User;
-  userType: 'admin' | 'client' | 'contractor';
-}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'paul-jwt') {
@@ -27,19 +20,13 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'paul-jwt') {
         id: payload.sub,
       },
     });
-    delete user.hash;
 
     if (!user) {
       return null;
     }
 
-    const userType = getUserType(user);
+    delete user.hash;
 
-    const userData = {
-      user,
-      userType,
-    };
-
-    return userData;
+    return user;
   }
 }
