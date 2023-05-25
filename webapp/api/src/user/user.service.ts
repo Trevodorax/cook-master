@@ -77,6 +77,10 @@ export class UserService {
 
     const idAsNumber = parseInt(id);
 
+    if (idAsNumber === 1) {
+      throw new ForbiddenException('You cannot delete the default admin');
+    }
+
     const foundUser = await this.prisma.user.findUnique({
       where: { id: idAsNumber },
     });
