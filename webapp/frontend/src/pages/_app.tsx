@@ -6,6 +6,7 @@ import { store } from "@/store/store";
 import Layout from "@/components/layout/Layout";
 import { LocalStorageProvider } from "@/wrappers/LocalStorageProvider";
 import "@/styles/globals.scss";
+import { Toaster } from "react-hot-toast";
 
 interface Props {
   Component: FC;
@@ -18,6 +19,7 @@ export default function Index({ Component, pageProps }: Props) {
       <LocalStorageProvider>
         <RedirectionWrapper>
           <Layout>
+            <Toaster />
             <Component {...pageProps} />
           </Layout>
         </RedirectionWrapper>

@@ -9,6 +9,7 @@ import {
   retry,
 } from "@reduxjs/toolkit/query/react";
 import { buildQueryParams } from "../utils/buildQueryParams";
+import { toast } from "react-hot-toast";
 
 export type userType = "any" | "contractor" | "client" | "admin";
 
@@ -66,21 +67,26 @@ const baseQuery = fetchBaseQuery({
 
 const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 
-const baseQueryWithReauth: BaseQueryFn<
+const baseQueryWithErrorHandling: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
   const result = await baseQueryWithRetry(args, api, extraOptions);
-  if (result.error && result.error.status === 401) {
-    api.dispatch(setRedirection("/login"));
+  if (result.error) {
+    if (result.error.status === 401) {
+      api.dispatch(setRedirection("/login"));
+      return result;
+    }
+
+    toast(result?.error?.data?.message || "An error occured");
   }
   return result;
 };
 
 export const api = createApi({
   reducerPath: "cookMaster",
-  baseQuery: baseQueryWithReauth,
+  baseQuery: baseQueryWithErrorHandling,
   tagTypes: ["User"],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({

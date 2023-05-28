@@ -1,11 +1,12 @@
 import Link from "next/link";
+import { toast } from "react-hot-toast";
+import { useState } from "react";
 
 import { useGetAllUsersQuery, userType } from "@/store/services/cookMaster/api";
-
-import styles from "./AdminDashboard.module.scss";
-import { useState } from "react";
 import { TextInput } from "@/components/textInput/TextInput";
 import { SelectInput } from "@/components/selectInput/SelectInput";
+
+import styles from "./AdminDashboard.module.scss";
 
 const userTypes: Array<userType> = ["any", "contractor", "client", "admin"];
 
