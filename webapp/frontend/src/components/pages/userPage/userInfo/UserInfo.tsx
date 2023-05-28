@@ -16,14 +16,10 @@ interface Props {
 }
 
 export const UserInfo = ({ userId }: Props) => {
-  const {
-    data: userData,
-    isLoading: isUserLoading,
-    error: userError,
-  } = useGetUserByIdQuery(userId);
+  const { data: userData, isLoading: isUserLoading } =
+    useGetUserByIdQuery(userId);
 
-  const [patchUser, { isLoading: isPatchLoading, error: patchError }] =
-    usePatchUserMutation();
+  const [patchUser, { isLoading: isPatchLoading }] = usePatchUserMutation();
 
   const [confirmAdmin] = useConfirmAdminMutation();
 
@@ -56,22 +52,9 @@ export const UserInfo = ({ userId }: Props) => {
 
   if (isUserLoading) return <div>Loading...</div>;
 
-  if (userError) {
-    return (
-      <div>
-        Error: <pre>{JSON.stringify(userError, null, 4)}</pre>
-      </div>
-    );
-  }
-
   return (
     <div className={styles.container}>
       {isUserLoading && <div>Loading...</div>}
-      {userError && (
-        <div>
-          Error: <pre>{JSON.stringify(userError, null, 4)}</pre>
-        </div>
-      )}
       {userData && (
         <div>
           <table>
@@ -138,11 +121,6 @@ export const UserInfo = ({ userId }: Props) => {
           <Button onClick={handleSave} type="ok">
             {isPatchLoading ? "Loading..." : "Save modifications"}
           </Button>
-          {patchError && (
-            <div>
-              <div>{(patchError as GenericError).data?.message || "Error"}</div>
-            </div>
-          )}
         </div>
       )}
     </div>

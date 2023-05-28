@@ -1,11 +1,11 @@
 import Link from "next/link";
+import { useState } from "react";
 
 import { useGetAllUsersQuery, userType } from "@/store/services/cookMaster/api";
-
-import styles from "./AdminDashboard.module.scss";
-import { useState } from "react";
 import { TextInput } from "@/components/textInput/TextInput";
 import { SelectInput } from "@/components/selectInput/SelectInput";
+
+import styles from "./AdminDashboard.module.scss";
 
 const userTypes: Array<userType> = ["any", "contractor", "client", "admin"];
 
@@ -13,12 +13,12 @@ export const AdminDashboard = () => {
   const [search, setSearch] = useState("");
   const [userType, setUserType] = useState<userType>(userTypes[0]);
 
-  const { data, error, isLoading } = useGetAllUsersQuery({
+  const { data, isLoading } = useGetAllUsersQuery({
     search,
     userType: userType === "any" ? null : userType,
   });
 
-  const SearchZone = () => (
+  const SearchZone = (
     <div className={styles.searchZone}>
       <TextInput
         type="text"
@@ -38,8 +38,7 @@ export const AdminDashboard = () => {
 
   return (
     <div className={styles.container}>
-      {SearchZone()}
-      {error && `Error: ${JSON.stringify(error)}`}
+      {SearchZone}
       {isLoading && "Loading..."}
       {data && (
         <table>
