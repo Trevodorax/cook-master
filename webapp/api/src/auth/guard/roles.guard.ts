@@ -11,7 +11,6 @@ export class RolesGuard implements CanActivate {
       'allowedUserTypes',
       context.getHandler(),
     );
-    console.log('PONEY', allowedUserTypes);
     if (!allowedUserTypes) {
       // if no AllowedUserTypes decorator is set, anyone can access
       return true;

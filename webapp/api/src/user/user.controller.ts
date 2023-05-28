@@ -19,17 +19,16 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @UseGuards(JwtGuard, RolesGuard)
-  @AllowedUserTypes(['admin', 'contractor'])
+  @AllowedUserTypes(['admin'])
   @Get()
   async getAllUsers(
-    @GetUser() user: User,
     @Query('search') search: string,
     @Query('userType') userType: string,
   ) {
     if (search || userType) {
-      return this.userService.searchUsers(user, search, userType);
+      return this.userService.searchUsers(search, userType);
     } else {
-      return this.userService.getAllUsers(user);
+      return this.userService.getAllUsers();
     }
   }
 
@@ -39,31 +38,31 @@ export class UserController {
     return this.userService.getMe(user);
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Patch('confirmAdmin')
-  async confirmAdmin(@GetUser() user: User, @Body() data: { id: string }) {
-    return await this.userService.confirmAdmin(user, data.id);
+  async confirmAdmin(@Body() data: { id: string }) {
+    return await this.userService.confirmAdmin(data.id);
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Get(':id')
-  async getUserById(@GetUser() user: User, @Param('id') id: string) {
-    return await this.userService.getUserById(user, id);
+  async getUserById(@Param('id') id: string) {
+    return await this.userService.getUserById(id);
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Delete(':id')
-  async deleteUserById(@GetUser() user: User, @Param('id') id: string) {
-    return await this.userService.deleteUserById(user, id);
+  async deleteUserById(@Param('id') id: string) {
+    return await this.userService.deleteUserById(id);
   }
 
-  @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Patch(':id')
-  async patchUser(
-    @GetUser() user: User,
-    @Param('id') id: string,
-    @Body() data: Partial<User>,
-  ) {
-    return await this.userService.patchUser(user, id, data);
+  async patchUser(@Param('id') id: string, @Body() data: Partial<User>) {
+    return await this.userService.patchUser(id, data);
   }
 }
