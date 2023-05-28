@@ -74,12 +74,20 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 > = async (args, api, extraOptions) => {
   const result = await baseQueryWithRetry(args, api, extraOptions);
   if (result.error) {
-    if (result.error.status === 401) {
+    const error = (result.error as GenericError).data;
+
+    // make sure the error was formatted as expected
+    if (!error) {
+      toast.error("An error occured");
+      return result;
+    }
+
+    if (error.statusCode === 401) {
       api.dispatch(setRedirection("/login"));
       return result;
     }
 
-    toast(result?.error?.data?.message || "An error occured");
+    toast.error(error.message || "An error occured");
   }
   return result;
 };

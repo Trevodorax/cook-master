@@ -77,9 +77,6 @@ export default function Login() {
     localStorage.setItem("token", user.access_token);
 
     const userInfo = await getUserInfo();
-    if ("error" in userInfo) {
-      console.log("Couldn't get user info : ", userInfo.error);
-    }
 
     if ("data" in userInfo) {
       dispatch(setUserInfo(userInfo.data));

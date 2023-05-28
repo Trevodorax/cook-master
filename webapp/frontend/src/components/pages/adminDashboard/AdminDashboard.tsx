@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { toast } from "react-hot-toast";
 import { useState } from "react";
 
 import { useGetAllUsersQuery, userType } from "@/store/services/cookMaster/api";
@@ -14,12 +13,12 @@ export const AdminDashboard = () => {
   const [search, setSearch] = useState("");
   const [userType, setUserType] = useState<userType>(userTypes[0]);
 
-  const { data, error, isLoading } = useGetAllUsersQuery({
+  const { data, isLoading } = useGetAllUsersQuery({
     search,
     userType: userType === "any" ? null : userType,
   });
 
-  const SearchZone = () => (
+  const SearchZone = (
     <div className={styles.searchZone}>
       <TextInput
         type="text"
@@ -39,8 +38,7 @@ export const AdminDashboard = () => {
 
   return (
     <div className={styles.container}>
-      {SearchZone()}
-      {error && `Error: ${JSON.stringify(error)}`}
+      {SearchZone}
       {isLoading && "Loading..."}
       {data && (
         <table>
