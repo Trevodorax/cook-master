@@ -38,6 +38,12 @@ export class UserController {
   }
 
   @UseGuards(PaulJwtGuard)
+  @Patch('confirmAdmin')
+  async confirmAdmin(@GetUser() user: User, @Body() data: { id: string }) {
+    return await this.userService.confirmAdmin(user, data.id);
+  }
+
+  @UseGuards(PaulJwtGuard)
   @Get(':id')
   async getUserById(@GetUser() user: User, @Param('id') id: string) {
     return await this.userService.getUserById(user, id);

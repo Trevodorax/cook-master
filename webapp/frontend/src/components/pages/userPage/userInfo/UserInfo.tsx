@@ -4,6 +4,7 @@ import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/textInput/TextInput";
 import {
   GenericError,
+  useConfirmAdminMutation,
   useGetUserByIdQuery,
   usePatchUserMutation,
 } from "@/store/services/cookMaster/api";
@@ -23,6 +24,8 @@ export const UserInfo = ({ userId }: Props) => {
 
   const [patchUser, { isLoading: isPatchLoading, error: patchError }] =
     usePatchUserMutation();
+
+  const [confirmAdmin] = useConfirmAdminMutation();
 
   const [firstName, setFirstName] = useState(userData?.firstName || "");
   const [lastName, setLastName] = useState(userData?.lastName || "");
@@ -47,6 +50,10 @@ export const UserInfo = ({ userId }: Props) => {
     });
   };
 
+  const handleConfirmAdmin = async () => {
+    confirmAdmin({ id: userId });
+  };
+
   if (isUserLoading) return <div>Loading...</div>;
 
   if (userError) {
@@ -68,46 +75,65 @@ export const UserInfo = ({ userId }: Props) => {
       {userData && (
         <div>
           <table>
-            <tr>
-              <td>First name: </td>
-              <td>
-                <TextInput
-                  value={firstName || ""}
-                  setValue={setFirstName}
-                  type="text"
-                  hideIcon
-                  className={styles.textField}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Last name: </td>
-              <td>
-                <TextInput
-                  value={lastName || ""}
-                  setValue={setLastName}
-                  type="text"
-                  hideIcon
-                  className={styles.textField}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>Email: </td>
-              <td>
-                <TextInput
-                  value={email || ""}
-                  setValue={setEmail}
-                  type="text"
-                  hideIcon
-                  className={styles.textField}
-                />
-              </td>
-            </tr>
-            <tr>
-              <td>User type: </td>
-              <td>{userData.userType}</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>First name: </td>
+                <td>
+                  <TextInput
+                    value={firstName || ""}
+                    setValue={setFirstName}
+                    type="text"
+                    hideIcon
+                    className={styles.textField}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Last name: </td>
+                <td>
+                  <TextInput
+                    value={lastName || ""}
+                    setValue={setLastName}
+                    type="text"
+                    hideIcon
+                    className={styles.textField}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Email: </td>
+                <td>
+                  <TextInput
+                    value={email || ""}
+                    setValue={setEmail}
+                    type="text"
+                    hideIcon
+                    className={styles.textField}
+                  />
+                </td>
+              </tr>
+              <tr className={styles.userType}>
+                <td>User type: </td>
+                <td>
+                  {userData.admin?.isConfirmed && "Confirmed "}
+                  {userData.userType}
+                  {userData.admin && !userData.admin.isConfirmed && (
+                    <>
+                      <span className={styles.unconfirmedAdmin}>
+                        (Not Confirmed)
+                      </span>
+                      <Button
+                        className={styles.confirmAdminButton}
+                        onClick={handleConfirmAdmin}
+                        type="primary"
+                      >
+                        Confirm admin
+                      </Button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            </tbody>
           </table>
           <Button onClick={handleSave} type="ok">
             {isPatchLoading ? "Loading..." : "Save modifications"}

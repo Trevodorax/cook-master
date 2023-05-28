@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -57,13 +58,16 @@ export class UserService {
 
     const foundUser = await this.prisma.user.findUnique({
       where: { id: idAsNumber },
+      include: {
+        admin: true,
+      },
     });
-
-    delete foundUser.hash;
 
     if (!foundUser) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
+
+    delete foundUser.hash;
 
     return foundUser;
   }
@@ -116,6 +120,41 @@ export class UserService {
     const updatedUser = await this.prisma.user.update({
       where: { id: idAsNumber },
       data,
+    });
+
+    return updatedUser;
+  }
+
+  async confirmAdmin(user: User, id: string) {
+    if (user.userType !== 'admin') {
+      throw new ForbiddenException(
+        'Admin rights are required to perform this operation',
+      );
+    }
+
+    const idAsNumber = parseInt(id);
+
+    const foundUser = await this.prisma.user.findUnique({
+      where: { id: idAsNumber },
+    });
+
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
+    }
+
+    if (!foundUser.adminId) {
+      throw new BadRequestException('Selected user is not an admin');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: idAsNumber },
+      data: {
+        admin: {
+          update: {
+            isConfirmed: true,
+          },
+        },
+      },
     });
 
     return updatedUser;
