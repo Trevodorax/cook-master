@@ -18,6 +18,9 @@ export interface UserInfo {
   firstName: string | null;
   lastName: string | null;
   userType: userType;
+  admin: {
+    isConfirmed: boolean;
+  };
 }
 
 export interface LoginRequest {
@@ -61,7 +64,7 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-const baseQueryWithRetry = retry(baseQuery, { maxRetries: 1 });
+const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 
 const baseQueryWithReauth: BaseQueryFn<
   string | FetchArgs,
@@ -107,6 +110,7 @@ export const api = createApi({
     }),
     getUserById: builder.query<UserInfo, string>({
       query: (id) => `users/${id}`,
+      providesTags: ["User"],
     }),
     deleteUser: builder.mutation<void, string>({
       query: (id) => ({
@@ -126,6 +130,14 @@ export const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
+    confirmAdmin: builder.mutation<UserInfo, { id: string }>({
+      query: ({ id }) => ({
+        url: "users/confirmAdmin",
+        method: "PATCH",
+        body: { id },
+      }),
+      invalidatesTags: ["User"],
+    }),
   }),
 });
 
@@ -137,4 +149,5 @@ export const {
   useGetUserByIdQuery,
   useDeleteUserMutation,
   usePatchUserMutation,
+  useConfirmAdminMutation,
 } = api;

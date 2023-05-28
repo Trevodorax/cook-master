@@ -8,4 +8,14 @@
       }
     }
   }
+
+  .userType {
+    .confirmAdminButton {
+      width: fit-content;
+    }
+
+    .unconfirmedAdmin {
+      margin: 0 8px;
+    }
+  }
 }

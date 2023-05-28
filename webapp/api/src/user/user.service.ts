@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -26,13 +27,7 @@ export class UserService {
     return userData;
   }
 
-  async getAllUsers(user: User) {
-    if (user.userType !== 'admin') {
-      throw new ForbiddenException(
-        'Admin rights are required to perform this operation',
-      );
-    }
-
+  async getAllUsers() {
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
@@ -46,36 +41,31 @@ export class UserService {
     return users;
   }
 
-  async getUserById(user: User, id: string) {
-    if (user.userType !== 'admin') {
-      throw new ForbiddenException(
-        'Admin rights are required to perform this operation',
-      );
-    }
-
+  async getUserById(id: string) {
     const idAsNumber = parseInt(id);
 
     const foundUser = await this.prisma.user.findUnique({
       where: { id: idAsNumber },
+      include: {
+        admin: true,
+      },
     });
-
-    delete foundUser.hash;
 
     if (!foundUser) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    delete foundUser.hash;
+
     return foundUser;
   }
 
-  async deleteUserById(user: User, id: string) {
-    if (user.userType !== 'admin') {
-      throw new ForbiddenException(
-        'Admin rights are required to perform this operation',
-      );
-    }
-
+  async deleteUserById(id: string) {
     const idAsNumber = parseInt(id);
+
+    if (idAsNumber === 1) {
+      throw new ForbiddenException('You cannot delete the default admin');
+    }
 
     const foundUser = await this.prisma.user.findUnique({
       where: { id: idAsNumber },
@@ -92,13 +82,7 @@ export class UserService {
     return deletedUser;
   }
 
-  async patchUser(user: User, id: string, data: Partial<User>) {
-    if (user.userType !== 'admin') {
-      throw new ForbiddenException(
-        'Admin rights are required to perform this operation',
-      );
-    }
-
+  async patchUser(id: string, data: Partial<User>) {
     const idAsNumber = parseInt(id);
 
     const foundUser = await this.prisma.user.findUnique({
@@ -117,13 +101,36 @@ export class UserService {
     return updatedUser;
   }
 
-  async searchUsers(user: User, search: string, userType: UserType) {
-    if (user.userType !== 'admin') {
-      throw new ForbiddenException(
-        'Admin rights are required to perform this operation',
-      );
+  async confirmAdmin(id: string) {
+    const idAsNumber = parseInt(id);
+
+    const foundUser = await this.prisma.user.findUnique({
+      where: { id: idAsNumber },
+    });
+
+    if (!foundUser) {
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    if (!foundUser.adminId) {
+      throw new BadRequestException('Selected user is not an admin');
+    }
+
+    const updatedUser = await this.prisma.user.update({
+      where: { id: idAsNumber },
+      data: {
+        admin: {
+          update: {
+            isConfirmed: true,
+          },
+        },
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async searchUsers(search: string, userType: UserType) {
     const users = await this.prisma.user.findMany({
       where: {
         AND: [

@@ -8,54 +8,61 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { GetUser } from 'src/auth/decorator';
-import { PaulJwtGuard } from 'src/auth/guard';
+import { AllowedUserTypes, GetUser } from 'src/auth/decorator';
+import { JwtGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Get()
   async getAllUsers(
-    @GetUser() user: User,
     @Query('search') search: string,
     @Query('userType') userType: string,
   ) {
     if (search || userType) {
-      return this.userService.searchUsers(user, search, userType);
+      return this.userService.searchUsers(search, userType);
     } else {
-      return this.userService.getAllUsers(user);
+      return this.userService.getAllUsers();
     }
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard)
   @Get('me')
   getMe(@GetUser() user: User) {
     return this.userService.getMe(user);
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
+  @Patch('confirmAdmin')
+  async confirmAdmin(@Body() data: { id: string }) {
+    return await this.userService.confirmAdmin(data.id);
+  }
+
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Get(':id')
-  async getUserById(@GetUser() user: User, @Param('id') id: string) {
-    return await this.userService.getUserById(user, id);
+  async getUserById(@Param('id') id: string) {
+    return await this.userService.getUserById(id);
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Delete(':id')
-  async deleteUserById(@GetUser() user: User, @Param('id') id: string) {
-    return await this.userService.deleteUserById(user, id);
+  async deleteUserById(@Param('id') id: string) {
+    return await this.userService.deleteUserById(id);
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Patch(':id')
-  async patchUser(
-    @GetUser() user: User,
-    @Param('id') id: string,
-    @Body() data: Partial<User>,
-  ) {
-    return await this.userService.patchUser(user, id, data);
+  async patchUser(@Param('id') id: string, @Body() data: Partial<User>) {
+    return await this.userService.patchUser(id, data);
   }
 }
