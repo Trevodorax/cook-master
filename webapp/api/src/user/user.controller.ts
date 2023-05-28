@@ -8,16 +8,18 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { GetUser } from 'src/auth/decorator';
-import { PaulJwtGuard } from 'src/auth/guard';
+import { AllowedUserTypes, GetUser } from 'src/auth/decorator';
+import { JwtGuard } from 'src/auth/guard';
 import { UserService } from './user.service';
 import { User } from '@prisma/client';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin', 'contractor'])
   @Get()
   async getAllUsers(
     @GetUser() user: User,
@@ -31,31 +33,31 @@ export class UserController {
     }
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard)
   @Get('me')
   getMe(@GetUser() user: User) {
     return this.userService.getMe(user);
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard)
   @Patch('confirmAdmin')
   async confirmAdmin(@GetUser() user: User, @Body() data: { id: string }) {
     return await this.userService.confirmAdmin(user, data.id);
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard)
   @Get(':id')
   async getUserById(@GetUser() user: User, @Param('id') id: string) {
     return await this.userService.getUserById(user, id);
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard)
   @Delete(':id')
   async deleteUserById(@GetUser() user: User, @Param('id') id: string) {
     return await this.userService.deleteUserById(user, id);
   }
 
-  @UseGuards(PaulJwtGuard)
+  @UseGuards(JwtGuard)
   @Patch(':id')
   async patchUser(
     @GetUser() user: User,

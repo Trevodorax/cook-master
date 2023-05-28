@@ -28,12 +28,6 @@ export class UserService {
   }
 
   async getAllUsers(user: User) {
-    if (user.userType !== 'admin') {
-      throw new ForbiddenException(
-        'Admin rights are required to perform this operation',
-      );
-    }
-
     const users = await this.prisma.user.findMany({
       select: {
         id: true,
