@@ -112,7 +112,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
-    getUserInfo: builder.mutation<UserInfo, void>({
+    getMe: builder.mutation<UserInfo, void>({
       query: () => "users/me",
     }),
     getAllUsers: builder.query<UserInfo[], UserSearchParams>({
@@ -120,18 +120,27 @@ export const api = createApi({
         const queryParams = buildQueryParams(searchParams);
         return "users" + queryParams;
       },
-      providesTags: ["User"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({
+                type: "User" as const,
+                id: id.toString(),
+              })),
+              "User",
+            ]
+          : ["User"],
     }),
     getUserById: builder.query<UserInfo, string>({
       query: (id) => `users/${id}`,
-      providesTags: ["User"],
+      providesTags: (_, __, arg) => [{ type: "User", id: arg }],
     }),
     deleteUser: builder.mutation<void, string>({
       query: (id) => ({
         url: `users/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: (_, __, arg) => [{ type: "User", id: arg }],
     }),
     patchUser: builder.mutation<
       UserInfo,
@@ -142,7 +151,7 @@ export const api = createApi({
         method: "PATCH",
         body: data,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: (_, __, arg) => [{ type: "User", id: arg.id }],
     }),
     confirmAdmin: builder.mutation<UserInfo, { id: string }>({
       query: ({ id }) => ({
@@ -150,14 +159,14 @@ export const api = createApi({
         method: "PATCH",
         body: { id },
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: (_, __, arg) => [{ type: "User", id: arg.id }],
     }),
   }),
 });
 
 export const {
   useLoginMutation,
-  useGetUserInfoMutation,
+  useGetMeMutation,
   useCreateAccountMutation,
   useGetAllUsersQuery,
   useGetUserByIdQuery,

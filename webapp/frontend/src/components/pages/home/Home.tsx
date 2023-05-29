@@ -1,12 +1,12 @@
 import React from "react";
 import styles from "./Home.module.scss";
-import { useGetUserInfoMutation } from "@/store/services/cookMaster/api";
+import { useGetMeMutation } from "@/store/services/cookMaster/api";
 
 export default function Home() {
-  const [getUserInfo, { data, isLoading }] = useGetUserInfoMutation();
+  const [getMe, { data, isLoading }] = useGetMeMutation();
 
   const fetchUserInfo = () => {
-    getUserInfo();
+    getMe();
   };
 
   return (

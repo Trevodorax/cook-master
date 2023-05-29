@@ -8,7 +8,7 @@ import {
   GenericError,
   LoginRequest,
   useCreateAccountMutation,
-  useGetUserInfoMutation,
+  useGetMeMutation,
   useLoginMutation,
   userType,
 } from "@/store/services/cookMaster/api";
@@ -33,7 +33,7 @@ export default function Login() {
   const [login, { error: loginError }] = useLoginMutation();
   const [createAccount, { error: createAccountError }] =
     useCreateAccountMutation();
-  const [getUserInfo] = useGetUserInfoMutation();
+  const [getMe] = useGetMeMutation();
 
   const [emailInput, setEmailInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
@@ -76,7 +76,7 @@ export default function Login() {
     dispatch(setToken(user.access_token));
     localStorage.setItem("token", user.access_token);
 
-    const userInfo = await getUserInfo();
+    const userInfo = await getMe();
 
     if ("data" in userInfo) {
       dispatch(setUserInfo(userInfo.data));
