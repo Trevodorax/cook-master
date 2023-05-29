@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 
 import { AppDispatch } from "@/store/store";
 import { setToken, setUserInfo } from "@/store/user/userSlice";
-import { useGetUserInfoMutation } from "@/store/services/cookMaster/api";
+import { useGetMeMutation } from "@/store/services/cookMaster/api";
 
 interface Props {
   children: ReactNode;
@@ -11,7 +11,7 @@ interface Props {
 
 export const LocalStorageProvider = ({ children }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const [getUserInfo] = useGetUserInfoMutation();
+  const [getMe] = useGetMeMutation();
 
   const getSessionAndUser = async () => {
     const token = localStorage.getItem("token");
@@ -21,7 +21,7 @@ export const LocalStorageProvider = ({ children }: Props) => {
 
     dispatch(setToken(token));
 
-    const userInfo = await getUserInfo();
+    const userInfo = await getMe();
     if ("data" in userInfo) {
       dispatch(setUserInfo(userInfo.data || null));
     }
