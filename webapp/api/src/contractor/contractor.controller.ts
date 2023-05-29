@@ -1,16 +1,37 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
+
+import { User } from '@prisma/client';
+import { JwtGuard } from 'src/auth/guard';
+import { AllowedUserTypes, GetUser } from 'src/auth/decorator';
 
 import { ContractorService } from './contractor.service';
-
 import { GetEventsByContractorIdDto } from './dto';
 
 @Controller('contractors')
 export class ContractorController {
   constructor(private eventService: ContractorService) {}
 
-  // TODO: secure this route
+  @UseGuards(JwtGuard)
+  @Get('me/events')
+  async getEventsForMe(@GetUser() user: User) {
+    return this.eventService.getEventsForMe(user);
+  }
+
+  @UseGuards(JwtGuard)
+  @AllowedUserTypes(['admin'])
   @Get(':id/events')
   async getEventsByContractorId(@Param('id') id: string) {
+    const parsedId = parseInt(id);
+    if (isNaN(parsedId)) {
+      throw new BadRequestException('Invalid contractor ID.');
+    }
+
     const formattedDto: GetEventsByContractorIdDto = {
       contractorId: parseInt(id),
     };

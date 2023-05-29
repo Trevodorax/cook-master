@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
 import { GetEventsByContractorIdDto } from './dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class ContractorService {
@@ -14,5 +15,25 @@ export class ContractorService {
         contractorId: dto.contractorId,
       },
     });
+  }
+
+  async getEventsForMe(user: User) {
+    if (!user) {
+      throw new UnauthorizedException(
+        'You must be logged in to access this route.',
+      );
+    }
+
+    if (user.contractorId === null) {
+      throw new UnauthorizedException(
+        'You must be a contractor to access this route.',
+      );
+    }
+
+    const formattedDto: GetEventsByContractorIdDto = {
+      contractorId: user.contractorId,
+    };
+
+    return this.getEventsByContractorId(formattedDto);
   }
 }
