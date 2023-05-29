@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
@@ -49,6 +46,7 @@ model Client {
   user           User?
   fidelityPoints Int      @default(0)
   Address        Address? @relation(fields: [addressId], references: [id])
+  events         Event[]
 
   // relation fileds
   addressId Int? @unique
@@ -61,6 +59,7 @@ model Contractor {
 
   user         User?
   presentation String?
+  Event        Event[]
 
   @@map("contractors")
 }
@@ -73,5 +72,20 @@ model Address {
   city         String
   postalCode   String
   country      String
-  Client       Client?
+  client       Client?
+}
+
+model Event {
+  id Int @id @default(autoincrement())
+
+  type        String
+  name        String
+  description String
+  startTime   DateTime
+  durationMin Int
+  animator    Contractor? @relation(fields: [contractorId], references: [id])
+  clients     Client[]
+
+  // relation fields
+  contractorId Int?
 }
