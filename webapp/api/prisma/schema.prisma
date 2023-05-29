@@ -59,7 +59,7 @@ model Contractor {
 
   user         User?
   presentation String?
-  Event        Event[]
+  events       Event[]
 
   @@map("contractors")
 }
@@ -80,7 +80,7 @@ model Event {
 
   type        String
   name        String
-  description String
+  description String?     @default("")
   startTime   DateTime
   durationMin Int
   animator    Contractor? @relation(fields: [contractorId], references: [id])
@@ -88,4 +88,6 @@ model Event {
 
   // relation fields
   contractorId Int?
+
+  @@map("events")
 }
