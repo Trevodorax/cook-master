@@ -5,3 +5,6 @@ export * from "./CursorIcon";
 export * from "./KeyIcon";
 export * from "./PhoneIcon";
 export * from "./UserIcon";
+export * from "./CalendarIcon";
+export * from "./MessageIcon";
+export * from "./BookIcon";
