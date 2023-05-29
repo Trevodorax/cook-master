@@ -2,14 +2,41 @@ import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import { CreateEventDto, GetEventByIdDto } from './dto';
+import { CreateEventDto, GetAllEventsDto, GetEventByIdDto } from './dto';
 
 @Injectable()
 export class EventService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllEvents() {
+  async getAllEvents({ filters }: GetAllEventsDto) {
+    let where = {};
+
+    if (filters.day) {
+      const date = new Date(filters.day);
+      const nextDate = new Date(date);
+      nextDate.setDate(date.getDate() + 1);
+
+      where = {
+        ...where,
+        AND: [
+          {
+            startTime: {
+              gte: date,
+            },
+          },
+          {
+            startTime: {
+              lt: nextDate,
+            },
+          },
+        ],
+      };
+    }
+
+    // Add conditions based on search filters here
+
     const events = await this.prisma.event.findMany({
+      where,
       include: {
         animator: true,
       },

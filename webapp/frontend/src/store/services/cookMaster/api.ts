@@ -1,3 +1,5 @@
+import { toast } from "react-hot-toast";
+
 import { setRedirection } from "@/store/redirection/redirectionSlice";
 import { RootState } from "@/store/store";
 import {
@@ -8,8 +10,9 @@ import {
   fetchBaseQuery,
   retry,
 } from "@reduxjs/toolkit/query/react";
+
 import { buildQueryParams } from "../utils/buildQueryParams";
-import { toast } from "react-hot-toast";
+import { CookMasterEvent } from "./types";
 
 export type userType = "any" | "contractor" | "client" | "admin";
 
@@ -161,6 +164,19 @@ export const api = createApi({
       }),
       invalidatesTags: (_, __, arg) => [{ type: "User", id: arg.id }],
     }),
+    getAllEvents: builder.query<
+      CookMasterEvent[],
+      { filters: { day?: string } }
+    >({
+      query: (args) => {
+        const queryParams = buildQueryParams(args.filters);
+
+        return "events" + queryParams;
+      },
+    }),
+    getMyEvents: builder.query<CookMasterEvent[], void>({
+      query: () => "contractors/me/events",
+    }),
   }),
 });
 
@@ -173,4 +189,6 @@ export const {
   useDeleteUserMutation,
   usePatchUserMutation,
   useConfirmAdminMutation,
+  useGetAllEventsQuery,
+  useGetMyEventsQuery,
 } = api;

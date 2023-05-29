@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { EventService } from './event.service';
-import { CreateEventDto, unparsedCreateEventDto } from './dto';
+import { CreateEventDto, GetAllEventsDto, unparsedCreateEventDto } from './dto';
 
 @Controller('events')
 export class EventController {
@@ -8,8 +8,8 @@ export class EventController {
 
   // TODO: secure this route
   @Get()
-  getAllEvents() {
-    return this.eventService.getAllEvents();
+  getAllEvents(@Query() filters: GetAllEventsDto['filters']) {
+    return this.eventService.getAllEvents({ filters });
   }
 
   // TODO: secure this route
