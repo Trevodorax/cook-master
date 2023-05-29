@@ -6,11 +6,13 @@ import { CreateEventDto, unparsedCreateEventDto } from './dto';
 export class EventController {
   constructor(private eventService: EventService) {}
 
+  // TODO: secure this route
   @Get()
   getAllEvents() {
     return this.eventService.getAllEvents();
   }
 
+  // TODO: secure this route
   @Post()
   createEvent(@Body() data: unparsedCreateEventDto) {
     const parsedDto: CreateEventDto = {
@@ -21,6 +23,7 @@ export class EventController {
     return this.eventService.createEvent(parsedDto);
   }
 
+  // TODO: secure this route
   @Get(':id')
   getEventById(@Param('id') id: string) {
     return this.eventService.getEventById({ id: parseInt(id) });
