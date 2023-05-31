@@ -1,3 +1,0 @@
-C:/Users/said_/Desktop/Curl_Projet_Annuel/cmake-build-debug/CMakeFiles/test_curl_mysql.dir
-C:/Users/said_/Desktop/Curl_Projet_Annuel/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/said_/Desktop/Curl_Projet_Annuel/cmake-build-debug/CMakeFiles/rebuild_cache.dir
