@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import cx from "classnames";
+import Link from "next/link";
 
 import Navigation from "@/components/navigation/Navigation";
 import { MainLogo } from "@/components/svgs";
@@ -22,9 +23,11 @@ export default function Header({
 
   return (
     <header className={styles.container}>
-      <div className={styles.mainLogo}>
-        <MainLogo />
-      </div>
+      <Link href="/dashboard">
+        <div className={styles.mainLogo}>
+          <MainLogo />
+        </div>
+      </Link>
       <h1 className={styles.title}>Cook Master</h1>
       <div
         className={cx(styles.burgerIcon, {

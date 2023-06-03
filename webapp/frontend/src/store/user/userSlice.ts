@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { UserInfo } from "../services/cookMaster/api";
+import { User } from "../services/cookMaster/types";
 
 export interface UserState {
-  userInfo: UserInfo | null;
+  userInfo: User | null;
   token: string | null;
 }
 
@@ -18,7 +18,7 @@ export const userSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
-    setUserInfo: (state, action: PayloadAction<UserInfo>) => {
+    setUserInfo: (state, action: PayloadAction<User>) => {
       state.userInfo = action.payload;
     },
   },

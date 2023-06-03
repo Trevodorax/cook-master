@@ -28,4 +28,6 @@ export class CreateEventDto {
 
 export type unparsedCreateEventDto = Omit<CreateEventDto, 'startTime'> & {
   startTime: string;
+  durationMin: string;
+  animator?: string;
 };

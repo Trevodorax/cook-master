@@ -12,7 +12,8 @@ import {
 } from "@reduxjs/toolkit/query/react";
 
 import { buildQueryParams } from "../utils/buildQueryParams";
-import { CookMasterEvent } from "./types";
+import { CookMasterEvent, User } from "./types";
+import { CreateEventDto, serializeCreateEventDto } from "./dto";
 
 export type userType = "any" | "contractor" | "client" | "admin";
 
@@ -115,7 +116,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
-    getMe: builder.mutation<UserInfo, void>({
+    getMe: builder.mutation<User, void>({
       query: () => "users/me",
     }),
     getAllUsers: builder.query<UserInfo[], UserSearchParams>({
@@ -177,6 +178,13 @@ export const api = createApi({
     getMyEvents: builder.query<CookMasterEvent[], void>({
       query: () => "contractors/me/events",
     }),
+    createEvent: builder.mutation<CookMasterEvent, CreateEventDto>({
+      query: (newEventData) => ({
+        url: "events",
+        method: "POST",
+        body: serializeCreateEventDto(newEventData),
+      }),
+    }),
   }),
 });
 
@@ -191,4 +199,5 @@ export const {
   useConfirmAdminMutation,
   useGetAllEventsQuery,
   useGetMyEventsQuery,
+  useCreateEventMutation,
 } = api;

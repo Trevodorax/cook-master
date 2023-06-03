@@ -17,7 +17,9 @@ export class EventController {
   createEvent(@Body() data: unparsedCreateEventDto) {
     const parsedDto: CreateEventDto = {
       ...data,
+      durationMin: parseInt(data.durationMin),
       startTime: new Date(data.startTime),
+      animator: data.animator ? parseInt(data.animator) : undefined,
     };
 
     return this.eventService.createEvent(parsedDto);

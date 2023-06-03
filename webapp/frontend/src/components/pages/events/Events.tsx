@@ -1,13 +1,18 @@
+import { EventCard } from "@/components/eventCard/EventCard";
+import { useGetMyEventsQuery } from "@/store/services/cookMaster/api";
+
 import styles from "./Events.module.scss";
-import { Calendar } from "@/components/calendar/Calendar";
-import { useState } from "react";
+import Link from "next/link";
 
 export const Events = () => {
-  const [nbDays, setNbDays] = useState(7);
-
+  const { data } = useGetMyEventsQuery();
   return (
     <div className={styles.container}>
-      <Calendar startDate={new Date()} nbDays={nbDays} />
+      <Link href="/events/new" className={styles.createButton}>
+        +
+      </Link>
+      {data &&
+        data.map((event, index) => <EventCard key={index} event={event} />)}
     </div>
   );
 };
