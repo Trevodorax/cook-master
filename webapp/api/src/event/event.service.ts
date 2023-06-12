@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -53,6 +53,10 @@ export class EventService {
       },
     });
 
+    if (!foundEvent) {
+      throw new NotFoundException('Event not found');
+    }
+
     return foundEvent;
   }
 
@@ -65,6 +69,9 @@ export class EventService {
         startTime: dto.startTime,
         durationMin: dto.durationMin,
         contractorId: dto.animator ?? undefined,
+      },
+      include: {
+        animator: true,
       },
     });
 

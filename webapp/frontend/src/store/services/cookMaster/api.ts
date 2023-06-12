@@ -12,7 +12,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 
 import { buildQueryParams } from "../utils/buildQueryParams";
-import { CookMasterEvent, User } from "./types";
+import { CookMasterEvent, User, serializedCookMasterEvent } from "./types";
 import { CreateEventDto, serializeCreateEventDto } from "./dto";
 
 export type userType = "any" | "contractor" | "client" | "admin";
@@ -185,6 +185,13 @@ export const api = createApi({
         body: serializeCreateEventDto(newEventData),
       }),
     }),
+    getEventById: builder.query<CookMasterEvent, string>({
+      query: (id) => `events/${id}`,
+      transformResponse: (response: serializedCookMasterEvent) => ({
+        ...response,
+        startTime: new Date(response.startTime),
+      }),
+    }),
   }),
 });
 
@@ -200,4 +207,5 @@ export const {
   useGetAllEventsQuery,
   useGetMyEventsQuery,
   useCreateEventMutation,
+  useGetEventByIdQuery,
 } = api;

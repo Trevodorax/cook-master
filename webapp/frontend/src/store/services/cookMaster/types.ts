@@ -65,3 +65,7 @@ export interface CookMasterEvent {
   clients: Client[];
   contractorId?: number | null;
 }
+
+export type serializedCookMasterEvent = Omit<CookMasterEvent, "startTime"> & {
+  startTime: string;
+};
