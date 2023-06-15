@@ -63,3 +63,46 @@ export interface CookMasterEvent {
 export type serializedCookMasterEvent = Omit<CookMasterEvent, "startTime"> & {
   startTime: string;
 };
+
+export type userType = "any" | "contractor" | "client" | "admin";
+
+export interface UserInfo {
+  id: number;
+  email: string;
+  firstName: string | null;
+  lastName: string | null;
+  userType: userType;
+  admin: {
+    isConfirmed: boolean;
+  };
+}
+
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  access_token: string;
+}
+
+export interface GenericError {
+  data: {
+    error: string;
+    message: string;
+    statusCode: number;
+  };
+}
+
+export interface CreateAccountRequest {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  userType: userType;
+}
+
+export interface UserSearchParams {
+  search: string | null;
+  userType: userType | null;
+}

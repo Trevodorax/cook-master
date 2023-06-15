@@ -10,7 +10,7 @@ export default function Layout({ children }: Props) {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
 
   return (
-    <div className={styles.container}>
+    <div id="root" className={styles.container}>
       <Header
         isNavigationOpen={isNavigationOpen}
         setIsNavigationOpen={setIsNavigationOpen}
