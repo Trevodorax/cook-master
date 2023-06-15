@@ -12,6 +12,7 @@ import {
   GetEventByIdDto,
   PatchEventDto,
 } from './dto';
+import { AddUserToEventDto } from './dto/addUserToEvent.dto';
 
 @Injectable()
 export class EventService {
@@ -48,6 +49,7 @@ export class EventService {
       where,
       include: {
         animator: true,
+        clients: true,
       },
     });
 
@@ -59,6 +61,7 @@ export class EventService {
       where: { id: dto.id },
       include: {
         animator: true,
+        clients: true,
       },
     });
 
@@ -133,5 +136,33 @@ export class EventService {
     });
 
     return updatedEvent;
+  }
+
+  async addUserToEvent(id: number, dto: AddUserToEventDto) {
+    const user = await this.prisma.client.findUnique({
+      where: { id: dto.userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${dto.userId} not found`);
+    }
+
+    const event = await this.prisma.event.update({
+      where: { id },
+      data: {
+        clients: {
+          connect: { id: dto.userId },
+        },
+      },
+      include: {
+        clients: true,
+      },
+    });
+
+    if (!event) {
+      throw new NotFoundException(`Event with ID ${id} not found`);
+    }
+
+    return event;
   }
 }

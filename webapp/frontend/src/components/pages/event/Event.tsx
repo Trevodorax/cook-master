@@ -100,11 +100,7 @@ export const Event = ({ eventId }: Props) => {
           <span>Duration:</span>
           <EditableField
             type="number"
-            initialValue={
-              <div>
-                <p>{event.durationMin}</p>
-              </div>
-            }
+            initialValue={<p>{event.durationMin}</p>}
             mutateValue={(value: any) => {
               patchEvent({ id: eventId, data: { durationMin: value } });
             }}

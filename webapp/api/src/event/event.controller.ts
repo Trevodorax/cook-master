@@ -14,6 +14,7 @@ import {
   PatchEventDto,
   unparsedCreateEventDto,
 } from './dto';
+import { AddUserToEventDto } from './dto/addUserToEvent.dto';
 
 @Controller('events')
 export class EventController {
@@ -47,5 +48,10 @@ export class EventController {
   @Patch(':id')
   patchEvent(@Param('id') id: string, @Body() data: PatchEventDto) {
     return this.eventService.patchEvent(parseInt(id), data);
+  }
+
+  @Post(':id/users')
+  addUserToEvent(@Param('id') id: string, @Body() data: AddUserToEventDto) {
+    return this.eventService.addUserToEvent(parseInt(id), data);
   }
 }

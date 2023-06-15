@@ -46,7 +46,7 @@ model Client {
   user           User?
   fidelityPoints Int      @default(0)
   Address        Address? @relation(fields: [addressId], references: [id])
-  events         Event[]
+  events         Event[]  @relation("EventToClient")
 
   // relation fileds
   addressId Int? @unique
@@ -84,7 +84,7 @@ model Event {
   startTime   DateTime
   durationMin Int
   animator    Contractor? @relation(fields: [contractorId], references: [id])
-  clients     Client[]
+  clients     Client[]    @relation("EventToClient")
 
   // relation fields
   contractorId Int?
