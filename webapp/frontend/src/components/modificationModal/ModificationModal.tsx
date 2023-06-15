@@ -1,5 +1,4 @@
 import { FC } from "react";
-import { UseQuery } from "@reduxjs/toolkit/dist/query/react/buildHooks";
 
 import { Modal } from "@/components/modal/Modal";
 

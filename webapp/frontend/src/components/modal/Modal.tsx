@@ -1,4 +1,5 @@
 import { MouseEvent, ReactNode } from "react";
+import { createPortal } from "react-dom";
 import cx from "classnames";
 
 import styles from "./Modal.module.scss";
@@ -26,7 +27,13 @@ export const Modal = ({
     e.stopPropagation();
   };
 
-  return (
+  const root = document.getElementById("root");
+
+  if (!root) {
+    return <></>;
+  }
+
+  return createPortal(
     <>
       {isOpen && (
         <>
@@ -42,6 +49,7 @@ export const Modal = ({
           />
         </>
       )}
-    </>
+    </>,
+    root // Pass root as the second argument to createPortal
   );
 };

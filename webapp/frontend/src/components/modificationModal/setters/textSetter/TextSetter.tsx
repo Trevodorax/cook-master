@@ -17,7 +17,7 @@ export const TextSetter: FC<Props> = ({
       mutateValue={mutateValue}
       setIsOpen={setIsOpen}
     >
-      <TextInput type="text" value={value} setValue={setValue} />
+      <TextInput type="text" value={value} setValue={setValue} hideIcon />
     </SetterWrapper>
   );
 };

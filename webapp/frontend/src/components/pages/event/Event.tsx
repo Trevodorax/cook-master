@@ -37,8 +37,6 @@ export const Event = ({ eventId }: Props) => {
     event?.contractorId || 0
   );
 
-  console.log("eventAnimator : ", eventAnimator);
-
   if (isEventLoading) {
     return <div>Loading...</div>;
   }
@@ -49,54 +47,52 @@ export const Event = ({ eventId }: Props) => {
 
   return (
     <div className={styles.container}>
-      <h2>
-        <EditableField
-          type="text"
-          initialValue={event.name}
-          mutateValue={(value: any) => {
-            patchEvent({ id: eventId, data: { name: value } });
-          }}
-          isEditable={
-            event.id === user?.contractorId || user?.userType === "admin"
-          }
-        />
-      </h2>
-      <h3>
-        <EditableField
-          type="text"
-          initialValue={event.type}
-          mutateValue={(value: any) => {
-            patchEvent({ id: eventId, data: { type: value } });
-          }}
-          isEditable={
-            event.id === user?.contractorId || user?.userType === "admin"
-          }
-        />
-      </h3>
-      <p>
-        <EditableField
-          type="text"
-          initialValue={event.description}
-          mutateValue={(value: any) => {
-            patchEvent({ id: eventId, data: { description: value } });
-          }}
-          isEditable={
-            event.id === user?.contractorId || user?.userType === "admin"
-          }
-        />
-      </p>
+      <EditableField
+        type="text"
+        initialValue={<h2>{event.name}</h2>}
+        mutateValue={(value: any) => {
+          patchEvent({ id: eventId, data: { name: value } });
+        }}
+        isEditable={
+          event.contractorId === user?.contractorId ||
+          user?.userType === "admin"
+        }
+      />
+      <EditableField
+        type="text"
+        initialValue={<h3>{event.type}</h3>}
+        mutateValue={(value: any) => {
+          patchEvent({ id: eventId, data: { type: value } });
+        }}
+        isEditable={
+          event.contractorId === user?.contractorId ||
+          user?.userType === "admin"
+        }
+      />
+      <EditableField
+        type="text"
+        initialValue={<p>{event.description}</p>}
+        mutateValue={(value: any) => {
+          patchEvent({ id: eventId, data: { description: value } });
+        }}
+        isEditable={
+          event.contractorId === user?.contractorId ||
+          user?.userType === "admin"
+        }
+      />
       <hr />
       <div className={styles.timeInfo}>
         <div>
           <span>Start time :</span>
           <EditableField
             type="date"
-            initialValue={event.startTime.toUTCString()}
+            initialValue={<p>{new Date(event.startTime).toUTCString()}</p>}
             mutateValue={(value: any) => {
               patchEvent({ id: eventId, data: { startTime: value } });
             }}
             isEditable={
-              event.id === user?.contractorId || user?.userType === "admin"
+              event.contractorId === user?.contractorId ||
+              user?.userType === "admin"
             }
           />
         </div>
@@ -104,12 +100,17 @@ export const Event = ({ eventId }: Props) => {
           <span>Duration:</span>
           <EditableField
             type="number"
-            initialValue={event.durationMin}
+            initialValue={
+              <div>
+                <p>{event.durationMin}</p>
+              </div>
+            }
             mutateValue={(value: any) => {
               patchEvent({ id: eventId, data: { durationMin: value } });
             }}
             isEditable={
-              event.id === user?.contractorId || user?.userType === "admin"
+              event.contractorId === user?.contractorId ||
+              user?.userType === "admin"
             }
           />
         </div>
@@ -118,14 +119,16 @@ export const Event = ({ eventId }: Props) => {
         <EditableField
           type="number"
           initialValue={
-            eventAnimator
-              ? `${eventAnimator?.user?.firstName} ${eventAnimator?.user?.lastName}`
-              : "None"
+            <p>
+              {eventAnimator
+                ? `${eventAnimator?.user?.firstName} ${eventAnimator?.user?.lastName}`
+                : "None"}
+            </p>
           }
           mutateValue={(value: any) => {
             patchEvent({ id: eventId, data: { animator: value } });
           }}
-          isEditable={true}
+          isEditable={user?.userType === "admin"}
         />
       </div>
     </div>
