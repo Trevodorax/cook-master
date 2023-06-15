@@ -1,0 +1,33 @@
+@import "@/styles/theme.scss";
+
+$inputHeight: 40px;
+
+.container {
+
+  .label {
+    display: block;
+    margin: 4px 0;
+  }
+
+  .field {
+    display: flex;
+
+    align-items: center;
+
+    border: 1.5px solid $neutral_5;
+    border-radius: 4px;
+
+    .input {
+      width: 100%;
+      height: $inputHeight;
+
+      overflow-x: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+
+      text-indent: 8px;
+
+      border: none;
+    }
+  }
+}

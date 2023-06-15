@@ -55,7 +55,7 @@ export default function Login() {
         password: passwordInput,
       };
       user = await login(credentials).unwrap();
-      router.push("/");
+      router.push("/dashboard");
     } else {
       // create an account
       if (inputValuesError !== "") {

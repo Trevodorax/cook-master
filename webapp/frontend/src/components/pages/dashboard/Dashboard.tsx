@@ -73,8 +73,8 @@ export const Dashboard = () => {
         Welcome, {user.firstName} {user.lastName}
       </h2>
       <div className={styles.actionsContainer}>
-        {actions[user.userType].map((action) => (
-          <Link href={action.link} className={styles.actionCard}>
+        {actions[user.userType].map((action, index) => (
+          <Link key={index} href={action.link} className={styles.actionCard}>
             <action.icon />
             <p className={styles.actionCardTitle}>{action.title}</p>
           </Link>

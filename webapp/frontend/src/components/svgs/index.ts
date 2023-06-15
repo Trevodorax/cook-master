@@ -8,3 +8,4 @@ export * from "./UserIcon";
 export * from "./CalendarIcon";
 export * from "./MessageIcon";
 export * from "./BookIcon";
+export * from "./PenIcon";

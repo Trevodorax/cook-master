@@ -1,0 +1,28 @@
+.container {
+  .title {
+    font-size: 16px;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+
+    .field {
+      margin: 4px 0;
+
+      /* for the single label of the datetime picker */
+      .label {
+        display: block;
+        margin: 4px 0;
+      }
+    }
+
+    .submitButton {
+      width: 300px;
+      height: 40px;
+      margin-top: 16px;
+      align-self: center;
+    }
+  }
+
+}

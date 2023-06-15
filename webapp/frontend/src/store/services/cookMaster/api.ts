@@ -1,3 +1,5 @@
+import { toast } from "react-hot-toast";
+
 import { setRedirection } from "@/store/redirection/redirectionSlice";
 import { RootState } from "@/store/store";
 import {
@@ -8,8 +10,10 @@ import {
   fetchBaseQuery,
   retry,
 } from "@reduxjs/toolkit/query/react";
+
 import { buildQueryParams } from "../utils/buildQueryParams";
-import { toast } from "react-hot-toast";
+import { CookMasterEvent, User, serializedCookMasterEvent } from "./types";
+import { CreateEventDto, serializeCreateEventDto } from "./dto";
 
 export type userType = "any" | "contractor" | "client" | "admin";
 
@@ -95,7 +99,7 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 export const api = createApi({
   reducerPath: "cookMaster",
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ["User"],
+  tagTypes: ["User", "Event"],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
@@ -112,7 +116,7 @@ export const api = createApi({
       }),
       invalidatesTags: ["User"],
     }),
-    getMe: builder.mutation<UserInfo, void>({
+    getMe: builder.mutation<User, void>({
       query: () => "users/me",
     }),
     getAllUsers: builder.query<UserInfo[], UserSearchParams>({
@@ -161,6 +165,52 @@ export const api = createApi({
       }),
       invalidatesTags: (_, __, arg) => [{ type: "User", id: arg.id }],
     }),
+    getAllEvents: builder.query<
+      CookMasterEvent[],
+      { filters: { day?: string } }
+    >({
+      query: (args) => {
+        const queryParams = buildQueryParams(args.filters);
+
+        return "events" + queryParams;
+      },
+      providesTags: ["Event"],
+    }),
+    getMyEvents: builder.query<CookMasterEvent[], void>({
+      query: () => "contractors/me/events",
+      providesTags: ["Event"],
+    }),
+    createEvent: builder.mutation<CookMasterEvent, CreateEventDto>({
+      query: (newEventData) => ({
+        url: "events",
+        method: "POST",
+        body: serializeCreateEventDto(newEventData),
+      }),
+      invalidatesTags: ["Event"],
+    }),
+    getEventById: builder.query<CookMasterEvent, string>({
+      query: (id) => `events/${id}`,
+      transformResponse: (response: serializedCookMasterEvent) => ({
+        ...response,
+        startTime: new Date(response.startTime),
+      }),
+      providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
+    }),
+    patchEvent: builder.mutation<
+      CookMasterEvent,
+      { id: string; data: Partial<CookMasterEvent> }
+    >({
+      query: ({ id, data }) => ({
+        url: `events/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: (_, __, arg) => [{ type: "Event", id: arg.id }],
+    }),
+    getUserFromContractor: builder.query<{ user: User }, number>({
+      query: (id) => `contractors/${id}/user`,
+      providesTags: (_, __, arg) => [{ type: "User", id: arg }],
+    }),
   }),
 });
 
@@ -173,4 +223,10 @@ export const {
   useDeleteUserMutation,
   usePatchUserMutation,
   useConfirmAdminMutation,
+  useGetAllEventsQuery,
+  useGetMyEventsQuery,
+  useCreateEventMutation,
+  useGetEventByIdQuery,
+  usePatchEventMutation,
+  useGetUserFromContractorQuery,
 } = api;

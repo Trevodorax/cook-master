@@ -1,1 +1,30 @@
-.container {}
+@import "@/styles/theme.scss";
+
+.container {
+  display: flex;
+  width: 100%;
+
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .createButton {
+    display: flex;
+    height: 200px;
+    width: 200px;
+    margin: 8px;
+
+    justify-content: center;
+    align-items: center;
+
+    color: $neutral_5;
+    text-decoration: none;
+    font-size: 32px;
+    border-radius: 8px;
+    background-color: $primary_1;
+    transition: all .3s;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+}

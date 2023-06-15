@@ -22,6 +22,8 @@
     color: $neutral_5;
     text-decoration: none;
 
+    transition: all .3s;
+
     &:hover {
       filter: brightness(90%);
     }
