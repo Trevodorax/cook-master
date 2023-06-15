@@ -1,26 +1,23 @@
 import { Button } from "@/components/button/Button";
-import { UseMutation } from "@reduxjs/toolkit/dist/query/react/buildHooks";
 import { FC, ReactNode } from "react";
 
 import styles from "./SetterWrapper.module.scss";
 
 interface Props {
   value: any;
-  useMutation: UseMutation<any>;
+  mutateValue: (value: any) => void;
   setIsOpen: (isOpen: boolean) => void;
   children: ReactNode;
 }
 
 export const SetterWrapper: FC<Props> = ({
   value,
-  useMutation,
+  mutateValue,
   setIsOpen,
   children,
 }) => {
-  const [mutate, { isLoading }] = useMutation();
-
   const handleSave = () => {
-    mutate(value);
+    mutateValue(value);
   };
 
   const handleClose = () => {

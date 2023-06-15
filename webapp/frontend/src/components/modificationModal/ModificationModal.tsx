@@ -1,8 +1,5 @@
 import { FC } from "react";
-import {
-  UseMutation,
-  UseQuery,
-} from "@reduxjs/toolkit/dist/query/react/buildHooks";
+import { UseQuery } from "@reduxjs/toolkit/dist/query/react/buildHooks";
 
 import { Modal } from "@/components/modal/Modal";
 
@@ -12,25 +9,30 @@ import {
   SelectSetter,
   TextSetter,
   setterType,
+  EntitySetter,
 } from "./setters";
 import styles from "./ModificationModal.module.scss";
 
 interface Props {
-  useFetchPossibleValues?: UseQuery<any>;
+  getOptions?: (search: string) => any[];
+  textField?: string;
+  options?: string[];
   type: setterType;
   initialValue: any;
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  useMutation: UseMutation<any>;
+  mutateValue: (value: any) => void;
 }
 
 export const ModificationModal: FC<Props> = ({
   type,
   initialValue,
-  useMutation,
-  useFetchPossibleValues,
+  mutateValue,
+  getOptions,
   isOpen,
   setIsOpen,
+  options,
+  textField,
 }) => {
   interface SetterPerType {
     [key: string]: FC<any>;
@@ -41,6 +43,7 @@ export const ModificationModal: FC<Props> = ({
     number: NumberSetter,
     date: DateSetter,
     select: SelectSetter,
+    entity: EntitySetter,
   };
 
   const Setter = setterPerType[type];
@@ -55,8 +58,10 @@ export const ModificationModal: FC<Props> = ({
         <Setter
           initialValue={initialValue}
           setIsOpen={setIsOpen}
-          useMutation={useMutation}
-          useFetchPossibleValues={useFetchPossibleValues || undefined}
+          mutateValue={mutateValue}
+          getOptions={getOptions}
+          options={options}
+          textField={textField}
         />
       }
     </Modal>

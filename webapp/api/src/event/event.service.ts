@@ -1,8 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import { CreateEventDto, GetAllEventsDto, GetEventByIdDto } from './dto';
+import {
+  CreateEventDto,
+  GetAllEventsDto,
+  GetEventByIdDto,
+  PatchEventDto,
+} from './dto';
 
 @Injectable()
 export class EventService {
@@ -76,5 +85,53 @@ export class EventService {
     });
 
     return newEvent;
+  }
+
+  async patchEvent(id: number, dto: PatchEventDto) {
+    /* ===== CHECKS ===== */
+    // make sure the animator exists if it is specified
+    if (dto.animator) {
+      const contractor = await this.prisma.contractor.findUnique({
+        where: { id: dto.animator },
+      });
+
+      if (!contractor) {
+        throw new NotFoundException(
+          `Contractor with ID ${dto.animator} not found`,
+        );
+      }
+    }
+
+    // make sure the date is valid if it is specified
+    if (dto.startTime) {
+      const date = new Date(dto.startTime);
+
+      if (!date) {
+        throw new BadRequestException('Wrong date format');
+      }
+    }
+
+    // make sure the modified event exists
+    const foundEvent = await this.prisma.event.findUnique({
+      where: { id },
+    });
+
+    if (!foundEvent) {
+      throw new NotFoundException(`Event with ID ${id} not found`);
+    }
+
+    /* ===== UPDATE ===== */
+    const modifiedEventData = {
+      ...dto,
+      animator: dto.animator ? { connect: { id: dto.animator } } : undefined,
+      startTime: dto.startTime ? new Date(dto.startTime) : undefined,
+    };
+
+    const updatedEvent = await this.prisma.event.update({
+      where: { id },
+      data: modifiedEventData,
+    });
+
+    return updatedEvent;
   }
 }

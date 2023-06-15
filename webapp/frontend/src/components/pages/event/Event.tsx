@@ -1,69 +1,133 @@
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
+
 import {
-  useGetAllUsersQuery,
   useGetEventByIdQuery,
-  usePatchUserMutation,
+  useGetUserFromContractorQuery,
+  usePatchEventMutation,
 } from "@/store/services/cookMaster/api";
+import { EditableField } from "@/components/editableField/EditableField";
+import { RootState } from "@/store/store";
+
 import styles from "./Event.module.scss";
-import { Modal } from "@/components/modal/Modal";
-import { useState } from "react";
-import { ModificationModal } from "@/components/modificationModal/ModificationModal";
 
 interface Props {
   eventId: string;
 }
 
 export const Event = ({ eventId }: Props) => {
-  const [modalContent, setModalContent] = useState(<div />);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const user = useSelector((state: RootState) => state.user.userInfo);
+  const [patchEvent] = usePatchEventMutation();
+
+  if (!user) {
+    router.push("/login");
+  }
 
   if (!eventId) {
     return <div>Event not found</div>;
   }
 
-  const { data: event, isLoading, isError } = useGetEventByIdQuery(eventId);
+  const {
+    data: event,
+    isLoading: isEventLoading,
+    isError: isEventError,
+  } = useGetEventByIdQuery(eventId);
+  const { data: eventAnimator } = useGetUserFromContractorQuery(
+    event?.contractorId || 0
+  );
 
-  const handleTitleClick = () => {
-    setModalContent(<div>Modify title</div>);
-    setIsModalOpen(true);
-  };
+  console.log("eventAnimator : ", eventAnimator);
 
-  const handleTypeClick = () => {
-    setModalContent(<div>Modify type</div>);
-    setIsModalOpen(true);
-  };
-
-  if (isLoading) {
+  if (isEventLoading) {
     return <div>Loading...</div>;
   }
 
-  if (isError || !event) {
+  if (isEventError || !event) {
     return <div>An error occured.</div>;
   }
 
   return (
     <div className={styles.container}>
-      {/* TODO: Create a better format for it, with modification buttons onlyh on the fields the user can modify  */}{" "}
-      {/* TODO: Implement a general modification modal for modificating fields (with a modification request, a field, its type and the initial value) */}
-      <Modal isOpen={isModalOpen} setIsOpen={setIsModalOpen}>
-        {modalContent}
-      </Modal>
-      <ModificationModal
-        type="text"
-        initialValue="initial value"
-        isOpen={isModalOpen}
-        setIsOpen={setIsModalOpen}
-        useMutation={usePatchUserMutation}
-        useFetchPossibleValues={useGetAllUsersQuery}
-      />
-      <button onClick={() => setIsModalOpen(true)}>Open modal</button>
-      <h2 onClick={handleTitleClick}>{event.name}</h2>
-      <p onClick={handleTypeClick}>Type: {event.type}</p>
-      <p>Description: {event.description}</p>
-      <p>Date: {event.startTime.toUTCString()}</p>
-      <p>Duration: {event.durationMin} minutes</p>
-      <p>Animator: {event.animator?.id || "None"}</p>
+      <h2>
+        <EditableField
+          type="text"
+          initialValue={event.name}
+          mutateValue={(value: any) => {
+            patchEvent({ id: eventId, data: { name: value } });
+          }}
+          isEditable={
+            event.id === user?.contractorId || user?.userType === "admin"
+          }
+        />
+      </h2>
+      <h3>
+        <EditableField
+          type="text"
+          initialValue={event.type}
+          mutateValue={(value: any) => {
+            patchEvent({ id: eventId, data: { type: value } });
+          }}
+          isEditable={
+            event.id === user?.contractorId || user?.userType === "admin"
+          }
+        />
+      </h3>
+      <p>
+        <EditableField
+          type="text"
+          initialValue={event.description}
+          mutateValue={(value: any) => {
+            patchEvent({ id: eventId, data: { description: value } });
+          }}
+          isEditable={
+            event.id === user?.contractorId || user?.userType === "admin"
+          }
+        />
+      </p>
+      <hr />
+      <div className={styles.timeInfo}>
+        <div>
+          <span>Start time :</span>
+          <EditableField
+            type="date"
+            initialValue={event.startTime.toUTCString()}
+            mutateValue={(value: any) => {
+              patchEvent({ id: eventId, data: { startTime: value } });
+            }}
+            isEditable={
+              event.id === user?.contractorId || user?.userType === "admin"
+            }
+          />
+        </div>
+        <div>
+          <span>Duration:</span>
+          <EditableField
+            type="number"
+            initialValue={event.durationMin}
+            mutateValue={(value: any) => {
+              patchEvent({ id: eventId, data: { durationMin: value } });
+            }}
+            isEditable={
+              event.id === user?.contractorId || user?.userType === "admin"
+            }
+          />
+        </div>
+      </div>
+      <div>
+        <EditableField
+          type="number"
+          initialValue={
+            eventAnimator
+              ? `${eventAnimator?.user?.firstName} ${eventAnimator?.user?.lastName}`
+              : "None"
+          }
+          mutateValue={(value: any) => {
+            patchEvent({ id: eventId, data: { animator: value } });
+          }}
+          isEditable={true}
+        />
+      </div>
     </div>
   );
 };
-
-// TODO: create the modification modals for each of these fields

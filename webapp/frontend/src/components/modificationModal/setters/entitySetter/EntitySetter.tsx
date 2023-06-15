@@ -1,16 +1,57 @@
-import { FC } from "react";
-import { UseQuery } from "@reduxjs/toolkit/dist/query/react/buildHooks";
+import { FC, useState } from "react";
 
 import { Props } from "../types";
+import { SetterWrapper } from "../setterWrapper/SetterWrapper";
+import { SelectInput } from "@/components/selectInput/SelectInput";
 
 interface EntitySetterProps extends Props {
-  useFetchPossibleValues?: UseQuery<any>;
-  textAttribute: string; // the attribute by which we will search, and which will be displayed in the field
+  getOptions: (search: string) => any[]; // the function that will fetch the entities ;
+  textField: string; // the field that will be searched and displayed in the select input
 }
 
-export const EntitySetter: FC<EntitySetterProps> = () => {
-  // TODO: use the useFetchPossibleValues to fetch the possible values for the entity as the user types
-  // when one is selected, the value of the textAttribute on the entity should be displayed in the field
-  // on validation, it is the id of the  that is used to patch the entity
-  return <div>Entity setter</div>;
+// ! This component is a failed attempt to make a generic setter for entities
+// ! Do not use it, or make it work first
+export const EntitySetter: FC<EntitySetterProps> = ({
+  initialValue,
+  setIsOpen,
+  mutateValue,
+  getOptions,
+  textField,
+}) => {
+  const [value, setValue] = useState<Record<string, any>>(initialValue);
+
+  // mock of getOptions(value)
+  const options: Record<string, any> = getOptions(value[textField]) || [
+    { [textField]: "No values found" },
+  ];
+
+  const optionsAsText = options.map((option: any) => option[textField] || null);
+
+  const setValueFromText = (text: string) => {
+    const option = options.find((option: any) => option[textField] === text);
+    if (option) {
+      setValue(option);
+    }
+  };
+
+  const mutateValueFromText = (text: string) => {
+    const option = options.find((option: any) => option[textField] === text);
+    if (option) {
+      mutateValue(option.id || null);
+    }
+  };
+
+  return (
+    <SetterWrapper
+      value={value[textField]}
+      mutateValue={mutateValueFromText}
+      setIsOpen={setIsOpen}
+    >
+      <SelectInput
+        value={value[textField]}
+        setValue={setValueFromText}
+        options={optionsAsText}
+      />
+    </SetterWrapper>
+  );
 };

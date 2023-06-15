@@ -7,7 +7,7 @@ interface Props {
   defaultIndex?: number;
   options: Array<string>;
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (newValue: string) => void;
 }
 
 export const SelectInput = ({

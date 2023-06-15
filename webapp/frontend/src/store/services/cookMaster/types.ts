@@ -1,4 +1,3 @@
-// user.ts
 export interface User {
   id: number;
   email: string;
@@ -14,7 +13,6 @@ export interface User {
   contractorId?: number | null;
 }
 
-// admin.ts
 export interface Admin {
   id: number;
   user?: User | null;
@@ -24,7 +22,6 @@ export interface Admin {
   isContractorAdmin: boolean;
 }
 
-// client.ts
 export interface Client {
   id: number;
   user?: User | null;
@@ -34,7 +31,6 @@ export interface Client {
   addressId?: number | null;
 }
 
-// contractor.ts
 export interface Contractor {
   id: number;
   user?: User | null;
@@ -42,7 +38,6 @@ export interface Contractor {
   events: Event[];
 }
 
-// address.ts
 export interface Address {
   id: number;
   streetNumber: string;
@@ -53,7 +48,6 @@ export interface Address {
   client?: Client | null;
 }
 
-// event.ts
 export interface CookMasterEvent {
   id: number;
   type: string;

@@ -99,7 +99,7 @@ const baseQueryWithErrorHandling: BaseQueryFn<
 export const api = createApi({
   reducerPath: "cookMaster",
   baseQuery: baseQueryWithErrorHandling,
-  tagTypes: ["User"],
+  tagTypes: ["User", "Event"],
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
@@ -174,9 +174,11 @@ export const api = createApi({
 
         return "events" + queryParams;
       },
+      providesTags: ["Event"],
     }),
     getMyEvents: builder.query<CookMasterEvent[], void>({
       query: () => "contractors/me/events",
+      providesTags: ["Event"],
     }),
     createEvent: builder.mutation<CookMasterEvent, CreateEventDto>({
       query: (newEventData) => ({
@@ -184,6 +186,7 @@ export const api = createApi({
         method: "POST",
         body: serializeCreateEventDto(newEventData),
       }),
+      invalidatesTags: ["Event"],
     }),
     getEventById: builder.query<CookMasterEvent, string>({
       query: (id) => `events/${id}`,
@@ -191,6 +194,22 @@ export const api = createApi({
         ...response,
         startTime: new Date(response.startTime),
       }),
+      providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
+    }),
+    patchEvent: builder.mutation<
+      CookMasterEvent,
+      { id: string; data: Partial<CookMasterEvent> }
+    >({
+      query: ({ id, data }) => ({
+        url: `events/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: (_, __, arg) => [{ type: "Event", id: arg.id }],
+    }),
+    getUserFromContractor: builder.query<{ user: User }, number>({
+      query: (id) => `contractors/${id}/user`,
+      providesTags: (_, __, arg) => [{ type: "User", id: arg }],
     }),
   }),
 });
@@ -208,4 +227,6 @@ export const {
   useGetMyEventsQuery,
   useCreateEventMutation,
   useGetEventByIdQuery,
+  usePatchEventMutation,
+  useGetUserFromContractorQuery,
 } = api;

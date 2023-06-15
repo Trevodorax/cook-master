@@ -1,8 +1,12 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import { GetEventsByContractorIdDto } from './dto';
+import { GetEventsByContractorIdDto, getUserForContractorDto } from './dto';
 import { User } from '@prisma/client';
 
 @Injectable()
@@ -35,5 +39,22 @@ export class ContractorService {
     };
 
     return this.getEventsByContractorId(formattedDto);
+  }
+
+  async getUserForContractor(dto: getUserForContractorDto) {
+    const userForContractor = this.prisma.contractor.findUnique({
+      where: {
+        id: dto.contractorId,
+      },
+      select: {
+        user: true,
+      },
+    });
+
+    if (!userForContractor) {
+      throw new NotFoundException('Contractor not found.');
+    }
+
+    return userForContractor;
   }
 }
