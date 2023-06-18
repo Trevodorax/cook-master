@@ -1,0 +1,129 @@
+{
+  "info": {
+    "name": "LessonModule API",
+    "description": "API tests for LessonModule",
+    "_postman_id": "fb7d6f79-3cf0-4e9f-a067-898ff73e6e65",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /lessons",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/lessons",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "lessons"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /lessons",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"LessonName\", \"description\": \"LessonDescription\", \"content\": \"LessonContent\", \"courseId\": 1}"
+        },
+        "url": {
+          "raw": "localhost:3333/api/lessons",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "lessons"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /lessons/:lessonId",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/lessons/1",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "lessons",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /lessons/:lessonId",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"UpdatedLessonName\"}"
+        },
+        "url": {
+          "raw": "localhost:3333/api/lessons/1",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "lessons",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /lessons/:lessonId/course",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/lessons/1/course",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "lessons",
+            "1",
+            "course"
+          ]
+        }
+      }
+    },
+    {
+      "name": "DELETE /lessons/:lessonId",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/lessons/1",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "lessons",
+            "1"
+          ]
+        }
+      }
+    }
+  ]
+}

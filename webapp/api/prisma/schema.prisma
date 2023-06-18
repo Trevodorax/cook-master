@@ -48,6 +48,7 @@ model Client {
   fidelityPoints    Int      @default(0)
   Address           Address? @relation(fields: [addressId], references: [id])
   events            Event[]
+  courses           Course[]
 
   // relation fileds
   addressId Int? @unique
@@ -61,6 +62,7 @@ model Contractor {
   user         User?
   presentation String?
   events       Event[]
+  courses      Course[]
 
   @@map("contractors")
 }
@@ -91,4 +93,31 @@ model Event {
   contractorId Int?
 
   @@map("events")
+}
+
+model Course {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String
+  lessons     Lesson[]
+  Contractor  Contractor? @relation(fields: [contractorId], references: [id])
+
+  contractorId Int?
+  clients      Client[]
+
+  @@map("courses")
+}
+
+model Lesson {
+  id Int @id @default(autoincrement())
+
+  name        String
+  description String
+  content     String
+  Course      Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  courseId Int?
+
+  @@map("lessons")
 }
