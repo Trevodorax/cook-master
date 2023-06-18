@@ -1,5 +1,6 @@
 import { FC } from "react";
 import cx from "classnames";
+import { useTranslation } from "react-i18next";
 
 import { NoIcon, YesIcon } from "@/components/svgs";
 import { CookMasterSubscription } from "@/components/pages/subscriptionBooking/utils/subscriptionTypes";
@@ -17,6 +18,8 @@ export const SubscriptionCard: FC<Props> = ({
   subscription,
   onClick,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <div
       onClick={onClick}
@@ -27,7 +30,7 @@ export const SubscriptionCard: FC<Props> = ({
         <tbody>
           {Object.entries(subscription.benefits).map(([key, value]) => (
             <tr key={key}>
-              <td>{key}</td>
+              <td>{t(key)}</td>
               <td>{value ? <YesIcon /> : <NoIcon />}</td>
             </tr>
           ))}
