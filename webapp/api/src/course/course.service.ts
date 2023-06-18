@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCourseDto, PatchCourseDto, GetCourseDto } from './dto';
+import { SearchCourseDto } from './dto/searchCourse.dto';
 
 @Injectable()
 export class CourseService {
@@ -108,5 +109,32 @@ export class CourseService {
     }
 
     return this.prisma.course.delete({ where: { id: idNumber } });
+  }
+
+  async searchCourses(searchDto: SearchCourseDto) {
+    const { searchTerm } = searchDto;
+
+    if (!searchTerm) {
+      return this.prisma.course.findMany();
+    }
+
+    return this.prisma.course.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
+          {
+            description: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
   }
 }

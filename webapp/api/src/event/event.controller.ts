@@ -48,4 +48,17 @@ export class EventController {
   patchEvent(@Param('id') id: string, @Body() data: PatchEventDto) {
     return this.eventService.patchEvent(parseInt(id), data);
   }
+
+  @Post(':eventId/clients')
+  addUserToEvent(
+    @Param('eventId') eventId: string,
+    @Body() data: { clientId: number },
+  ) {
+    return this.eventService.addUserToEvent(eventId, data.clientId);
+  }
+
+  @Get(':eventId/clients')
+  getUsersFromEvent(@Param('eventId') eventId: string) {
+    return this.eventService.getUsersFromEvent(eventId);
+  }
 }

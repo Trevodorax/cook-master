@@ -5,7 +5,12 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-import { CreateLessonDto, PatchLessonDto, GetLessonDto } from './dto';
+import {
+  CreateLessonDto,
+  PatchLessonDto,
+  GetLessonDto,
+  SearchLessonDto,
+} from './dto';
 
 @Injectable()
 export class LessonService {
@@ -98,5 +103,32 @@ export class LessonService {
     }
 
     return this.prisma.lesson.delete({ where: { id: idNumber } });
+  }
+
+  async searchLessons(searchDto: SearchLessonDto) {
+    const { searchTerm } = searchDto;
+
+    if (!searchTerm) {
+      return this.prisma.lesson.findMany();
+    }
+
+    return this.prisma.lesson.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
+          {
+            description: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
   }
 }

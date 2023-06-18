@@ -134,4 +134,52 @@ export class EventService {
 
     return updatedEvent;
   }
+
+  async addUserToEvent(eventId: string, clientId: number) {
+    const eventIdNumber = parseInt(eventId);
+
+    if (isNaN(eventIdNumber)) {
+      throw new BadRequestException('Event id must be an integer.');
+    }
+
+    const client = await this.prisma.client.findUnique({
+      where: { id: clientId },
+    });
+
+    if (!client) {
+      throw new NotFoundException(`Could not find client with id ${clientId}.`);
+    }
+
+    const updatedEvent = await this.prisma.event.update({
+      where: { id: eventIdNumber },
+      data: {
+        clients: {
+          connect: { id: clientId },
+        },
+      },
+    });
+
+    return updatedEvent;
+  }
+
+  async getUsersFromEvent(eventId: string) {
+    const eventIdNumber = parseInt(eventId);
+
+    if (isNaN(eventIdNumber)) {
+      throw new BadRequestException('Event id must be an integer.');
+    }
+
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventIdNumber },
+      include: {
+        clients: true,
+      },
+    });
+
+    if (!event) {
+      throw new NotFoundException(`Could not find event with id ${eventId}`);
+    }
+
+    return event.clients;
+  }
 }

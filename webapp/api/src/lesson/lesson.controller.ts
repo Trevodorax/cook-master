@@ -6,9 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { LessonService } from './lesson.service';
-import { CreateLessonDto, PatchLessonDto, GetLessonDto } from './dto/';
+import {
+  CreateLessonDto,
+  PatchLessonDto,
+  GetLessonDto,
+  SearchLessonDto,
+} from './dto/';
 
 @Controller('lessons')
 export class LessonController {
@@ -22,6 +28,11 @@ export class LessonController {
   @Post()
   createLesson(@Body() createLessonDto: CreateLessonDto) {
     return this.lessonService.createLesson(createLessonDto);
+  }
+
+  @Get('search')
+  searchLessons(@Query() searchDto: SearchLessonDto) {
+    return this.lessonService.searchLessons(searchDto);
   }
 
   @Get(':lessonId')

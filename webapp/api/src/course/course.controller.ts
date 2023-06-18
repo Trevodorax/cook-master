@@ -6,9 +6,11 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
 import { CreateCourseDto, PatchCourseDto, GetCourseDto } from './dto';
+import { SearchCourseDto } from './dto/searchCourse.dto';
 
 @Controller('courses')
 export class CourseController {
@@ -22,6 +24,11 @@ export class CourseController {
   @Post()
   createCourse(@Body() createCourseDto: CreateCourseDto) {
     return this.courseService.createCourse(createCourseDto);
+  }
+
+  @Get('search')
+  searchLessons(@Query() searchDto: SearchCourseDto) {
+    return this.courseService.searchCourses(searchDto);
   }
 
   @Get(':courseId')
