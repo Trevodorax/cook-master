@@ -43,10 +43,11 @@ model Admin {
 model Client {
   id Int @id @default(autoincrement())
 
-  user           User?
-  fidelityPoints Int      @default(0)
-  Address        Address? @relation(fields: [addressId], references: [id])
-  events         Event[]
+  user              User?
+  subscriptionLevel Int      @default(0)
+  fidelityPoints    Int      @default(0)
+  Address           Address? @relation(fields: [addressId], references: [id])
+  events            Event[]
 
   // relation fileds
   addressId Int? @unique

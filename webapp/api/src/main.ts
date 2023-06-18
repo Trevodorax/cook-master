@@ -6,6 +6,7 @@ import { createDefaultUser } from './utils/createDefaultUser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
+    rawBody: true,
   });
   app.useGlobalPipes(
     new ValidationPipe({

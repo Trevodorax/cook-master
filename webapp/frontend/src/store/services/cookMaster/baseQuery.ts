@@ -13,9 +13,9 @@ import { RootState } from "@/store/store";
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://127.0.0.1:3333/api/",
   prepareHeaders: (headers, { getState }) => {
-    const token = (getState() as RootState).user.token;
-    if (token) {
-      headers.set("authorization", `Bearer ${token}`);
+    const user = (getState() as RootState).user;
+    if (user.token) {
+      headers.set("authorization", `Bearer ${user.token}`);
     }
     return headers;
   },

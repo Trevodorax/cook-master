@@ -15,12 +15,12 @@ import { GetEventsByContractorIdDto, getUserForContractorDto } from './dto';
 
 @Controller('contractors')
 export class ContractorController {
-  constructor(private eventService: ContractorService) {}
+  constructor(private contractorService: ContractorService) {}
 
   @UseGuards(JwtGuard)
   @Get('me/events')
   async getEventsForMe(@GetUser() user: User) {
-    return this.eventService.getEventsForMe(user);
+    return this.contractorService.getEventsForMe(user);
   }
 
   @UseGuards(JwtGuard)
@@ -35,7 +35,7 @@ export class ContractorController {
     const formattedDto: GetEventsByContractorIdDto = {
       contractorId: parseInt(id),
     };
-    return this.eventService.getEventsByContractorId(formattedDto);
+    return this.contractorService.getEventsByContractorId(formattedDto);
   }
 
   @Get(':id/user')
@@ -49,6 +49,6 @@ export class ContractorController {
       contractorId: parseInt(id),
     };
 
-    return this.eventService.getUserForContractor(formattedDto);
+    return this.contractorService.getUserForContractor(formattedDto);
   }
 }
