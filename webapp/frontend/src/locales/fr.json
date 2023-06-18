@@ -1,0 +1,15 @@
+{
+  "noAds": "Pas de pub",
+  "canComment": "Commenter",
+  "accessLimitedToOneLessonPerDay": "1 Leçon/Jour",
+  "accessLimitedToFiveLessonsPerDay": "5 Leçons/Jour",
+  "unlimitedLessonAccess": "Accès Illimité",
+  "hasChefChatService": "Chat avec Chef",
+  "permanent5PercentDiscount": "5% de Réduc.",
+  "freeDeliveryInPickupPoints": "Livraison Gratuite",
+  "hasKitchenSpaceRentalService": "Location d'Espace Cuisine",
+  "exclusiveEventInvitations": "Invitations Exclusives",
+  "hasReferralRewards": "Récompenses Parrainage",
+  "referralBonusOnlyForPaidSubscriptions": "Bonus Parrainage Payant",
+  "annualSubscriptionRenewalBonus": "Bonus Renouv. Annuel"
+}
