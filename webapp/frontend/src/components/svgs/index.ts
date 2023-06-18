@@ -9,3 +9,5 @@ export * from "./CalendarIcon";
 export * from "./MessageIcon";
 export * from "./BookIcon";
 export * from "./PenIcon";
+export * from "./NoIcon";
+export * from "./YesIcon";

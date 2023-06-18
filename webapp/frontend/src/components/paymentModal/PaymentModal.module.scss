@@ -1,0 +1,33 @@
+@import "@/styles/theme.scss";
+
+.container {
+  width: 400px;
+
+  padding: 16px;
+
+  .productInfo {
+    margin-bottom: 32px;
+
+    font-size: 18px;
+    color: $neutral_5;
+    text-align: center;
+
+    .productName {
+      margin-bottom: 8px;
+      color: $neutral_5;
+    }
+
+    .productPrice {
+      color: $neutral_4;
+    }
+
+    .okButton {
+      margin: 8px;
+    }
+  }
+
+  .cardForm {
+    display: flex;
+    flex-direction: column;
+  }
+}

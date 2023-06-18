@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode } from "react";
+import { MouseEvent, ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 import cx from "classnames";
 
@@ -9,7 +9,7 @@ interface Props {
   children: ReactNode;
   isOpen: boolean;
   modalClassName?: string;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export const Modal = ({
@@ -19,6 +19,15 @@ export const Modal = ({
   modalClassName,
   setIsOpen,
 }: Props) => {
+  // because of issues with "document is not defined"
+  if (typeof document === "undefined") {
+    return <></>;
+  }
+  const root = document?.getElementById("root") || null;
+
+  if (root === null) {
+    return <></>;
+  }
   const handleBackdropClick = () => {
     setIsOpen(false);
   };
@@ -26,12 +35,6 @@ export const Modal = ({
   const handleModalClick = (e: MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
   };
-
-  const root = document.getElementById("root");
-
-  if (!root) {
-    return <></>;
-  }
 
   return createPortal(
     <>

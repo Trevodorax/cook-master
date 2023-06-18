@@ -1,0 +1,42 @@
+@import "@/styles/theme.scss";
+
+.container {
+  margin: 16px;
+  padding: 16px;
+  height: fit-content;
+  width: fit-content;
+  aspect-ratio: 1/1;
+  cursor: pointer;
+
+  border-radius: 8px;
+  background-color: $neutral_1;
+  transition: all .2s;
+  border: 2px solid $neutral_2;
+
+  &.selected {
+    box-shadow: 0 0 5px 2px $primary_2;
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+
+  .benefits {
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style: none;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    svg {
+      height: 16px;
+      aspect-ratio: 1/1;
+    }
+  }
+}

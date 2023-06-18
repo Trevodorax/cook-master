@@ -6,6 +6,7 @@ import { RootState } from "@/store/store";
 import {
   BookIcon,
   CalendarIcon,
+  KeyIcon,
   MessageIcon,
   UserIcon,
 } from "@/components/svgs";
@@ -58,6 +59,11 @@ export const Dashboard = () => {
       title: "Events",
       icon: CalendarIcon,
       link: "/events",
+    },
+    {
+      title: "Subscriptions",
+      icon: KeyIcon,
+      link: "/subscription/booking",
     },
   ];
 
