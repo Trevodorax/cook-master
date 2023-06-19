@@ -12,6 +12,7 @@ import {
   PatchLessonDto,
   SearchLessonDto,
 } from "./dto";
+import { Lesson } from "../types";
 
 export const lessonEndpoints = (
   builder: EndpointBuilder<
@@ -20,11 +21,11 @@ export const lessonEndpoints = (
     string
   >
 ) => ({
-  getAllLessons: builder.query<Array<any>, void>({
+  getAllLessons: builder.query<Array<Lesson>, void>({
     query: () => "lessons",
     providesTags: ["Lesson"],
   }),
-  createLesson: builder.mutation<void, CreateLessonDto>({
+  createLesson: builder.mutation<Lesson, CreateLessonDto>({
     query: (newLessonData) => ({
       url: "lessons",
       method: "POST",
@@ -32,11 +33,11 @@ export const lessonEndpoints = (
     }),
     invalidatesTags: ["Lesson"],
   }),
-  searchLessons: builder.query<Array<any>, SearchLessonDto>({
+  searchLessons: builder.query<Array<Lesson>, SearchLessonDto>({
     query: ({ searchTerm }) => `lessons/search?searchTerm=${searchTerm}`,
     providesTags: ["Lesson"],
   }),
-  getLessonById: builder.query<any, GetLessonDto>({
+  getLessonById: builder.query<Lesson, GetLessonDto>({
     query: ({ lessonId }) => `lessons/${lessonId}`,
     providesTags: (_, __, arg) => [{ type: "Lesson", id: arg.lessonId }],
   }),
@@ -55,7 +56,7 @@ export const lessonEndpoints = (
     query: ({ lessonId }) => `lessons/${lessonId}/course`,
     providesTags: (_, __, arg) => [{ type: "Lesson", id: arg.lessonId }],
   }),
-  deleteLesson: builder.mutation<void, GetLessonDto>({
+  deleteLesson: builder.mutation<Lesson, GetLessonDto>({
     query: ({ lessonId }) => ({
       url: `lessons/${lessonId}`,
       method: "DELETE",

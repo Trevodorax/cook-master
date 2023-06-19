@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useRouter } from "next/router";
 import { LessonCard } from "@/components/lessonCard/LessonCard";
+import Link from "next/link";
 
 interface Props {
   courseId: string;
@@ -78,6 +79,7 @@ export const Course: FC<Props> = ({ courseId }) => {
       />
       <div className={styles.lessons}>
         <h2>Lessons</h2>
+        <Link href={`/course/${courseId}/lesson/new`}>Add a lesson</Link>
         <div className={styles.lessonList}>
           {!courseLessons && <div>Loading...</div>}
           {courseLessons &&
