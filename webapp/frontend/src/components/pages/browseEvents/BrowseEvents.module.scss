@@ -1,0 +1,35 @@
+.container {
+  .filters {
+    display: flex;
+
+    &>* {
+      margin-right: 16px;
+    }
+
+    .dateInput {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        margin-bottom: 8px;
+      }
+
+      .input {
+        height: 40px;
+      }
+    }
+    .myEventsButton {
+      height: 56px;
+      padding: 0 16px;
+      align-self: center;
+    }
+  }
+  .separator {
+    margin: 40px 0 32px;
+  }
+
+  .events {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

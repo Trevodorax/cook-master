@@ -27,7 +27,7 @@ export const Dashboard = () => {
     {
       title: "Events",
       icon: CalendarIcon,
-      link: "/events",
+      link: "/events/my",
     },
     {
       title: "My profile",
@@ -58,7 +58,7 @@ export const Dashboard = () => {
     {
       title: "Events",
       icon: CalendarIcon,
-      link: "/events",
+      link: "/events/browse",
     },
     {
       title: "Subscriptions",

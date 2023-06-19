@@ -1,4 +1,5 @@
 import Link from "next/link";
+import cx from "classnames";
 
 import { CookMasterEvent } from "@/store/services/cookMaster/types";
 
@@ -6,11 +7,12 @@ import styles from "./EventCard.module.scss";
 
 interface Props {
   event: CookMasterEvent;
+  className?: string;
 }
 
-export const EventCard = ({ event }: Props) => {
+export const EventCard = ({ event, className = "" }: Props) => {
   return (
-    <Link className={styles.link} href={`/events/${event.id}`}>
+    <Link className={cx(styles.link, className)} href={`/events/${event.id}`}>
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.title}>{event.name}</div>

@@ -17,16 +17,17 @@ export const eventEndpoints = (
     string
   >
 ) => ({
-  getAllEvents: builder.query<CookMasterEvent[], { filters: { day?: string } }>(
-    {
-      query: (args) => {
-        const queryParams = buildQueryParams(args.filters);
+  getAllEvents: builder.query<
+    CookMasterEvent[],
+    { filters: { day?: string; term?: string } }
+  >({
+    query: ({ filters }) => {
+      const queryParams = buildQueryParams(filters);
 
-        return "events" + queryParams;
-      },
-      providesTags: ["Event"],
-    }
-  ),
+      return "events" + queryParams;
+    },
+    providesTags: ["Event"],
+  }),
   getMyEvents: builder.query<CookMasterEvent[], void>({
     query: () => "contractors/me/events",
     providesTags: ["Event"],

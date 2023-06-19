@@ -2,14 +2,18 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 import {
+  useApplyToEventMutation,
   useGetEventByIdQuery,
   useGetUserFromContractorQuery,
+  useGetUsersFromEventQuery,
   usePatchEventMutation,
+  useResignFromEventMutation,
 } from "@/store/services/cookMaster/api";
 import { EditableField } from "@/components/editableField/EditableField";
 import { RootState } from "@/store/store";
 
 import styles from "./Event.module.scss";
+import { Button } from "@/components/button/Button";
 
 interface Props {
   eventId: string;
@@ -19,6 +23,8 @@ export const Event = ({ eventId }: Props) => {
   const router = useRouter();
   const user = useSelector((state: RootState) => state.user.userInfo);
   const [patchEvent] = usePatchEventMutation();
+  const [applyToEvent] = useApplyToEventMutation();
+  const [resignFromEvent] = useResignFromEventMutation();
 
   if (!user) {
     router.push("/login");
@@ -36,6 +42,14 @@ export const Event = ({ eventId }: Props) => {
   const { data: eventAnimator } = useGetUserFromContractorQuery(
     event?.contractorId || 0
   );
+
+  const { data: usersInEvent } = useGetUsersFromEventQuery(eventId);
+
+  const isUserInEvent = usersInEvent?.some(
+    (client) => client.id === user?.clientId
+  );
+
+  console.log(isUserInEvent);
 
   if (isEventLoading) {
     return <div>Loading...</div>;
@@ -58,6 +72,26 @@ export const Event = ({ eventId }: Props) => {
           user?.userType === "admin"
         }
       />
+      {/* button to apply or resign as client */}
+      {user?.userType === "client" && (
+        <div>
+          {isUserInEvent ? (
+            <Button
+              type="error"
+              onClick={() => resignFromEvent({ eventId: parseInt(eventId) })}
+            >
+              Leave
+            </Button>
+          ) : (
+            <Button
+              onClick={() => applyToEvent({ eventId: parseInt(eventId) })}
+            >
+              Join
+            </Button>
+          )}
+        </div>
+      )}
+
       <EditableField
         type="text"
         initialValue={<h3>{event.type}</h3>}
