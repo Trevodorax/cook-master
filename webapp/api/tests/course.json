@@ -1,0 +1,129 @@
+{
+  "info": {
+    "name": "CourseModule API",
+    "description": "API tests for CourseModule",
+    "_postman_id": "fb7d6f79-3cf0-4e9f-a067-898ff73e6e65",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET /courses",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/courses",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "courses"
+          ]
+        }
+      }
+    },
+    {
+      "name": "POST /courses",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"CourseName\", \"description\": \"CourseDescription\", \"contractorId\": 1}"
+        },
+        "url": {
+          "raw": "localhost:3333/api/courses",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "courses"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /courses/:courseId",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/courses/1",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "courses",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "PATCH /courses/:courseId",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\": \"UpdatedCourseName\"}"
+        },
+        "url": {
+          "raw": "localhost:3333/api/courses/1",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "courses",
+            "1"
+          ]
+        }
+      }
+    },
+    {
+      "name": "GET /courses/:courseId/lessons",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/courses/1/lessons",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "courses",
+            "1",
+            "lessons"
+          ]
+        }
+      }
+    },
+    {
+      "name": "DELETE /courses/:courseId",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "localhost:3333/api/courses/1",
+          "host": [
+            "localhost:3333/api"
+          ],
+          "path": [
+            "courses",
+            "1"
+          ]
+        }
+      }
+    }
+  ]
+}
