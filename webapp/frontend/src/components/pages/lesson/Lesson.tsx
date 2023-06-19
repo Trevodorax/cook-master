@@ -1,4 +1,5 @@
 import { FC } from "react";
+import ReactMarkdown from "react-markdown";
 
 import {
   useGetLessonByIdQuery,
@@ -50,10 +51,7 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
             },
           });
         }}
-        isEditable={
-          user?.contractorId === lessonData.contractorId ||
-          user?.userType === "admin"
-        }
+        isEditable={user?.userType === "admin"}
       />
       <EditableField
         type="text"
@@ -66,11 +64,12 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
             },
           });
         }}
-        isEditable={
-          user?.contractorId === lessonData.contractorId ||
-          user?.userType === "admin"
-        }
+        isEditable={user?.userType === "admin"}
       />
+      <hr className={styles.separator} />
+      <div className={styles.content}>
+        <ReactMarkdown>{lessonData.content}</ReactMarkdown>
+      </div>
     </div>
   );
 };

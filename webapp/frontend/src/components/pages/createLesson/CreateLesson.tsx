@@ -2,15 +2,18 @@ import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
+import MarkdownIt from "markdown-it";
+import MdEditor from "react-markdown-editor-lite";
+import "react-markdown-editor-lite/lib/index.css";
 
 import { RootState } from "@/store/store";
 import { useCreateLessonMutation } from "@/store/services/cookMaster/api";
 import { Lesson } from "@/store/services/cookMaster/types";
 import { CreateLessonDto } from "@/store/services/cookMaster/lesson/dto";
-
-import styles from "./CreateLesson.module.scss";
 import { TextInput } from "@/components/textInput/TextInput";
 import { Button } from "@/components/button/Button";
+
+import styles from "./CreateLesson.module.scss";
 
 interface Props {
   courseId: number;
@@ -22,6 +25,8 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
     (state: RootState) => state.user.userInfo?.contractorId
   );
   const [createLesson] = useCreateLessonMutation();
+
+  const mdParser = new MarkdownIt();
 
   if (!contractorId) {
     toast.error("This page is for contractors.");
@@ -42,6 +47,10 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
 
   const setLessonDescription = (value: string) =>
     setNewLesson((prev) => ({ ...prev, description: value }));
+
+  function handleEditorChange({ text }: { text: string }) {
+    setNewLesson((prev) => ({ ...prev, content: text }));
+  }
 
   const handleSubmit = async () => {
     const result = await createLesson(newLesson);
@@ -69,6 +78,7 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
         placeholder="My amazing lesson"
         label="Lesson name"
         hideIcon
+        className={styles.textInput}
       />
       <TextInput
         type="text"
@@ -77,7 +87,16 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
         placeholder="Short description of the lesson"
         label="Lesson description"
         hideIcon
+        className={styles.textInput}
       />
+      <div className={styles.contentInput}>
+        <h2>Content</h2>
+        <MdEditor
+          style={{ height: "500px" }}
+          renderHTML={(text) => mdParser.render(text)}
+          onChange={handleEditorChange}
+        />
+      </div>
       <Button onClick={handleSubmit}>Create lesson</Button>
     </div>
   );
