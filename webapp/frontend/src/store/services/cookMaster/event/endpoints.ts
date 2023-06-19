@@ -54,4 +54,19 @@ export const eventEndpoints = (
     }),
     invalidatesTags: (_, __, arg) => [{ type: "Event", id: arg.id }],
   }),
+  addUserToEvent: builder.mutation<
+    CookMasterEvent,
+    { eventId: string; clientId: number }
+  >({
+    query: ({ eventId, clientId }) => ({
+      url: `events/${eventId}/clients`,
+      method: "POST",
+      body: { clientId },
+    }),
+    invalidatesTags: (_, __, arg) => [{ type: "Event", id: arg.eventId }],
+  }),
+  getUsersFromEvent: builder.query<CookMasterEvent[], string>({
+    query: (eventId) => `events/${eventId}/clients`,
+    providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
+  }),
 });

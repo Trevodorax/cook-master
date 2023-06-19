@@ -106,3 +106,20 @@ export interface UserSearchParams {
   search: string | null;
   userType: userType | null;
 }
+
+export interface Lesson {
+  id: number;
+  name: string;
+  description: string;
+  content: string;
+  courseId?: number;
+}
+
+export interface Course {
+  id: number;
+  name: string;
+  description: string;
+  lessons: Lesson[];
+  contractorId?: number;
+  clients: Client[];
+}

@@ -5,9 +5,17 @@ import { userEndpoints } from "./user/endpoints";
 import { eventEndpoints } from "./event/endpoints";
 import { contractorEndpoints } from "./contractor/endpoints";
 import { billingEndpoints } from "./billing/endpoints";
+import { lessonEndpoints } from "./lesson/endpoints";
+import { courseEndpoints } from "./course/endpoints";
 
 export const apiName = "cookMaster";
-export const tagTypes = ["User", "Event", "Contractor"] as const;
+export const tagTypes = [
+  "User",
+  "Event",
+  "Contractor",
+  "Lesson",
+  "Course",
+] as const;
 
 export const api = createApi({
   reducerPath: apiName,
@@ -18,6 +26,8 @@ export const api = createApi({
     ...eventEndpoints(builder),
     ...contractorEndpoints(builder),
     ...billingEndpoints(builder),
+    ...lessonEndpoints(builder),
+    ...courseEndpoints(builder),
   }),
 });
 
@@ -37,4 +47,17 @@ export const {
   usePatchEventMutation,
   useGetUserFromContractorQuery,
   useCreateBillingIntentMutation,
+  useGetAllCoursesQuery,
+  useAddUserToEventMutation,
+  useCreateCourseMutation,
+  useCreateLessonMutation,
+  useDeleteCourseMutation,
+  useDeleteLessonMutation,
+  useGetAllLessonsQuery,
+  useGetClientsOfCourseQuery,
+  useGetCourseByIdQuery,
+  useGetCourseOfLessonQuery,
+  useGetLessonByIdQuery,
+  useGetLessonsOfCourseQuery,
+  useGetUsersFromEventQuery,
 } = api;
