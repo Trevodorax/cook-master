@@ -29,7 +29,7 @@ export const {
   usePatchUserMutation,
   useConfirmAdminMutation,
   useGetAllEventsQuery,
-  useGetMyEventsQuery,
+  useGetMyEventsContractorQuery,
   useCreateEventMutation,
   useGetEventByIdQuery,
   usePatchEventMutation,

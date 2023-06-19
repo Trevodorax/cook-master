@@ -1,7 +1,8 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { useGetAllUsersQuery, userType } from "@/store/services/cookMaster/api";
+import { useGetAllUsersQuery } from "@/store/services/cookMaster/api";
+import { userType } from "@/store/services/cookMaster/types";
 import { TextInput } from "@/components/textInput/TextInput";
 import { SelectInput } from "@/components/selectInput/SelectInput";
 

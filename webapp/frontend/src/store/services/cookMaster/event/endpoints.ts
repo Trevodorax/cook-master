@@ -27,7 +27,7 @@ export const eventEndpoints = (
       providesTags: ["Event"],
     }
   ),
-  getMyEvents: builder.query<CookMasterEvent[], void>({
+  getMyEventsContractor: builder.query<CookMasterEvent[], void>({
     query: () => "contractors/me/events",
     providesTags: ["Event"],
   }),
