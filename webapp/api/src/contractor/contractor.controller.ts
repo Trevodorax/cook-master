@@ -11,7 +11,7 @@ import { JwtGuard } from 'src/auth/guard';
 import { AllowedUserTypes, GetUser } from 'src/auth/decorator';
 
 import { ContractorService } from './contractor.service';
-import { GetEventsByContractorIdDto, getUserForContractorDto } from './dto';
+import { GetContractorDto } from './dto';
 
 @Controller('contractors')
 export class ContractorController {
@@ -24,6 +24,12 @@ export class ContractorController {
   }
 
   @UseGuards(JwtGuard)
+  @Get('me/courses')
+  async getCoursesForMe(@GetUser() user: User) {
+    return this.contractorService.getCoursesForMe(user);
+  }
+
+  @UseGuards(JwtGuard)
   @AllowedUserTypes(['admin'])
   @Get(':id/events')
   async getEventsByContractorId(@Param('id') id: string) {
@@ -32,7 +38,7 @@ export class ContractorController {
       throw new BadRequestException('Invalid contractor ID.');
     }
 
-    const formattedDto: GetEventsByContractorIdDto = {
+    const formattedDto: GetContractorDto = {
       contractorId: parseInt(id),
     };
     return this.contractorService.getEventsByContractorId(formattedDto);
@@ -45,7 +51,7 @@ export class ContractorController {
       throw new BadRequestException('Invalid contractor ID.');
     }
 
-    const formattedDto: getUserForContractorDto = {
+    const formattedDto: GetContractorDto = {
       contractorId: parseInt(id),
     };
 

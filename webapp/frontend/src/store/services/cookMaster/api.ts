@@ -60,4 +60,7 @@ export const {
   useGetLessonByIdQuery,
   useGetLessonsOfCourseQuery,
   useGetUsersFromEventQuery,
+  usePatchCourseMutation,
+  usePatchLessonMutation,
+  useGetMyCoursesContractorQuery,
 } = api;
