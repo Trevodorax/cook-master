@@ -42,7 +42,7 @@ export const Dashboard = () => {
     {
       title: "Courses",
       icon: BookIcon,
-      link: "/courses",
+      link: "/course",
     },
   ];
 

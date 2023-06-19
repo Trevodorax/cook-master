@@ -8,7 +8,7 @@ import styles from "./TextInput.module.scss";
 interface Props {
   className?: string;
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (value: string) => void;
   type: "text" | "email" | "password" | "tel";
   placeholder?: string;
   icon?: React.ReactNode;

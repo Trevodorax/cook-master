@@ -1,6 +1,6 @@
 import { IsInt, IsNotEmpty } from 'class-validator';
 
-export class getUserForContractorDto {
+export class GetContractorDto {
   @IsInt()
   @IsNotEmpty()
   contractorId: number;

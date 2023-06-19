@@ -1,2 +1,1 @@
-export * from './getEventsByContractorId.dto';
-export * from './getUserForContractor.dto';
+export * from './getContractor.dto';

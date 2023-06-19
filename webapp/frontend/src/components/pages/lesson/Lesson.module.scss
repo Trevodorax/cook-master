@@ -1,0 +1,13 @@
+@import "@/styles/theme.scss";
+
+.container {
+  .separator {
+    margin: 24px 0 32px;
+    ;
+  }
+
+  .content {
+    border: 1px solid $neutral_5;
+    padding: 8px;
+  }
+}
