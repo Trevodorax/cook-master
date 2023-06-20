@@ -8,8 +8,14 @@ import {
   Delete,
   Query,
 } from '@nestjs/common';
+
 import { CourseService } from './course.service';
-import { CreateCourseDto, PatchCourseDto, GetCourseDto } from './dto';
+import {
+  CreateCourseDto,
+  PatchCourseDto,
+  GetCourseDto,
+  GetAllCoursesDto,
+} from './dto';
 import { SearchCourseDto } from './dto/searchCourse.dto';
 
 @Controller('courses')
@@ -17,8 +23,8 @@ export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
   @Get()
-  getAllCourses() {
-    return this.courseService.getAllCourses();
+  getAllCourses(@Query() filters: GetAllCoursesDto['filters']) {
+    return this.courseService.getAllCourses({ filters });
   }
 
   @Post()

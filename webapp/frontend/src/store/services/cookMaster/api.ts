@@ -72,5 +72,7 @@ export const {
   useApplyToEventMutation,
   useResignFromEventMutation,
   useGetUserFromClientQuery,
+  useApplyToCourseMutation,
+  useResignFromCourseMutation,
   usePrefetch,
 } = api;

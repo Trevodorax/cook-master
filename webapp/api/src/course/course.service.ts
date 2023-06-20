@@ -11,8 +11,30 @@ import { SearchCourseDto } from './dto/searchCourse.dto';
 export class CourseService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllCourses() {
-    return this.prisma.course.findMany();
+  async getAllCourses({ filters }) {
+    let where = {};
+
+    if (filters.term) {
+      where = {
+        ...where,
+        OR: [
+          {
+            name: {
+              contains: filters.term,
+              mode: 'insensitive',
+            },
+          },
+          {
+            description: {
+              contains: filters.term,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      };
+    }
+
+    return this.prisma.course.findMany({ where });
   }
 
   async createCourse(dto: CreateCourseDto) {

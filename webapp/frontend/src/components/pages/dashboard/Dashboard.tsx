@@ -12,8 +12,6 @@ import {
 } from "@/components/svgs";
 
 import styles from "./Dashboard.module.scss";
-import { userType } from "@/store/services/cookMaster/types";
-import { ReactNode } from "react";
 
 export const Dashboard = () => {
   const router = useRouter();
@@ -50,7 +48,7 @@ export const Dashboard = () => {
     {
       title: "Courses",
       icon: BookIcon,
-      link: "/course",
+      link: "/courses/my",
     },
   ];
 
@@ -73,9 +71,14 @@ export const Dashboard = () => {
       icon: KeyIcon,
       link: "/subscription/booking",
     },
+    {
+      title: "Courses",
+      icon: BookIcon,
+      link: "/courses/browse",
+    },
   ];
 
-  const actions: Record<userType, dashboardAction[]> = {
+  const actions = {
     contractor: contractorActions,
     admin: adminActions,
     client: clientActions,
@@ -87,12 +90,14 @@ export const Dashboard = () => {
         Welcome, {user.firstName} {user.lastName}
       </h2>
       <div className={styles.actionsContainer}>
-        {actions[user.userType].map((action, index) => (
-          <Link key={index} href={action.link} className={styles.actionCard}>
-            <action.icon />
-            <p className={styles.actionCardTitle}>{action.title}</p>
-          </Link>
-        ))}
+        {actions[user.userType as "client" | "contractor" | "admin"].map(
+          (action, index) => (
+            <Link key={index} href={action.link} className={styles.actionCard}>
+              <action.icon />
+              <p className={styles.actionCardTitle}>{action.title}</p>
+            </Link>
+          )
+        )}
       </div>
     </div>
   );

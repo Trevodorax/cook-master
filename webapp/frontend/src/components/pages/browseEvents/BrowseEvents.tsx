@@ -4,7 +4,6 @@ import { useGetAllEventsQuery } from "@/store/services/cookMaster/api";
 import { TextInput } from "@/components/textInput/TextInput";
 
 import styles from "./BrowseEvents.module.scss";
-import Link from "next/link";
 import { EventCard } from "@/components/eventCard/EventCard";
 import { Button } from "@/components/button/Button";
 import { useRouter } from "next/router";
@@ -21,6 +20,7 @@ export const BrowseEvents = () => {
 
   return (
     <div className={styles.container}>
+      <h1>Browse events</h1>
       <div className={styles.filters}>
         <TextInput
           type="text"

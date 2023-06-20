@@ -13,6 +13,7 @@ import {
   SearchCourseDto,
 } from "./dto";
 import { Client, Course, Lesson } from "../types";
+import { buildQueryParams } from "../../utils/buildQueryParams";
 
 export const courseEndpoints = (
   builder: EndpointBuilder<
@@ -21,8 +22,15 @@ export const courseEndpoints = (
     string
   >
 ) => ({
-  getAllCourses: builder.query<Course[], void>({
-    query: () => "courses",
+  getAllCourses: builder.query<
+    Course[],
+    { filters: { day?: string; term?: string } }
+  >({
+    query: ({ filters }) => {
+      const queryParams = buildQueryParams(filters);
+
+      return "courses" + queryParams;
+    },
     providesTags: ["Course"],
   }),
   createCourse: builder.mutation<Course, CreateCourseDto>({
