@@ -1,4 +1,5 @@
 import Link from "next/link";
+import cx from "classnames";
 
 import { Course } from "@/store/services/cookMaster/types";
 
@@ -6,12 +7,13 @@ import styles from "./CourseCard.module.scss";
 
 interface Props {
   course: Course;
+  className?: string;
 }
 
-export const CourseCard = ({ course }: Props) => {
+export const CourseCard = ({ course, className = "" }: Props) => {
   return (
-    <Link className={styles.link} href={`/course/${course.id}`}>
-      <div className={styles.container}>
+    <Link className={styles.link} href={`/courses/${course.id}`}>
+      <div className={cx(styles.container, className)}>
         <div className={styles.header}>
           <div className={styles.title}>{course.name}</div>
         </div>

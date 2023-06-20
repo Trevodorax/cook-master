@@ -1,0 +1,23 @@
+.container {
+  .filters {
+    display: flex;
+
+    &>* {
+      margin-right: 16px;
+    }
+
+    .myCoursesButton {
+      height: 56px;
+      padding: 0 16px;
+      align-self: center;
+    }
+  }
+  .separator {
+    margin: 40px 0 32px;
+  }
+
+  .courses {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

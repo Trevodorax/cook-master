@@ -46,6 +46,18 @@ export class ClientController {
     return this.clientService.resignFromEvent(user.clientId, dto.eventId);
   }
 
+  @UseGuards(JwtGuard)
+  @Post('me/courses')
+  applyToCourse(@GetUser() user: User, @Body() dto: { courseId: number }) {
+    return this.clientService.applyToCourse(user.clientId, dto.courseId);
+  }
+
+  @UseGuards(JwtGuard)
+  @Delete('me/courses')
+  resignFromCourse(@GetUser() user: User, @Body() dto: { courseId: number }) {
+    return this.clientService.resignFromCourse(user.clientId, dto.courseId);
+  }
+
   @Get(':clientId/events')
   getEventsByClientId(@Param('clientId') clientId: string) {
     return this.clientService.getEventsByClientId(clientId);

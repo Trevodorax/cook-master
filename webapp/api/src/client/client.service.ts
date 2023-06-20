@@ -108,4 +108,59 @@ export class ClientService {
 
     return userForClient;
   }
+
+  async applyToCourse(clientId: number, courseId: number) {
+    if (!courseId) {
+      throw new BadRequestException('Missing course id.');
+    }
+
+    const client = await this.prisma.client.findUnique({
+      where: { id: clientId },
+    });
+
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!client || !course) {
+      throw new NotFoundException('Client or course not found');
+    }
+
+    await this.prisma.client.update({
+      where: { id: clientId },
+      data: {
+        courses: {
+          connect: { id: courseId },
+        },
+      },
+    });
+  }
+
+  async resignFromCourse(clientId: number, courseId: number) {
+    if (!courseId) {
+      throw new BadRequestException('Missing course id.');
+    }
+
+    const client = await this.prisma.client.findUnique({
+      where: { id: clientId },
+    });
+
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!client || !course) {
+      throw new NotFoundException('Client or course not found');
+    }
+
+    // Remove course from client's courses
+    await this.prisma.client.update({
+      where: { id: clientId },
+      data: {
+        courses: {
+          disconnect: { id: courseId },
+        },
+      },
+    });
+  }
 }

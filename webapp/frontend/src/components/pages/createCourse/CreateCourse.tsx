@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { useCreateCourseMutation } from "@/store/services/cookMaster/api";
 import { TextInput } from "@/components/textInput/TextInput";
 import { Button } from "@/components/button/Button";
-import { CreateCourseDto } from "@/store/services/cookMaster/course/dto";
+import { CreateCourseDto } from "@/store/services/cookMaster/courses/dto";
 import { RootState } from "@/store/store";
 
 import styles from "./CreateCourse.module.scss";
@@ -50,7 +50,7 @@ export const CreateCourse: FC = () => {
     toast.success("Success creating course.");
 
     setTimeout(() => {
-      router.push(`/course/${(result as { data: Course }).data.id}`); // "as" because I already tested the data prop but ts sucks
+      router.push(`/courses/${(result as { data: Course }).data.id}`); // "as" because I already tested the data prop but ts sucks
     }, 1000);
   };
 
