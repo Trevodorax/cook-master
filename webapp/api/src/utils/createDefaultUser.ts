@@ -1,8 +1,10 @@
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from '@prisma/client';
 import * as argon from 'argon2';
 
 export async function createDefaultUser(): Promise<void> {
   const prisma = new PrismaClient();
+  const config = new ConfigService();
 
   try {
     // Check if the default user already exists
@@ -14,8 +16,7 @@ export async function createDefaultUser(): Promise<void> {
       return;
     }
 
-    // TODO: Hide this password in a .env file
-    const passwordHash = await argon.hash('Respons11!');
+    const passwordHash = await argon.hash(config.get('DEFAULT_ADMIN_PASSWORD'));
 
     // Create the default admin
     const admin = await prisma.admin.create({
