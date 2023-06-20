@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit/dist/query";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
-import { CookMasterEvent, Course } from "../types";
+import { CookMasterEvent, Course, User } from "../types";
 import { tagTypes } from "../api";
 
 export const clientEndpoints = (
@@ -38,5 +38,9 @@ export const clientEndpoints = (
       body: { eventId },
     }),
     invalidatesTags: ["Event"],
+  }),
+  getUserFromClient: builder.query<{ user: User }, number>({
+    query: (id) => `clients/${id}/user`,
+    providesTags: (_, __, arg) => [{ type: "Client", id: arg }],
   }),
 });

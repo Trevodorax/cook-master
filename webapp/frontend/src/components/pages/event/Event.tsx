@@ -5,15 +5,15 @@ import {
   useApplyToEventMutation,
   useGetEventByIdQuery,
   useGetUserFromContractorQuery,
-  useGetUsersFromEventQuery,
+  useGetClientsFromEventQuery,
   usePatchEventMutation,
   useResignFromEventMutation,
 } from "@/store/services/cookMaster/api";
 import { EditableField } from "@/components/editableField/EditableField";
 import { RootState } from "@/store/store";
+import { Button } from "@/components/button/Button";
 
 import styles from "./Event.module.scss";
-import { Button } from "@/components/button/Button";
 
 interface Props {
   eventId: string;
@@ -43,13 +43,11 @@ export const Event = ({ eventId }: Props) => {
     event?.contractorId || 0
   );
 
-  const { data: usersInEvent } = useGetUsersFromEventQuery(eventId);
+  const { data: clientsInEvent } = useGetClientsFromEventQuery(eventId);
 
-  const isUserInEvent = usersInEvent?.some(
+  const isUserInEvent = clientsInEvent?.some(
     (client) => client.id === user?.clientId
   );
-
-  console.log(isUserInEvent);
 
   if (isEventLoading) {
     return <div>Loading...</div>;
@@ -165,6 +163,18 @@ export const Event = ({ eventId }: Props) => {
           isEditable={user?.userType === "admin"}
         />
       </div>
+      {/* list of clients participating in the event */}
+      <h3>Participants</h3>
+      {(!clientsInEvent || clientsInEvent.length === 0) && (
+        <div>No participants yet.</div>
+      )}
+      {clientsInEvent && (
+        <ul>
+          {clientsInEvent.map((client, index) => (
+            <li key={index}>{client.id}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -53,5 +54,15 @@ export class ClientController {
   @Get(':clientId/courses')
   getCoursesByClientId(@Param('clientId') clientId: string) {
     return this.clientService.getCoursesByClientId(clientId);
+  }
+
+  @Get(':id/user')
+  async getUserForContractor(@Param('id') id: string) {
+    const idNumber = parseInt(id);
+    if (isNaN(idNumber)) {
+      throw new BadRequestException('Invalid client ID.');
+    }
+
+    return this.clientService.getUserForClient(idNumber);
   }
 }

@@ -180,7 +180,7 @@ export class EventService {
     return updatedEvent;
   }
 
-  async getUsersFromEvent(eventId: string) {
+  async getClientsFromEvent(eventId: string) {
     const eventIdNumber = parseInt(eventId);
 
     if (isNaN(eventIdNumber)) {

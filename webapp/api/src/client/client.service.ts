@@ -91,4 +91,21 @@ export class ClientService {
       },
     });
   }
+
+  async getUserForClient(clientId: number) {
+    const userForClient = this.prisma.client.findUnique({
+      where: {
+        id: clientId,
+      },
+      select: {
+        user: true,
+      },
+    });
+
+    if (!userForClient) {
+      throw new NotFoundException('Client not found.');
+    }
+
+    return userForClient;
+  }
 }

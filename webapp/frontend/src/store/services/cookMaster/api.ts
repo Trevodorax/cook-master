@@ -16,6 +16,7 @@ export const tagTypes = [
   "Contractor",
   "Lesson",
   "Course",
+  "Client",
 ] as const;
 
 export const api = createApi({
@@ -61,7 +62,7 @@ export const {
   useGetCourseOfLessonQuery,
   useGetLessonByIdQuery,
   useGetLessonsOfCourseQuery,
-  useGetUsersFromEventQuery,
+  useGetClientsFromEventQuery,
   usePatchCourseMutation,
   usePatchLessonMutation,
   useGetMyCoursesContractorQuery,
@@ -70,4 +71,6 @@ export const {
   useGetMyCoursesClientQuery,
   useApplyToEventMutation,
   useResignFromEventMutation,
+  useGetUserFromClientQuery,
+  usePrefetch,
 } = api;

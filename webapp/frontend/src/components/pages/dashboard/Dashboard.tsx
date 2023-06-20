@@ -12,6 +12,8 @@ import {
 } from "@/components/svgs";
 
 import styles from "./Dashboard.module.scss";
+import { userType } from "@/store/services/cookMaster/types";
+import { ReactNode } from "react";
 
 export const Dashboard = () => {
   const router = useRouter();
@@ -23,7 +25,13 @@ export const Dashboard = () => {
     return <div>Not connected</div>;
   }
 
-  const contractorActions = [
+  type dashboardAction = {
+    title: string;
+    icon: () => JSX.Element;
+    link: string;
+  };
+
+  const contractorActions: dashboardAction[] = [
     {
       title: "Events",
       icon: CalendarIcon,
@@ -46,7 +54,7 @@ export const Dashboard = () => {
     },
   ];
 
-  const adminActions = [
+  const adminActions: dashboardAction[] = [
     {
       title: "Users",
       icon: UserIcon,
@@ -54,7 +62,7 @@ export const Dashboard = () => {
     },
   ];
 
-  const clientActions = [
+  const clientActions: dashboardAction[] = [
     {
       title: "Events",
       icon: CalendarIcon,
@@ -67,7 +75,7 @@ export const Dashboard = () => {
     },
   ];
 
-  const actions = {
+  const actions: Record<userType, dashboardAction[]> = {
     contractor: contractorActions,
     admin: adminActions,
     client: clientActions,
