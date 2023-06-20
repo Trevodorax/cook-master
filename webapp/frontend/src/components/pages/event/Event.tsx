@@ -171,7 +171,9 @@ export const Event = ({ eventId }: Props) => {
       {clientsInEvent && (
         <ul>
           {clientsInEvent.map((client, index) => (
-            <li key={index}>{client.id}</li>
+            <li
+              key={index}
+            >{`${client.user?.firstName} ${client.user?.lastName}`}</li>
           ))}
         </ul>
       )}
