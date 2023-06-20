@@ -7,6 +7,7 @@ import { contractorEndpoints } from "./contractor/endpoints";
 import { billingEndpoints } from "./billing/endpoints";
 import { lessonEndpoints } from "./lesson/endpoints";
 import { courseEndpoints } from "./course/endpoints";
+import { clientEndpoints } from "./client/endpoints";
 
 export const apiName = "cookMaster";
 export const tagTypes = [
@@ -15,6 +16,7 @@ export const tagTypes = [
   "Contractor",
   "Lesson",
   "Course",
+  "Client",
 ] as const;
 
 export const api = createApi({
@@ -28,6 +30,7 @@ export const api = createApi({
     ...billingEndpoints(builder),
     ...lessonEndpoints(builder),
     ...courseEndpoints(builder),
+    ...clientEndpoints(builder),
   }),
 });
 
@@ -59,8 +62,15 @@ export const {
   useGetCourseOfLessonQuery,
   useGetLessonByIdQuery,
   useGetLessonsOfCourseQuery,
-  useGetUsersFromEventQuery,
+  useGetClientsFromEventQuery,
   usePatchCourseMutation,
   usePatchLessonMutation,
   useGetMyCoursesContractorQuery,
+  useGetMyEventsContractorQuery,
+  useGetMyEventsClientQuery,
+  useGetMyCoursesClientQuery,
+  useApplyToEventMutation,
+  useResignFromEventMutation,
+  useGetUserFromClientQuery,
+  usePrefetch,
 } = api;

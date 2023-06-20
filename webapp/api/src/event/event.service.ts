@@ -42,7 +42,25 @@ export class EventService {
       };
     }
 
-    // Add conditions based on search filters here
+    if (filters.term) {
+      where = {
+        ...where,
+        OR: [
+          {
+            name: {
+              contains: filters.term,
+              mode: 'insensitive',
+            },
+          },
+          {
+            description: {
+              contains: filters.term,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      };
+    }
 
     const events = await this.prisma.event.findMany({
       where,
@@ -162,7 +180,7 @@ export class EventService {
     return updatedEvent;
   }
 
-  async getUsersFromEvent(eventId: string) {
+  async getClientsFromEvent(eventId: string) {
     const eventIdNumber = parseInt(eventId);
 
     if (isNaN(eventIdNumber)) {

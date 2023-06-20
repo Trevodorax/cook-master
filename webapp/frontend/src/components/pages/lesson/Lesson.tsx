@@ -1,5 +1,6 @@
 import { FC } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import {
   useGetLessonByIdQuery,
@@ -68,7 +69,9 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
       />
       <hr className={styles.separator} />
       <div className={styles.content}>
-        <ReactMarkdown>{lessonData.content}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {lessonData.content}
+        </ReactMarkdown>
       </div>
     </div>
   );

@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit/dist/query";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
-import { Course, User } from "../types";
+import { CookMasterEvent, Course, User } from "../types";
 import { tagTypes } from "../api";
 
 export const contractorEndpoints = (
@@ -22,5 +22,9 @@ export const contractorEndpoints = (
   getMyCoursesContractor: builder.query<Course[], void>({
     query: () => "contractors/me/courses",
     providesTags: ["Course"],
+  }),
+  getMyEventsContractor: builder.query<CookMasterEvent[], void>({
+    query: () => "contractors/me/events",
+    providesTags: ["Event"],
   }),
 });

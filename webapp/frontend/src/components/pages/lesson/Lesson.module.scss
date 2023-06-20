@@ -7,7 +7,9 @@
   }
 
   .content {
-    border: 1px solid $neutral_5;
     padding: 8px;
+
+    background-color: $neutral_1;
+    border: 1px solid $neutral_5;
   }
 }

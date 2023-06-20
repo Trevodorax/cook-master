@@ -2,12 +2,16 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 
 import {
+  useApplyToEventMutation,
   useGetEventByIdQuery,
   useGetUserFromContractorQuery,
+  useGetClientsFromEventQuery,
   usePatchEventMutation,
+  useResignFromEventMutation,
 } from "@/store/services/cookMaster/api";
 import { EditableField } from "@/components/editableField/EditableField";
 import { RootState } from "@/store/store";
+import { Button } from "@/components/button/Button";
 
 import styles from "./Event.module.scss";
 
@@ -19,6 +23,8 @@ export const Event = ({ eventId }: Props) => {
   const router = useRouter();
   const user = useSelector((state: RootState) => state.user.userInfo);
   const [patchEvent] = usePatchEventMutation();
+  const [applyToEvent] = useApplyToEventMutation();
+  const [resignFromEvent] = useResignFromEventMutation();
 
   if (!user) {
     router.push("/login");
@@ -35,6 +41,12 @@ export const Event = ({ eventId }: Props) => {
   } = useGetEventByIdQuery(eventId);
   const { data: eventAnimator } = useGetUserFromContractorQuery(
     event?.contractorId || 0
+  );
+
+  const { data: clientsInEvent } = useGetClientsFromEventQuery(eventId);
+
+  const isUserInEvent = clientsInEvent?.some(
+    (client) => client.id === user?.clientId
   );
 
   if (isEventLoading) {
@@ -58,6 +70,26 @@ export const Event = ({ eventId }: Props) => {
           user?.userType === "admin"
         }
       />
+      {/* button to apply or resign as client */}
+      {user?.userType === "client" && (
+        <div>
+          {isUserInEvent ? (
+            <Button
+              type="error"
+              onClick={() => resignFromEvent({ eventId: parseInt(eventId) })}
+            >
+              Leave
+            </Button>
+          ) : (
+            <Button
+              onClick={() => applyToEvent({ eventId: parseInt(eventId) })}
+            >
+              Join
+            </Button>
+          )}
+        </div>
+      )}
+
       <EditableField
         type="text"
         initialValue={<h3>{event.type}</h3>}
@@ -131,6 +163,20 @@ export const Event = ({ eventId }: Props) => {
           isEditable={user?.userType === "admin"}
         />
       </div>
+      {/* list of clients participating in the event */}
+      <h3>Participants</h3>
+      {(!clientsInEvent || clientsInEvent.length === 0) && (
+        <div>No participants yet.</div>
+      )}
+      {clientsInEvent && (
+        <ul>
+          {clientsInEvent.map((client, index) => (
+            <li
+              key={index}
+            >{`${client.user?.firstName} ${client.user?.lastName}`}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

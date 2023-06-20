@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit/dist/query";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
-import { CookMasterEvent, serializedCookMasterEvent } from "../types";
+import { Client, CookMasterEvent, serializedCookMasterEvent } from "../types";
 import { buildQueryParams } from "../../utils/buildQueryParams";
 import { CreateEventDto, serializeCreateEventDto } from "./dto";
 import { tagTypes } from "../api";
@@ -17,16 +17,17 @@ export const eventEndpoints = (
     string
   >
 ) => ({
-  getAllEvents: builder.query<CookMasterEvent[], { filters: { day?: string } }>(
-    {
-      query: (args) => {
-        const queryParams = buildQueryParams(args.filters);
+  getAllEvents: builder.query<
+    CookMasterEvent[],
+    { filters: { day?: string; term?: string } }
+  >({
+    query: ({ filters }) => {
+      const queryParams = buildQueryParams(filters);
 
-        return "events" + queryParams;
-      },
-      providesTags: ["Event"],
-    }
-  ),
+      return "events" + queryParams;
+    },
+    providesTags: ["Event"],
+  }),
   getMyEvents: builder.query<CookMasterEvent[], void>({
     query: () => "contractors/me/events",
     providesTags: ["Event"],
@@ -65,7 +66,7 @@ export const eventEndpoints = (
     }),
     invalidatesTags: (_, __, arg) => [{ type: "Event", id: arg.eventId }],
   }),
-  getUsersFromEvent: builder.query<CookMasterEvent[], string>({
+  getClientsFromEvent: builder.query<Client[], string>({
     query: (eventId) => `events/${eventId}/clients`,
     providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
   }),

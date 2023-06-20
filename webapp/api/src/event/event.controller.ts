@@ -58,7 +58,7 @@ export class EventController {
   }
 
   @Get(':eventId/clients')
-  getUsersFromEvent(@Param('eventId') eventId: string) {
-    return this.eventService.getUsersFromEvent(eventId);
+  getClientsFromEvent(@Param('eventId') eventId: string) {
+    return this.eventService.getClientsFromEvent(eventId);
   }
 }
