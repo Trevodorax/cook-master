@@ -1,7 +1,6 @@
 export interface User {
   id: number;
   email: string;
-  hash: string;
   firstName?: string | null;
   lastName?: string | null;
   userType: string;
@@ -122,4 +121,14 @@ export interface Course {
   lessons: Lesson[];
   contractorId?: number;
   clients: Client[];
+}
+
+export interface Message {
+  id: number;
+  createdAt: Date;
+  content: string;
+  senderId: number;
+  sender: User;
+  recipientId: number;
+  recipient: User;
 }

@@ -16,6 +16,8 @@ model User {
   firstName  String?
   lastName   String?
   userType   String
+  sentMessages     Message[] @relation("SentMessages")  // Relation name is specified here
+  receivedMessages Message[] @relation("ReceivedMessages") // Relation name is specified here
   admin      Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
   client     Client?     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   contractor Contractor? @relation(fields: [contractorId], references: [id], onDelete: Cascade)
@@ -120,4 +122,18 @@ model Lesson {
   courseId Int?
 
   @@map("lessons")
+}
+
+model Message {
+  id          Int      @id @default(autoincrement())
+  
+  createdAt   DateTime @default(now())   // To ensure the order of messages
+  content     String
+
+  senderId    Int                         // ID of the user who sent the message
+  sender      User    @relation(fields: [senderId], references: [id], name: "SentMessages")
+  recipientId Int                         // ID of the user who will receive the message
+  recipient   User    @relation(fields: [recipientId], references: [id], name: "ReceivedMessages")
+
+  @@map("messages")
 }

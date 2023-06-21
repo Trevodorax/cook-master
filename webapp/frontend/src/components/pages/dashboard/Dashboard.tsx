@@ -76,6 +76,11 @@ export const Dashboard = () => {
       icon: BookIcon,
       link: "/courses/browse",
     },
+    {
+      title: "Conversations",
+      icon: MessageIcon,
+      link: "/chat",
+    },
   ];
 
   const actions = {

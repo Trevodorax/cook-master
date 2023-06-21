@@ -1,0 +1,21 @@
+.container {
+  .conversationsZone {
+    .conversations {
+      display: flex;
+
+      flex-direction: column;
+    }
+  }
+
+  .searchUserZone {
+    .searchZone {
+      margin-bottom: 16px;
+    }
+
+    .userResults {
+      display: flex;
+
+      flex-direction: column;
+    }
+  }
+}

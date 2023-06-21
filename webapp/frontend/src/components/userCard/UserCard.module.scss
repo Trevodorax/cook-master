@@ -1,0 +1,30 @@
+@import "@/styles/theme.scss";
+
+
+.link {
+  text-decoration: none;
+
+  .container {
+    display: flex;
+    height: 50px;
+    width: 200px;
+    margin: 8px 0;
+
+    align-items: center;
+    padding: 8px;
+    overflow: hidden;
+
+    border-radius: 8px;
+    background-color: $neutral_1;
+    box-shadow: 0 0 1px .5px $neutral_2;
+    color: $neutral_5;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    transition: all .3s;
+
+    &:hover {
+      box-shadow: 0 0 5px 2px $neutral_2;
+    }
+  }
+}
