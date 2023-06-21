@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import cx from "classnames";
 import { useSelector } from "react-redux";
 import { io } from "socket.io-client";
@@ -30,23 +30,32 @@ export const Conversation: FC<Props> = ({ otherUserId }) => {
         ...prevMessages,
         ...((data as { data: any }).data || []),
       ]);
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
     });
 
     socket.emit("auth", JSON.stringify({ token }));
 
     socket.on("message", (message) => {
-      console.log("receive", message);
       setMessagesWithUpdates((prevMessages) => [...prevMessages, message]);
+      setTimeout(() => {
+        scrollToBottom();
+      }, 100);
     });
 
     return () => {
-      console.log("unmount Conversations");
       socket.disconnect();
     };
   }, []);
 
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView();
+  };
+
   const handleSendMessage = () => {
-    console.log("vomi");
     const payload = JSON.stringify({
       token,
       content: message,
@@ -70,6 +79,7 @@ export const Conversation: FC<Props> = ({ otherUserId }) => {
             {message.content}
           </div>
         ))}
+        <div ref={messagesEndRef} />
       </div>
       <div className={styles.input}>
         <TextInput

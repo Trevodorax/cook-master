@@ -4,21 +4,21 @@
   height: 90vh;
   display: flex;
 
+  padding: 0 16px;
   justify-content: flex-end;
   flex-direction: column;
 
   .messages {
-    display: flex;
     width: 100%;
+    height: 100%;
 
     overflow: scroll;
-    flex-direction: column;
-    justify-content: flex-end;
+    scroll-behavior: smooth;
 
     .message {
       width: fit-content;
       max-width: 80%;
-      margin: 4px 0;
+      margin: 8px 0;
 
       padding: 8px;
 
@@ -26,7 +26,7 @@
       border: 1px solid $neutral_5;
 
       &.fromMe {
-        align-self: flex-end;
+        margin-inline-start: auto;
         background-color: $primary_5;
         color: $neutral_1;
       }

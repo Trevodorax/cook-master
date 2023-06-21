@@ -49,7 +49,6 @@ export class ChatGateway
 
   @SubscribeMessage('auth')
   handleAuth(@MessageBody() data: string, @ConnectedSocket() client: Socket) {
-    console.log('authenticating user');
     const dataJSON = JSON.parse(data);
     if (!dataJSON.token) {
       throw new BadRequestException('Invalid message');
@@ -64,7 +63,6 @@ export class ChatGateway
 
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() data: string): Promise<any> {
-    console.log('receive message');
     const dataJSON = JSON.parse(data);
     if (!dataJSON.token) {
       throw new BadRequestException('Missing token');
