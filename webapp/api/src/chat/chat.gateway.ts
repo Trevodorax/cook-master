@@ -80,6 +80,10 @@ export class ChatGateway
       secret: this.configService.get('JWT_SECRET'),
     });
 
+    if (!payload) {
+      console.log('JWT error');
+    }
+
     const authorId = payload.sub;
 
     const newMessage = await this.chatService.addMessage(

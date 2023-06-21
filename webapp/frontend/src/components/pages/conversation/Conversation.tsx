@@ -17,6 +17,8 @@ interface Props {
 
 export const Conversation: FC<Props> = ({ otherUserId }) => {
   const token = useSelector((state: RootState) => state.user.token);
+  const myId = useSelector((state: RootState) => state.user.userInfo?.id);
+
   const [message, setMessage] = useState("");
   const [getMyMessages] = useGetMyMessagesWithMutation();
 
@@ -37,7 +39,11 @@ export const Conversation: FC<Props> = ({ otherUserId }) => {
 
     socket.emit("auth", JSON.stringify({ token }));
 
-    socket.on("message", (message) => {
+    socket.on("message", (message: Message) => {
+      if (message.senderId !== otherUserId && message.senderId !== myId) {
+        return;
+      }
+
       setMessagesWithUpdates((prevMessages) => [...prevMessages, message]);
       setTimeout(() => {
         scrollToBottom();
