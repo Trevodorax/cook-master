@@ -1,0 +1,52 @@
+@import "@/styles/theme.scss";
+
+.container {
+  height: 90vh;
+  display: flex;
+
+  justify-content: flex-end;
+  flex-direction: column;
+
+  .messages {
+    display: flex;
+    width: 100%;
+
+    overflow: scroll;
+    flex-direction: column;
+    justify-content: flex-end;
+
+    .message {
+      width: fit-content;
+      max-width: 80%;
+      margin: 4px 0;
+
+      padding: 8px;
+
+      border-radius: 4px;
+      border: 1px solid $neutral_5;
+
+      &.fromMe {
+        align-self: flex-end;
+        background-color: $primary_5;
+        color: $neutral_1;
+      }
+    }
+  }
+
+  .input {
+    display: flex;
+    margin-top: 8px;
+
+    justify-content: stretch;
+
+    .textInput {
+      width: 100%;
+    }
+
+    .sendButton {
+      height: 42px;
+      width: 100px;
+      margin-left: 4px;
+    }
+  }
+}

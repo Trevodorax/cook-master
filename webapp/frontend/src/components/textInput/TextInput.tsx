@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, KeyboardEventHandler } from "react";
 import cx from "classnames";
 
 import { CursorIcon, KeyIcon, LetterIcon, PhoneIcon } from "../svgs";
@@ -14,6 +14,7 @@ interface Props {
   icon?: React.ReactNode;
   hideIcon?: boolean;
   label?: string;
+  onEnter?: () => void;
 }
 
 export const TextInput = ({
@@ -25,9 +26,17 @@ export const TextInput = ({
   icon,
   hideIcon = false,
   label = "",
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onEnter = () => {},
 }: Props) => {
   const handleChange = (e: ChangeEvent) => {
     setValue((e.target as HTMLInputElement).value);
+  };
+
+  const handleKeyDown = (event: KeyboardEventHandler<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      onEnter();
+    }
   };
 
   const iconsPerType = {
@@ -49,6 +58,7 @@ export const TextInput = ({
           type={type}
           value={value}
           onChange={handleChange}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
         />
       </div>

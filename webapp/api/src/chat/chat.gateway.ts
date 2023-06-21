@@ -8,14 +8,14 @@ import {
   MessageBody,
   ConnectedSocket,
 } from '@nestjs/websockets';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { BadRequestException } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 
 import { ChatService } from './chat.service';
-import { JwtService } from '@nestjs/jwt';
-import { ConfigService } from '@nestjs/config';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: true })
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
 {
@@ -49,6 +49,7 @@ export class ChatGateway
 
   @SubscribeMessage('auth')
   handleAuth(@MessageBody() data: string, @ConnectedSocket() client: Socket) {
+    console.log('authenticating user');
     const dataJSON = JSON.parse(data);
     if (!dataJSON.token) {
       throw new BadRequestException('Invalid message');
@@ -63,6 +64,7 @@ export class ChatGateway
 
   @SubscribeMessage('message')
   async handleMessage(@MessageBody() data: string): Promise<any> {
+    console.log('receive message');
     const dataJSON = JSON.parse(data);
     if (!dataJSON.token) {
       throw new BadRequestException('Missing token');

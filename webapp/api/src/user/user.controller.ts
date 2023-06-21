@@ -18,8 +18,6 @@ import { RolesGuard } from 'src/auth/guard/roles.guard';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(JwtGuard, RolesGuard)
-  @AllowedUserTypes(['admin'])
   @Get()
   async getAllUsers(
     @Query('search') search: string,
@@ -43,6 +41,12 @@ export class UserController {
   @Patch('confirmAdmin')
   async confirmAdmin(@Body() data: { id: string }) {
     return await this.userService.confirmAdmin(data.id);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('me/conversations')
+  getMyConversations(@GetUser() user: User) {
+    return this.userService.getUserConversations(user.id);
   }
 
   @UseGuards(JwtGuard, RolesGuard)

@@ -8,6 +8,7 @@ import { billingEndpoints } from "./billing/endpoints";
 import { lessonEndpoints } from "./lesson/endpoints";
 import { courseEndpoints } from "./course/endpoints";
 import { clientEndpoints } from "./client/endpoints";
+import { chatEndpoints } from "./chat/endpoints";
 
 export const apiName = "cookMaster";
 export const tagTypes = [
@@ -17,6 +18,7 @@ export const tagTypes = [
   "Lesson",
   "Course",
   "Client",
+  "Chat",
 ] as const;
 
 export const api = createApi({
@@ -31,6 +33,7 @@ export const api = createApi({
     ...lessonEndpoints(builder),
     ...courseEndpoints(builder),
     ...clientEndpoints(builder),
+    ...chatEndpoints(builder),
   }),
 });
 
@@ -74,5 +77,7 @@ export const {
   useGetUserFromClientQuery,
   useApplyToCourseMutation,
   useResignFromCourseMutation,
+  useGetMyMessagesWithMutation,
+  useGetMyConversationsQuery,
   usePrefetch,
 } = api;

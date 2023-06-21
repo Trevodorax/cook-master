@@ -130,6 +130,25 @@ export class UserService {
     return updatedUser;
   }
 
+  async getUserConversations(id: number) {
+    // fetching all the messages received by the user
+    const uniqueUsers = await this.prisma.$queryRawUnsafe(`
+    SELECT * 
+    FROM users 
+    WHERE id IN (
+      SELECT DISTINCT "recipientId" 
+      FROM messages 
+      WHERE "senderId" = ${id}
+      UNION
+      SELECT DISTINCT "senderId" 
+      FROM messages 
+      WHERE "recipientId" = ${id}
+    )
+  `);
+
+    return uniqueUsers;
+  }
+
   async searchUsers(search: string, userType: UserType) {
     const users = await this.prisma.user.findMany({
       where: {

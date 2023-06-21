@@ -40,7 +40,10 @@ export const userEndpoints = (
   getMe: builder.mutation<User, void>({
     query: () => "users/me",
   }),
-  getAllUsers: builder.query<UserInfo[], UserSearchParams>({
+  getMyConversations: builder.query<User[], void>({
+    query: () => "users/me/conversations",
+  }),
+  getAllUsers: builder.query<User[], UserSearchParams>({
     query: (searchParams) => {
       const queryParams = buildQueryParams(searchParams);
       return "users" + queryParams;
