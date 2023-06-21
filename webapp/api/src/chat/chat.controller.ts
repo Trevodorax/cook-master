@@ -1,4 +1,10 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { ChatService } from './chat.service';
@@ -13,8 +19,12 @@ export class ChatController {
   @Get(':otherUserId')
   getMessages(
     @GetUser() user: User,
-    @Param('otherUserId') otherUserId: number,
+    @Param('otherUserId') otherUserId: string,
   ) {
-    return this.chatService.getMessages(user.id, otherUserId);
+    const otherUserIdNumber = parseInt(otherUserId);
+    if (isNaN(otherUserIdNumber)) {
+      throw new BadRequestException('Invalid other id number');
+    }
+    return this.chatService.getMessages(user.id, otherUserIdNumber);
   }
 }
