@@ -17,4 +17,5 @@ jobs:
         script: |
           cd /home/deploy/cook-master
           git pull --rebase
+          cd webapp
           docker compose up -d && docker compose exec api npx prisma migrate dev --preview-feature
