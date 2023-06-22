@@ -15,4 +15,4 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-                    bash /home/debian/cook-master/update.sh
+                    bash /home/deploy/cook-master/update.sh
