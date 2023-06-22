@@ -27,7 +27,7 @@ export const Conversation: FC<Props> = ({ otherUserId }) => {
   const socket = useMemo(
     () =>
       io(
-        `ws://${
+        `wss://${
           process.env.NODE_ENV === "development"
             ? "localhost:3333"
             : "cookmaster.site"
