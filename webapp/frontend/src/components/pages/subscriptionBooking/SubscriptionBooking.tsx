@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-hot-toast";
 import { useStripe } from "@stripe/react-stripe-js";
 import { useSelector } from "react-redux";
@@ -37,6 +37,11 @@ export const SubscriptionBooking = () => {
 
     if (isBillingDataError) {
       toast.error("Could not get payment information");
+      return;
+    }
+
+    if (!(result as { data: any }).data) {
+      toast.error("Stripe error");
       return;
     }
 
