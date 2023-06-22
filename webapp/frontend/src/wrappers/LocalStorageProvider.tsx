@@ -9,6 +9,8 @@ interface Props {
   children: ReactNode;
 }
 
+const noAuthPages = ["http://localhost:3000/", "http://cookmaster.site/"];
+
 export const LocalStorageProvider = ({ children }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const [getMe] = useGetMeMutation();
@@ -21,6 +23,9 @@ export const LocalStorageProvider = ({ children }: Props) => {
 
     dispatch(setToken(token));
 
+    if (noAuthPages.includes(window.location.href)) {
+      return;
+    }
     const userInfo = await getMe();
     if ("data" in userInfo) {
       dispatch(setUserInfo(userInfo.data || null));

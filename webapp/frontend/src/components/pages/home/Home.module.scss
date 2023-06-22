@@ -1,0 +1,38 @@
+@import "@/styles/theme.scss";
+
+.container {
+  .actions {
+    display: flex;
+
+    justify-content: space-around;
+    flex-wrap: wrap;
+    .action {
+      display: flex;
+      width: 300px;
+      margin: 32px;
+
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+
+      svg {
+        color: $neutral_5;
+      }
+
+      .verb {
+        color: $secondary_5;
+        margin-right: 8px;
+      }
+
+      .actionButton {
+        font-size: 16px;
+        padding: 8px;
+      }
+
+      .description {
+        margin-top: 16px;
+      }
+    }
+  }
+}

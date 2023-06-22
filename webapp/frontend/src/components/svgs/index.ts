@@ -11,3 +11,5 @@ export * from "./BookIcon";
 export * from "./PenIcon";
 export * from "./NoIcon";
 export * from "./YesIcon";
+export * from "./WhiteBoardIcon";
+export * from "./PanIcon";
