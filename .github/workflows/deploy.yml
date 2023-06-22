@@ -15,7 +15,6 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          mkdir tartoflan
-          cd tartoflan
-          touch poney.txt
-          echo "hey Paul what's up my friend ?" > poney.txt
+          cd /home/debian/cook-master
+          git pull --rebase
+          docker compose up -d && docker compose exec api npx prisma migrate dev --preview-feature
