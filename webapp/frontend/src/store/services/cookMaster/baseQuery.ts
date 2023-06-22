@@ -5,13 +5,18 @@ import {
   fetchBaseQuery,
   retry,
 } from "@reduxjs/toolkit/dist/query";
-import { GenericError } from "./types";
-import { setRedirection } from "@/store/redirection/redirectionSlice";
 import { toast } from "react-hot-toast";
+
+import { setRedirection } from "@/store/redirection/redirectionSlice";
 import { RootState } from "@/store/store";
 
+import { GenericError } from "./types";
+
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://127.0.0.1:3333/api/",
+  baseUrl:
+    process.env.NODE_ENV === "development"
+      ? "http://localhost:3333/api/"
+      : "https://cookmaster.site/api/",
   prepareHeaders: (headers, { getState }) => {
     const user = (getState() as RootState).user;
     if (user.token) {

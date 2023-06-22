@@ -24,7 +24,17 @@ export const Conversation: FC<Props> = ({ otherUserId }) => {
 
   const [messagesWithUpdates, setMessagesWithUpdates] = useState<Message[]>([]);
 
-  const socket = useMemo(() => io("ws://localhost:3333"), []);
+  const socket = useMemo(
+    () =>
+      io(
+        `ws://${
+          process.env.NODE_ENV === "development"
+            ? "localhost:3333"
+            : "cookmaster.site"
+        }`
+      ),
+    []
+  );
 
   useEffect(() => {
     getMyMessages(otherUserId).then((data) => {
