@@ -15,6 +15,6 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          cd /home/debian/cook-master
+          cd /home/deploy/cook-master
           git pull --rebase
           docker compose up -d && docker compose exec api npx prisma migrate dev --preview-feature
