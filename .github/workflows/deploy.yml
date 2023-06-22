@@ -14,4 +14,4 @@ jobs:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
-        script: "touch /home/deploy/poney.txt"
+        script: touch /home/deploy/poney.txt && echo "hey Paul !" > /home/deploy/poney.txt
