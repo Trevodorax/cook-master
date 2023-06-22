@@ -1,4 +1,4 @@
-import { MouseEvent, ReactNode, useEffect } from "react";
+import { MouseEvent, ReactNode } from "react";
 import { createPortal } from "react-dom";
 import cx from "classnames";
 

@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 
 import { useGetAllCoursesQuery } from "@/store/services/cookMaster/api";
 import { TextInput } from "@/components/textInput/TextInput";

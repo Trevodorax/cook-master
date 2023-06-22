@@ -33,7 +33,7 @@ export const TextInput = ({
     setValue((e.target as HTMLInputElement).value);
   };
 
-  const handleKeyDown = (event: KeyboardEventHandler<HTMLInputElement>) => {
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") {
       onEnter();
     }

@@ -4,13 +4,9 @@ import { useRouter } from "next/router";
 import cx from "classnames";
 
 import {
-  CreateAccountRequest,
-  GenericError,
-  LoginRequest,
   useCreateAccountMutation,
   useGetMeMutation,
   useLoginMutation,
-  userType,
 } from "@/store/services/cookMaster/api";
 import { setToken, setUserInfo } from "@/store/user/userSlice";
 import { AppDispatch } from "@/store/store";
@@ -22,6 +18,12 @@ import { UserIcon } from "@/components/svgs";
 import { SelectInput } from "@/components/selectInput/SelectInput";
 
 import styles from "./Login.module.scss";
+import {
+  CreateAccountRequest,
+  GenericError,
+  LoginRequest,
+  userType,
+} from "@/store/services/cookMaster/types";
 
 const userTypes: Array<userType> = ["contractor", "client", "admin"];
 

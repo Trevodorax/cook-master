@@ -52,7 +52,7 @@ export const EditableField: FC<Props> = ({
   );
 };
 
-function getPrimitiveValue(children: ReactNode) {
+function getPrimitiveValue(children: ReactNode): ReactNode {
   if (typeof children === "string" || typeof children === "number") {
     return children;
   }

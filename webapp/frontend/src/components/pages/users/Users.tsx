@@ -1,11 +1,12 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import { useGetAllUsersQuery, userType } from "@/store/services/cookMaster/api";
+import { useGetAllUsersQuery } from "@/store/services/cookMaster/api";
 import { TextInput } from "@/components/textInput/TextInput";
 import { SelectInput } from "@/components/selectInput/SelectInput";
 
 import styles from "./Users.module.scss";
+import { userType } from "@/store/services/cookMaster/types";
 
 const userTypes: Array<userType> = ["any", "contractor", "client", "admin"];
 

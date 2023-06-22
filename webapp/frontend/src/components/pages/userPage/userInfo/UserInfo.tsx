@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/textInput/TextInput";
 import {
-  GenericError,
   useConfirmAdminMutation,
   useGetUserByIdQuery,
   usePatchUserMutation,

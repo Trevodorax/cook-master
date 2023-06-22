@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
@@ -28,12 +28,14 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
 
   const mdParser = new MarkdownIt();
 
-  if (!contractorId) {
-    toast.error("This page is for contractors.");
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 500);
-  }
+  useEffect(() => {
+    if (!contractorId) {
+      toast.error("This page is for contractors.");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 500);
+    }
+  });
 
   const [newLesson, setNewLesson] = useState<CreateLessonDto>({
     name: "",

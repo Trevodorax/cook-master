@@ -1,11 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 import { useCreateCourseMutation } from "@/store/services/cookMaster/api";
 import { TextInput } from "@/components/textInput/TextInput";
 import { Button } from "@/components/button/Button";
-import { CreateCourseDto } from "@/store/services/cookMaster/courses/dto";
+import { CreateCourseDto } from "@/store/services/cookMaster/course/dto";
 import { RootState } from "@/store/store";
 
 import styles from "./CreateCourse.module.scss";
@@ -19,12 +19,14 @@ export const CreateCourse: FC = () => {
   );
   const [createCourse] = useCreateCourseMutation();
 
-  if (!contractorId) {
-    toast.error("This page is for contractors.");
-    setTimeout(() => {
-      router.push("/dashboard");
-    }, 1000);
-  }
+  useEffect(() => {
+    if (!contractorId) {
+      toast.error("This page is for contractors.");
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1000);
+    }
+  });
 
   const [newCourse, setNewCourse] = useState<CreateCourseDto>({
     name: "",
