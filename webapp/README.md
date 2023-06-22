@@ -36,4 +36,3 @@ Use 127.0.0.1 for the database instead of the db container name
 `npm run db:dev:restart`
 
 `npm run start:dev`
-

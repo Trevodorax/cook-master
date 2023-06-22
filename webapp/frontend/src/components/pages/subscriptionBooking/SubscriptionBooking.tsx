@@ -1,16 +1,16 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { useStripe } from "@stripe/react-stripe-js";
-import { useSelector } from "react-redux";
 
 import { SubscriptionCard } from "@/components/subscriptionCard/SubscriptionCard";
 import { useCreateBillingIntentMutation } from "@/store/services/cookMaster/api";
 import { RootState } from "@/store/store";
+import { PaymentModal } from "@/components/paymentModal/PaymentModal";
+import { Button } from "@/components/button/Button";
 
 import { subscriptions } from "./utils/subscriptionTypes";
 import styles from "./SubscriptionBooking.module.scss";
-import { PaymentModal } from "@/components/paymentModal/PaymentModal";
-import { Button } from "@/components/button/Button";
 
 export const SubscriptionBooking = () => {
   const stripe = useStripe();
