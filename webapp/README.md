@@ -7,6 +7,13 @@ Find all the .env.example files
 create a .env with the right values for each, located in the same folder as the .env.example
 
 ## run with docker-compose
+### Add the certs to the project
+Create a webapp/certs folder
+
+Add the two cert files to the folder (You can ask Trevodorax to give them to you):
+- cookmaster.site.crt
+- cookmaster.site.key
+
 ### In the api's .env
 
 Use the database container name in the URL
