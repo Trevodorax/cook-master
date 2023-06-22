@@ -15,4 +15,5 @@ jobs:
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_KEY }}
         script: |
-          touch /home/deploy/poney.txt && echo "hey Paul what's up ?" > /home/deploy/poney.txt
+          touch /home/deploy/poney.txt
+          && echo "hey Paul what's up my friend ?" > /home/deploy/poney.txt
