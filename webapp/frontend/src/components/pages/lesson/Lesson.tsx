@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -21,9 +21,12 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
   const router = useRouter();
 
   const user = useSelector((state: RootState) => state.user.userInfo);
-  if (!user) {
-    router.push("/login");
-  }
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  });
 
   const lessonIdNumber = parseInt(lessonId);
   if (isNaN(lessonIdNumber)) {

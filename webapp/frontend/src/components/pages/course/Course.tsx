@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 import {
   useApplyToCourseMutation,
@@ -26,9 +26,12 @@ export const Course: FC<Props> = ({ courseId }) => {
   const router = useRouter();
 
   const user = useSelector((state: RootState) => state.user.userInfo);
-  if (!user) {
-    router.push("/login");
-  }
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  });
 
   const courseIdNumber = parseInt(courseId);
   if (isNaN(courseIdNumber)) {

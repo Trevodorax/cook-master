@@ -78,6 +78,8 @@ model Address {
   postalCode   String
   country      String
   client       Client?
+
+  @@map("addresses")
 }
 
 model Event {
@@ -130,9 +132,9 @@ model Message {
   createdAt   DateTime @default(now())   // To ensure the order of messages
   content     String
 
-  senderId    Int                         // ID of the user who sent the message
+  senderId    Int
   sender      User    @relation(fields: [senderId], references: [id], name: "SentMessages")
-  recipientId Int                         // ID of the user who will receive the message
+  recipientId Int
   recipient   User    @relation(fields: [recipientId], references: [id], name: "ReceivedMessages")
 
   @@map("messages")

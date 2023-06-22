@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -18,10 +19,11 @@ export const Dashboard = () => {
 
   const user = useSelector((state: RootState) => state.user.userInfo);
 
-  if (user === null || user.userType === "any") {
-    router.push("/login");
-    return <div>Not connected</div>;
-  }
+  useEffect(() => {
+    if (user === null || user.userType === "any") {
+      router.push("/login");
+    }
+  });
 
   type dashboardAction = {
     title: string;
@@ -92,18 +94,24 @@ export const Dashboard = () => {
   return (
     <div className={styles.container}>
       <h2>
-        Welcome, {user.firstName} {user.lastName}
+        Welcome, {user?.firstName} {user?.lastName}
       </h2>
-      <div className={styles.actionsContainer}>
-        {actions[user.userType as "client" | "contractor" | "admin"].map(
-          (action, index) => (
-            <Link key={index} href={action.link} className={styles.actionCard}>
-              <action.icon />
-              <p className={styles.actionCardTitle}>{action.title}</p>
-            </Link>
-          )
-        )}
-      </div>
+      {user && (
+        <div className={styles.actionsContainer}>
+          {actions[user.userType as "client" | "contractor" | "admin"].map(
+            (action, index) => (
+              <Link
+                key={index}
+                href={action.link}
+                className={styles.actionCard}
+              >
+                <action.icon />
+                <p className={styles.actionCardTitle}>{action.title}</p>
+              </Link>
+            )
+          )}
+        </div>
+      )}
     </div>
   );
 };

@@ -10,6 +10,7 @@ import {
 
 import styles from "./MyEvents.module.scss";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export const MyEvents = () => {
   const router = useRouter();
@@ -17,9 +18,12 @@ export const MyEvents = () => {
   const userType = useSelector(
     (state: RootState) => state.user.userInfo?.userType
   );
-  if (!userType) {
-    router.push("/login");
-  }
+
+  useEffect(() => {
+    if (!userType) {
+      router.push("/login");
+    }
+  });
 
   const { data: contractorEvents } = useGetMyEventsContractorQuery(undefined, {
     skip: userType !== "contractor",

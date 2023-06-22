@@ -14,6 +14,7 @@ import { RootState } from "@/store/store";
 import { Button } from "@/components/button/Button";
 
 import styles from "./Event.module.scss";
+import { useEffect } from "react";
 
 interface Props {
   eventId: string;
@@ -26,9 +27,11 @@ export const Event = ({ eventId }: Props) => {
   const [applyToEvent] = useApplyToEventMutation();
   const [resignFromEvent] = useResignFromEventMutation();
 
-  if (!user) {
-    router.push("/login");
-  }
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  });
 
   if (!eventId) {
     return <div>Event not found</div>;
