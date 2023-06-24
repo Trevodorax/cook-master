@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText emailInput;
     private EditText passwordInput;
     private TextView errorMessageTextView;
+    private TextView createAccountText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,17 @@ public class LoginActivity extends AppCompatActivity {
         this.emailInput = findViewById(R.id.emailInput);
         this.passwordInput = findViewById(R.id.passwordInput);
         this.errorMessageTextView = findViewById(R.id.errorMessage);
+        this.createAccountText = findViewById(R.id.createAccountText);
+
+        this.createAccountText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://cookmaster.site/login";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
 
         this.okButton.setOnClickListener(new View.OnClickListener() {
             @Override
