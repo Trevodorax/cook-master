@@ -8,14 +8,15 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
+import { User } from '@prisma/client';
+
 import { ClientService } from './client.service';
 import { JwtGuard } from 'src/auth/guard';
 import { GetUser } from 'src/auth/decorator';
-import { User } from '@prisma/client';
 
 @Controller('clients')
 export class ClientController {
-  constructor(private readonly clientService: ClientService) {}
+  constructor(private clientService: ClientService) {}
 
   @Get(':clientId')
   getClientById(@Param('clientId') clientId: string) {

@@ -47,7 +47,7 @@ model Client {
 
   user              User?
   subscriptionLevel Int      @default(0)
-  fidelityPoints    Int      @default(0)
+  fidelityPoints    Int      @default(25)
   Address           Address? @relation(fields: [addressId], references: [id])
   events            Event[]
   courses           Course[]
