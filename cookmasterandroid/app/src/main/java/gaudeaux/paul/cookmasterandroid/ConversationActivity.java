@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -27,33 +28,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CoursesActivity extends AppCompatActivity {
-    private ListView coursesList;
+public class ConversationActivity extends AppCompatActivity {
+    private ListView messagesList;
+    private TextView title;
+
+    private String otherUserId;
+    private String myId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_courses);
+        setContentView(R.layout.activity_conversation);
 
-        this.coursesList = findViewById(R.id.coursesList);
+        this.title = findViewById(R.id.title);
+        this.messagesList = findViewById(R.id.messagesList);
 
-        getCourses(new CoursesCallback() {
+        SharedPreferences userDictionary = getSharedPreferences("userDictionary", Context.MODE_PRIVATE);
+        this.myId = userDictionary.getString("id", "");
+
+        Intent intent = getIntent();
+        System.out.println(intent.getStringExtra("otherUserId"));
+        this.otherUserId = intent.getStringExtra("otherUserId");
+        String otherUserName = intent.getStringExtra("otherUserName");
+
+        title.setText(otherUserName);
+
+        getMessages(new MessagesCallback() {
             @Override
-            public void onSuccess(List<Course> courses) {
-                CourseAdapter courseAdapter = new CourseAdapter(courses, CoursesActivity.this);
-                coursesList.setAdapter(courseAdapter);
-
-                coursesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Course currentCourse = (Course) courseAdapter.getItem(position);
-
-                        Intent courseActivity = new Intent(CoursesActivity.this, CourseActivity.class);
-                        courseActivity.putExtra("id", currentCourse.getId());
-                        courseActivity.putExtra("name", currentCourse.getName());
-                        startActivity(courseActivity);
-                    }
-                });
+            public void onSuccess(List<Message> messages) {
+                MessageAdapter messageAdapter = new MessageAdapter(messages, ConversationActivity.this);
+                messagesList.setAdapter(messageAdapter);
+                scrollToBottom();
             }
 
             @Override
@@ -61,18 +66,22 @@ public class CoursesActivity extends AppCompatActivity {
 
             }
         });
+
+
+
     }
 
-    public interface CoursesCallback {
-        void onSuccess(List<Course> courses);
+    public interface MessagesCallback {
+        void onSuccess(List<Message> messages);
         void onError(VolleyError error);
     }
 
-    public void getCourses(CoursesCallback callback) {
-        List<Course> courses = new ArrayList<>();
+    public void getMessages(MessagesCallback callback) {
+        List<Message> messages = new ArrayList<>();
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        String url = "https://cookmaster.site/api/clients/me/courses";
+
+        String url = "https://cookmaster.site/api/chat/" + otherUserId;
 
         StringRequest request = new StringRequest(
                 Request.Method.GET,
@@ -83,15 +92,22 @@ public class CoursesActivity extends AppCompatActivity {
                         try {
                             JSONArray responseJSONArray = new JSONArray(response);
 
-                            // Go through each item in the array
                             for (int i = 0; i < responseJSONArray.length(); i++) {
-                                JSONObject courseObject = responseJSONArray.getJSONObject(i);
-                                Course addedCourse = new Course(courseObject.getString("name"), Integer.toString(courseObject.getInt("id")));
-                                courses.add(addedCourse);
+                                JSONObject conversationObject = responseJSONArray.getJSONObject(i);
+                                boolean isFromMe = Integer.toString(conversationObject.getInt("recipientId")).equals(otherUserId);
+                                Message addedMessage = new Message(
+                                        Integer.toString(conversationObject.getInt("senderId")),
+                                        Integer.toString(conversationObject.getInt("recipientId")),
+                                        conversationObject.getString("content"),
+                                        isFromMe
+                                );
+                                messages.add(addedMessage);
                             }
-                            callback.onSuccess(courses);  // Notify callback
+                            callback.onSuccess(messages);  // Notify callback
+
                         } catch (Exception e) {
-                            Toast.makeText(CoursesActivity.this, "Fetch error", Toast.LENGTH_SHORT).show();
+                            System.out.println(e.getMessage());
+                            Toast.makeText(ConversationActivity.this, "Fetch error", Toast.LENGTH_SHORT).show();
                         }
                     }
                 },
@@ -99,7 +115,7 @@ public class CoursesActivity extends AppCompatActivity {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof com.android.volley.NetworkError) {
-                            Toast.makeText(CoursesActivity.this, "Cannot connect to Internet", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ConversationActivity.this, "Cannot connect to Internet", Toast.LENGTH_SHORT).show();
                         } else if (error.networkResponse != null) {
                             String body;
                             if(error.networkResponse.data!=null) {
@@ -117,11 +133,11 @@ public class CoursesActivity extends AppCompatActivity {
                                     } else if (error.networkResponse.statusCode == 403) {
                                         errorMessage = bodyJSON.getString("message");
                                     } else if (error.networkResponse.statusCode == 401) {
-                                        Intent loginActivity = new Intent(CoursesActivity.this, LoginActivity.class);
+                                        Intent loginActivity = new Intent(ConversationActivity.this, LoginActivity.class);
                                         startActivity(loginActivity);
                                     }
 
-                                    Toast.makeText(CoursesActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ConversationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
@@ -141,6 +157,16 @@ public class CoursesActivity extends AppCompatActivity {
 
         };
         requestQueue.add(request);
+    }
+
+    private void scrollToBottom() {
+        messagesList.post(new Runnable() {
+            @Override
+            public void run() {
+                // Select the last item in the adapter
+                messagesList.setSelection(messagesList.getCount() - 1);
+            }
+        });
     }
 
 

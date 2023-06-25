@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ConversationsActivity">
+    tools:context=".CourseActivity">
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -13,4 +13,8 @@
         android:layout_margin="32dp"
         android:textSize="32sp"
         android:text="Conversations" />
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/conversationsList" />
 </LinearLayout>

@@ -100,7 +100,6 @@ public class LessonActivity extends AppCompatActivity {
                                     responseJSON.getString("content")
                             );
 
-                            String content = responseJSON.getString("content");
                             callback.onSuccess(lesson);
 
                         } catch (Exception e) {
