@@ -2,6 +2,7 @@ package gaudeaux.paul.cookmasterandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -65,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                         Request.Method.POST,
                         url,
                         new Response.Listener<String>() {
+                            @SuppressLint("ApplySharedPref") // using commit because I want to make sure the token is registered before we get to the new page
                             @Override
                             public void onResponse(String response) {
                                 try {
@@ -72,10 +74,9 @@ public class LoginActivity extends AppCompatActivity {
                                     String token = responseJSON.getString("access_token");
                                     SharedPreferences.Editor authDictionaryEditor = authDictionary.edit();
                                     authDictionaryEditor.putString("token", token);
-                                    authDictionaryEditor.apply();
+                                    authDictionaryEditor.commit();
 
-                                    Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(mainActivity);
+                                    finish();
                                 } catch (Exception e) {
                                     Toast.makeText(LoginActivity.this, "Fetch error", Toast.LENGTH_SHORT).show();
                                 }

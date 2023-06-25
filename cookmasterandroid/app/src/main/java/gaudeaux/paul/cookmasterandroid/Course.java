@@ -1,21 +1,21 @@
 package gaudeaux.paul.cookmasterandroid;
 
 public class Course {
-    private String title;
+    private String name;
     private String id;
 
 
-    public Course(String title, String id) {
-        this.title = title;
+    public Course(String name, String id) {
+        this.name = name;
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
 

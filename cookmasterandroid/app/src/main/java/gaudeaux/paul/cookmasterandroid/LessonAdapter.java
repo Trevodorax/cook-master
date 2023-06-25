@@ -9,43 +9,42 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class CourseAdapter extends BaseAdapter {
-    private List<Course> students;
+public class LessonAdapter extends BaseAdapter {
+    private List<Lesson> lessons;
     private Context context;
 
-    public CourseAdapter(List<Course> students, Context context) {
-        this.students = students;
+    public LessonAdapter(List<Lesson> lessons, Context context) {
+        this.lessons = lessons;
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return this.students.size();
+        return this.lessons.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return this.students.get(position);
+        return this.lessons.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0; // we don't have an ID in this example, so this won't be used
+        return 0;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
-            convertView = inflater.inflate(R.layout.course_row, null);
+            convertView = inflater.inflate(R.layout.lesson_row, null);
         }
 
         TextView name = convertView.findViewById(R.id.name);
 
-        Course currentCourse = (Course) getItem(position);
+        Lesson currentLesson = (Lesson) getItem(position);
 
-        name.setText(currentCourse.getName());
-
+        name.setText(currentLesson.getName());
 
         return convertView;
     }

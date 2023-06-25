@@ -19,13 +19,13 @@
             android:name=".LessonActivity"
             android:exported="false" />
         <activity
-            android:name=".CourseActivity"
+            android:name=".CoursesActivity"
             android:exported="false" />
         <activity
             android:name=".ChatActivity"
             android:exported="false" />
         <activity
-            android:name=".CoursesActivity"
+            android:name=".CourseActivity"
             android:exported="false" />
         <activity
             android:name=".FidelityActivity"

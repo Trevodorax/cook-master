@@ -14,4 +14,8 @@
         android:textSize="32sp"
         android:text="Course"
         android:id="@+id/title"/>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/lessonsList" />
 </LinearLayout>
