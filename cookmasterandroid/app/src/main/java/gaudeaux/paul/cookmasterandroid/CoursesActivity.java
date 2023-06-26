@@ -61,9 +61,6 @@ public class CoursesActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
 
     public interface CoursesCallback {

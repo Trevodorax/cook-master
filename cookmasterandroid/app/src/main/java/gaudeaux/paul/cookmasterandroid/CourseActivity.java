@@ -100,7 +100,6 @@ public class CourseActivity extends AppCompatActivity {
                             for (int i = 0; i < responseJSONArray.length(); i++) {
                                 JSONObject courseObject = responseJSONArray.getJSONObject(i);
                                 Lesson addedLesson = new Lesson(courseObject.getString("name"), Integer.toString(courseObject.getInt("id")));
-                                System.out.println(addedLesson.getName() + " " + addedLesson.getId());
                                 lessons.add(addedLesson);
                             }
                             callback.onSuccess(lessons);  // Notify callback
