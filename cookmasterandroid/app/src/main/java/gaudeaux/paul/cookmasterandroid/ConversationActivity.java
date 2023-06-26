@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,37 +23,90 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
+
 public class ConversationActivity extends AppCompatActivity {
+    private List<Message> messages = new ArrayList<>();
+
     private ListView messagesList;
     private TextView title;
-
+    private EditText messageEditText;
+    private Button sendButton;
+    private String token;
     private String otherUserId;
     private String myId;
+    private Socket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
 
+        try {
+            mSocket = IO.socket("https://cookmaster.site");
+        } catch (URISyntaxException e) {
+            System.out.println("Socket io connection error : " + e.getMessage());
+        }
+
+        SharedPreferences authDictionary = getSharedPreferences("authDictionary", Context.MODE_PRIVATE);
+        this.token = authDictionary.getString("token", "");
+
+        mSocket.on("message", onNewMessage);
+
+        mSocket.connect();
+
+        try {
+            JSONObject authObject = new JSONObject();
+            authObject.put("token", this.token);
+            mSocket.emit("auth", authObject.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         this.title = findViewById(R.id.title);
         this.messagesList = findViewById(R.id.messagesList);
+        this.sendButton = findViewById(R.id.sendButton);
+        this.messageEditText = findViewById(R.id.messageInput);
 
         SharedPreferences userDictionary = getSharedPreferences("userDictionary", Context.MODE_PRIVATE);
         this.myId = userDictionary.getString("id", "");
 
         Intent intent = getIntent();
-        System.out.println(intent.getStringExtra("otherUserId"));
         this.otherUserId = intent.getStringExtra("otherUserId");
         String otherUserName = intent.getStringExtra("otherUserName");
 
         title.setText(otherUserName);
+
+        this.sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    // Initialize the JSONObject and populate it with payload data.
+                    JSONObject payload = new JSONObject();
+                    payload.put("token", token);
+                    payload.put("content", messageEditText.getText());
+                    payload.put("recipientId", Integer.parseInt(otherUserId));
+
+                    messageEditText.setText("");
+
+                    // Emit the "message" event with the payload.
+                    mSocket.emit("message", payload.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         getMessages(new MessagesCallback() {
             @Override
@@ -66,9 +121,6 @@ public class ConversationActivity extends AppCompatActivity {
 
             }
         });
-
-
-
     }
 
     public interface MessagesCallback {
@@ -77,8 +129,6 @@ public class ConversationActivity extends AppCompatActivity {
     }
 
     public void getMessages(MessagesCallback callback) {
-        List<Message> messages = new ArrayList<>();
-
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
         String url = "https://cookmaster.site/api/chat/" + otherUserId;
@@ -138,7 +188,7 @@ public class ConversationActivity extends AppCompatActivity {
                                     }
 
                                     Toast.makeText(ConversationActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                                }catch (Exception e){
+                                } catch (Exception e){
                                     e.printStackTrace();
                                 }
                             }
@@ -149,8 +199,6 @@ public class ConversationActivity extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> headers = new HashMap<String, String>();
-                SharedPreferences authDictionary = getSharedPreferences("authDictionary", Context.MODE_PRIVATE);
-                String token = authDictionary.getString("token", "");
                 headers.put("Authorization", "Bearer " + token);
                 return headers;
             }
@@ -158,6 +206,46 @@ public class ConversationActivity extends AppCompatActivity {
         };
         requestQueue.add(request);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mSocket.disconnect();
+        mSocket.off("message", onNewMessage);
+    }
+
+    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String senderId;
+                    String recipientId;
+                    String content;
+                    try {
+                        senderId = data.getString("senderId");
+                        recipientId = data.getString("recipientId");
+                        content = data.getString("content");
+                    } catch (JSONException e) {
+                        return;
+                    }
+
+                    Message newMessage = new Message(
+                            senderId,
+                            recipientId,
+                            content,
+                            senderId.equals(myId)
+                    );
+
+                    // add the message to view
+                    addMessage(newMessage);
+                }
+            });
+        }
+    };
 
     private void scrollToBottom() {
         messagesList.post(new Runnable() {
@@ -169,5 +257,17 @@ public class ConversationActivity extends AppCompatActivity {
         });
     }
 
+    private void addMessage(Message addedMessage) {
+        messages.add(addedMessage);  // Add the message to the list
 
+        // Create or update the adapter for the ListView
+        if (messagesList.getAdapter() == null) {
+            MessageAdapter messageAdapter = new MessageAdapter(messages, ConversationActivity.this);
+            messagesList.setAdapter(messageAdapter);
+        } else {
+            ((MessageAdapter) messagesList.getAdapter()).notifyDataSetChanged();
+        }
+
+        scrollToBottom();  // Scroll to the bottom of the ListView
+    }
 }
