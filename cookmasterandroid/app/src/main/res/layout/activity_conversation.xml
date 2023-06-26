@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="32dp"
-        android:text="Chat"
+        android:text="@string/chat"
         android:textAlignment="center"
         android:textSize="32sp"
         android:layout_alignParentTop="true" />
@@ -28,13 +28,13 @@
             android:layout_height="wrap_content"
             android:layout_weight="5"
             android:autofillHints="Enter your message"
-            android:hint="Enter your message"
+            android:hint="@string/message_input_text"
             android:inputType="text" />
         <Button
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text=">"
+            android:text="@string/send_message_button_text"
             android:id="@+id/sendButton"/>
     </LinearLayout>
     <ListView

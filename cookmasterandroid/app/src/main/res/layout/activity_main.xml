@@ -12,13 +12,13 @@
         android:layout_margin="32dp"
         android:textAlignment="center"
         android:textSize="32sp"
-        android:text="Welcome to cookmaster" />
+        android:text="@string/welcome_message" />
    <Button
        android:layout_width="300dp"
        android:layout_gravity="center"
        android:textSize="24sp"
        android:layout_height="wrap_content"
-       android:text="Log in"
+       android:text="@string/log_in"
        android:id="@+id/loginButton"/>
     <Button
         android:layout_width="300dp"
@@ -26,7 +26,7 @@
         android:textSize="24sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Courses"
+        android:text="@string/courses"
         android:id="@+id/coursesButton"/>
     <Button
         android:layout_width="300dp"
@@ -34,7 +34,7 @@
         android:textSize="24sp"
         android:layout_marginTop="16dp"
         android:layout_height="wrap_content"
-        android:text="Fidelity"
+        android:text="@string/fidelity"
         android:id="@+id/fidelityButton"/>
     <Button
         android:layout_width="300dp"
@@ -42,6 +42,14 @@
         android:textSize="24sp"
         android:layout_marginTop="16dp"
         android:layout_height="wrap_content"
-        android:text="Chat"
+        android:text="@string/chat"
         android:id="@+id/chatButton"/>
+    <Button
+        android:layout_width="300dp"
+        android:layout_gravity="center"
+        android:textSize="24sp"
+        android:layout_marginTop="16dp"
+        android:layout_height="wrap_content"
+        android:text="@string/change_locale"
+        android:id="@+id/localeButton"/>
 </LinearLayout>

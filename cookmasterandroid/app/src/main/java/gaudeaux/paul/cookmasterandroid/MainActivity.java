@@ -26,10 +26,11 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    Button loginButton;
-    Button coursesButton;
-    Button fidelityButton;
-    Button chatButton;
+    private Button loginButton;
+    private Button coursesButton;
+    private Button fidelityButton;
+    private Button chatButton;
+    private Button localeButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         this.coursesButton = findViewById(R.id.coursesButton);
         this.fidelityButton = findViewById(R.id.fidelityButton);
         this.chatButton = findViewById(R.id.chatButton);
+        this.localeButton = findViewById(R.id.localeButton);
 
         this.loginButton.setOnClickListener(v -> {
             Intent loginActivity = new Intent(MainActivity.this, LoginActivity.class);
@@ -59,6 +61,11 @@ public class MainActivity extends AppCompatActivity {
         this.chatButton.setOnClickListener(v -> {
             Intent conversationsActivity = new Intent(MainActivity.this, ConversationsActivity.class);
             startActivity(conversationsActivity);
+        });
+        
+        this.localeButton.setOnClickListener(v -> {
+            LocaleHelper.switchLanguageRandomly(this);
+            recreate();
         });
     }
 
