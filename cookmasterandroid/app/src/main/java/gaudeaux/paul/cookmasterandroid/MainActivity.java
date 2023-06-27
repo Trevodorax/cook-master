@@ -128,15 +128,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
-        // Check if the NFC intent contains an NDEF message
-        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
-            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            if (tag != null) {
-                // Change locale randomly
-                LocaleHelper.switchLanguageRandomly(this);
-                recreate();
-            }
-        }
+        LocaleHelper.switchLanguageRandomly(this);
+        recreate();
     }
 
 

@@ -38,7 +38,6 @@ import io.socket.emitter.Emitter;
 
 public class ConversationActivity extends AppCompatActivity {
     private List<Message> messages = new ArrayList<>();
-
     private ListView messagesList;
     private TextView title;
     private EditText messageEditText;
@@ -64,15 +63,28 @@ public class ConversationActivity extends AppCompatActivity {
 
         mSocket.on("message", onNewMessage);
 
-        mSocket.connect();
+        // for some dark reason, the socket disconnects and reconnects every 10 seconds, which
+        // causes the socket to change, so we need another auth call to tell the server who we are.
+        // probably same issue as https://github.com/socketio/socket.io-client-java/issues/549
+        mSocket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject authObject = new JSONObject();
+                            authObject.put("token", token);
+                            mSocket.emit("auth", authObject.toString());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            }
+        });
 
-        try {
-            JSONObject authObject = new JSONObject();
-            authObject.put("token", this.token);
-            mSocket.emit("auth", authObject.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        mSocket.connect();
 
         this.title = findViewById(R.id.title);
         this.messagesList = findViewById(R.id.messagesList);
@@ -218,7 +230,6 @@ public class ConversationActivity extends AppCompatActivity {
         @Override
         public void call(Object... args) {
             runOnUiThread(new Runnable() {
-                @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String senderId;

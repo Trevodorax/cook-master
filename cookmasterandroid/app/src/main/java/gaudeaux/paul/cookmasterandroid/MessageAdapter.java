@@ -1,14 +1,14 @@
 package gaudeaux.paul.cookmasterandroid;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.core.content.res.ResourcesCompat;
 
 import java.util.List;
 
@@ -57,12 +57,14 @@ public class MessageAdapter extends BaseAdapter {
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
             // Align the text inside TextView to the right
-            content.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+            content.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.message_bubble_me, null));
+            content.setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.black, null));
         } else {
             // Align the message to the left
             params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
             params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            content.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+            content.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.message_bubble_other, null));
+            content.setTextColor(ResourcesCompat.getColor(context.getResources(), R.color.white, null));
         }
 
         content.setLayoutParams(params); // apply the updated layout params

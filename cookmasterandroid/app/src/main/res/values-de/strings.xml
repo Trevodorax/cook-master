@@ -8,7 +8,7 @@
     <string name="chat">Chat</string>
     <string name="change_locale">Sprache ändern</string>
     <string name="message_input_text">Geben Sie Ihre Nachricht ein</string>
-    <string name="send_message_button_text">Senden</string>
+    <string name="send_message_button_text">\></string>
     <string name="conversations">Unterhaltungen</string>
     <string name="course">Kurs</string>
     <string name="fidelity_points_1">Sie haben</string>

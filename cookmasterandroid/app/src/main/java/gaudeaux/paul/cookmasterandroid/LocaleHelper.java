@@ -21,9 +21,24 @@ public class LocaleHelper {
     }
 
     public static void switchLanguageRandomly(Context context) {
+        // Get the current locale
+        Locale currentLocale = getResourcesLocale(context.getResources());
+
         Random random = new Random();
-        int randomIndex = random.nextInt(SUPPORTED_LANGUAGES.length);
-        String randomLanguageCode = SUPPORTED_LANGUAGES[randomIndex];
+        String randomLanguageCode;
+
+        do {
+            // Generate a random index and select a random language code
+            int randomIndex = random.nextInt(SUPPORTED_LANGUAGES.length);
+            randomLanguageCode = SUPPORTED_LANGUAGES[randomIndex];
+        } while (currentLocale.getLanguage().equals(randomLanguageCode)); // make sure the locale changes each time
+
         setLocale(context, randomLanguageCode);
     }
+
+    public static Locale getResourcesLocale(Resources resources) {
+        Configuration config = resources.getConfiguration();
+        return config.getLocales().get(0);
+    }
+
 }
