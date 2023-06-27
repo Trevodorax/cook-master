@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">cookmasterandroid</string>
+    <string name="welcome_message">Bienvenido a Cookmaster</string>
+    <string name="log_in">Iniciar sesión</string>
+    <string name="courses">Cursos</string>
+    <string name="fidelity">Fidelidad</string>
+    <string name="chat">Chat</string>
+    <string name="change_locale">Cambiar idioma</string>
+    <string name="message_input_text">Ingrese su mensaje</string>
+    <string name="send_message_button_text">\></string>
+    <string name="conversations">Conversaciones</string>
+    <string name="course">Curso</string>
+    <string name="fidelity_points_1">¡Tienes</string>
+    <string name="fidelity_points_2">puntos de fidelidad!</string>
+    <string name="lesson">Lección</string>
+    <string name="email">Email</string>
+    <string name="password">Contraseña</string>
+    <string name="no_account_question">¿Aún no tienes una cuenta?</string>
+    <string name="create_account">Crear cuenta</string>
+</resources>
