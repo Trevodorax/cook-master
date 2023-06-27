@@ -2,9 +2,12 @@ package gaudeaux.paul.cookmasterandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private Button fidelityButton;
     private Button chatButton;
     private Button localeButton;
+    private NfcAdapter nfcAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +71,26 @@ public class MainActivity extends AppCompatActivity {
             LocaleHelper.switchLanguageRandomly(this);
             recreate();
         });
+
+        // Initialize NFC adapter
+        nfcAdapter = NfcAdapter.getDefaultAdapter(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Enable foreground dispatch for NFC events
+        if (nfcAdapter != null) {
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    this,
+                    0,
+                    new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP),
+                    PendingIntent.FLAG_IMMUTABLE
+            );
+            nfcAdapter.enableForegroundDispatch(this, pendingIntent, null, null);
+        }
+
 
         getUser(new UserCallback() {
             @Override
@@ -93,6 +112,31 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Disable foreground dispatch for NFC events
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(this);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // Check if the NFC intent contains an NDEF message
+        if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction())) {
+            Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+            if (tag != null) {
+                // Change locale randomly
+                LocaleHelper.switchLanguageRandomly(this);
+                recreate();
+            }
+        }
     }
 
 
