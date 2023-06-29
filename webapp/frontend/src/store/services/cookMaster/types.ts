@@ -4,6 +4,7 @@ export interface User {
   firstName?: string | null;
   lastName?: string | null;
   userType: string;
+  profilePicture: string;
   admin?: Admin | null;
   client?: Client | null;
   contractor?: Contractor | null;
@@ -24,6 +25,7 @@ export interface Admin {
 export interface Client {
   id: number;
   user?: User | null;
+  subscriptionLevel: number;
   fidelityPoints: number;
   Address?: Address | null;
   events: Event[];

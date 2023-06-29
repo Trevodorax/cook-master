@@ -9,6 +9,7 @@ import {
   TextSetter,
   setterType,
   EntitySetter,
+  ImageSetter,
 } from "./setters";
 import styles from "./ModificationModal.module.scss";
 
@@ -43,6 +44,7 @@ export const ModificationModal: FC<Props> = ({
     date: DateSetter,
     select: SelectSetter,
     entity: EntitySetter,
+    image: ImageSetter,
   };
 
   const Setter = setterPerType[type];

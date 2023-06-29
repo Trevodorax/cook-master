@@ -13,3 +13,5 @@ export * from "./NoIcon";
 export * from "./YesIcon";
 export * from "./WhiteBoardIcon";
 export * from "./PanIcon";
+export * from "./SubscriptionLevelIcon";
+export * from "./SettingsIcon";

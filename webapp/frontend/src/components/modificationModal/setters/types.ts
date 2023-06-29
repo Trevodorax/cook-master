@@ -4,4 +4,10 @@ export interface Props {
   mutateValue: (value: any) => void;
 }
 
-export type setterType = "text" | "number" | "date" | "select" | "entity";
+export type setterType =
+  | "text"
+  | "number"
+  | "date"
+  | "select"
+  | "entity"
+  | "image";
