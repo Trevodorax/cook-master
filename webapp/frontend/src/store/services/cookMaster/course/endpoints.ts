@@ -12,7 +12,7 @@ import {
   PatchCourseDto,
   SearchCourseDto,
 } from "./dto";
-import { Client, CookMasterEvent, Course, Lesson } from "../types";
+import { Client, Course, Lesson, serializedCookMasterEvent } from "../types";
 import { buildQueryParams } from "../../utils/buildQueryParams";
 import { CreateEventDto } from "../event/dto";
 
@@ -65,12 +65,15 @@ export const courseEndpoints = (
     query: ({ courseId }) => `courses/${courseId}/lessons`,
     providesTags: (_, __, arg) => [{ type: "Course", id: arg.courseId }],
   }),
-  getWorkshopsOfCourse: builder.query<CookMasterEvent[], GetCourseDto>({
+  getWorkshopsOfCourse: builder.query<
+    serializedCookMasterEvent[],
+    GetCourseDto
+  >({
     query: ({ courseId }) => `courses/${courseId}/workshops`,
-    providesTags: (_, __, arg) => [{ type: "Course", id: arg.courseId }],
+    providesTags: ["Event"],
   }),
-  addWorkshopToCourse: builder.query<
-    CookMasterEvent[],
+  addWorkshopToCourse: builder.mutation<
+    serializedCookMasterEvent,
     { courseId: number; workshop: CreateEventDto }
   >({
     query: ({ courseId, workshop }) => ({
@@ -78,8 +81,7 @@ export const courseEndpoints = (
       method: "POST",
       body: workshop,
     }),
-
-    providesTags: (_, __, arg) => [{ type: "Course", id: arg.courseId }],
+    invalidatesTags: (_, __, arg) => [{ type: "Course", id: arg.courseId }],
   }),
   getClientsOfCourse: builder.query<Client[], GetCourseDto>({
     // Note: the Client type isn't defined here, replace this with the correct Client type

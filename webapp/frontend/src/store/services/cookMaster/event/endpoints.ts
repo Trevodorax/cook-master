@@ -70,4 +70,11 @@ export const eventEndpoints = (
     query: (eventId) => `events/${eventId}/clients`,
     providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
   }),
+  deleteEvent: builder.mutation<CookMasterEvent, string>({
+    query: (id) => ({
+      url: `events/${id}`,
+      method: "DELETE",
+    }),
+    invalidatesTags: ["Event"],
+  }),
 });

@@ -1,23 +1,28 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
 import { useSelector } from "react-redux";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { Scheduler } from "@aldabil/react-scheduler";
+import { toast } from "react-hot-toast";
 
 import {
+  useAddWorkshopToCourseMutation,
   useApplyToCourseMutation,
+  useDeleteEventMutation,
   useGetClientsOfCourseQuery,
   useGetCourseByIdQuery,
   useGetLessonsOfCourseQuery,
   useGetWorkshopsOfCourseQuery,
   usePatchCourseMutation,
+  usePatchEventMutation,
   useResignFromCourseMutation,
 } from "@/store/services/cookMaster/api";
 import { EditableField } from "@/components/editableField/EditableField";
 import { RootState } from "@/store/store";
 import { LessonCard } from "@/components/lessonCard/LessonCard";
 import { Button } from "@/components/button/Button";
-import { EventCard } from "@/components/eventCard/EventCard";
+import { serializedCookMasterEvent } from "@/store/services/cookMaster/types";
 
+import { formatEventForScheduler } from "./utils";
 import styles from "./Course.module.scss";
 
 interface Props {
@@ -25,15 +30,7 @@ interface Props {
 }
 
 export const Course: FC<Props> = ({ courseId }) => {
-  const router = useRouter();
-
   const user = useSelector((state: RootState) => state.user.userInfo);
-
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  });
 
   const courseIdNumber = parseInt(courseId);
   if (isNaN(courseIdNumber)) {
@@ -43,6 +40,9 @@ export const Course: FC<Props> = ({ courseId }) => {
   const [patchCourse] = usePatchCourseMutation();
   const [applyToCourse] = useApplyToCourseMutation();
   const [resignFromCourse] = useResignFromCourseMutation();
+  const [addWorkshopToCourse] = useAddWorkshopToCourseMutation();
+  const [patchEvent] = usePatchEventMutation();
+  const [deleteEvent] = useDeleteEventMutation();
 
   const { data: courseData } = useGetCourseByIdQuery({
     courseId: courseIdNumber,
@@ -107,7 +107,6 @@ export const Course: FC<Props> = ({ courseId }) => {
           </div>
         )}
       </div>
-
       <EditableField
         type="text"
         initialValue={<p>{courseData.description}</p>}
@@ -145,19 +144,69 @@ export const Course: FC<Props> = ({ courseId }) => {
       <div className={styles.workshops}>
         <h2>Workshops</h2>
         <div className={styles.workshopList}>
-          {user?.userType === "contractor" &&
-            user.contractorId === courseData.contractorId && (
-              <Link
-                href={`/courses/${courseId}/workshop/new`}
-                className={styles.createButton}
-              >
-                +
-              </Link>
-            )}
-          {courseWorkshops &&
-            courseWorkshops.map((workshop, index) => (
-              <EventCard key={index} event={workshop} />
-            ))}
+          {courseWorkshops && (
+            <>
+              <Scheduler
+                onDelete={async (deletedId) => {
+                  const deletedEvent = await deleteEvent(deletedId.toString());
+                  if ("data" in deletedEvent && deletedEvent.data) {
+                    return deletedEvent.data.id;
+                  } else {
+                    toast.error("Error deleting event");
+                  }
+                }}
+                onConfirm={async (event, action) => {
+                  switch (action) {
+                    case "create":
+                      const createdWorkshop = await addWorkshopToCourse({
+                        courseId: courseIdNumber,
+                        workshop: {
+                          name: event.title,
+                          type: "workshop",
+                          startTime: event.start,
+                          durationMin: Math.floor(
+                            (event.end.getTime() - event.start.getTime()) /
+                              (1000 * 60)
+                          ),
+                        },
+                      });
+
+                      const formattedEvent = formatEventForScheduler(
+                        (createdWorkshop as { data: serializedCookMasterEvent })
+                          .data
+                      );
+                      return formattedEvent;
+                    case "edit":
+                      console.log("event new value: ", event);
+                      const modifiedWorkshop = await patchEvent({
+                        id: event.event_id.toString(),
+                        data: {
+                          name: event.title,
+                          startTime: event.start,
+                          durationMin: Math.floor(
+                            (event.end.getTime() - event.start.getTime()) /
+                              (1000 * 60)
+                          ),
+                        },
+                      });
+                      return formatEventForScheduler(modifiedWorkshop.data);
+                  }
+                }}
+                events={courseWorkshops?.map((workshop) => {
+                  const isEditable =
+                    courseData.contractorId === user?.contractor?.id;
+
+                  const formattedWorkshop = formatEventForScheduler(workshop);
+
+                  formattedWorkshop.draggable = isEditable;
+                  formattedWorkshop.deletable = isEditable;
+                  formattedWorkshop.editable = isEditable;
+
+                  return formattedWorkshop;
+                })}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

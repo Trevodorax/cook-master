@@ -152,7 +152,7 @@ export class CourseService {
       throw new NotFoundException(`Could not find course with id ${courseId}`);
     }
 
-    const updatedCourse = await this.prisma.course.update({
+    await this.prisma.course.update({
       where: { id: courseIdNumber },
       data: {
         workshops: {
@@ -161,7 +161,7 @@ export class CourseService {
       },
     });
 
-    return updatedCourse;
+    return createdWorkshop;
   }
 
   async getWorkshopsFromCourse(courseId: string) {
