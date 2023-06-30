@@ -1,22 +1,24 @@
 import { FC, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 import {
   useApplyToCourseMutation,
   useGetClientsOfCourseQuery,
   useGetCourseByIdQuery,
   useGetLessonsOfCourseQuery,
+  useGetWorkshopsOfCourseQuery,
   usePatchCourseMutation,
   useResignFromCourseMutation,
 } from "@/store/services/cookMaster/api";
 import { EditableField } from "@/components/editableField/EditableField";
+import { RootState } from "@/store/store";
+import { LessonCard } from "@/components/lessonCard/LessonCard";
+import { Button } from "@/components/button/Button";
+import { EventCard } from "@/components/eventCard/EventCard";
 
 import styles from "./Course.module.scss";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store/store";
-import { useRouter } from "next/router";
-import { LessonCard } from "@/components/lessonCard/LessonCard";
-import Link from "next/link";
-import { Button } from "@/components/button/Button";
 
 interface Props {
   courseId: string;
@@ -46,6 +48,10 @@ export const Course: FC<Props> = ({ courseId }) => {
     courseId: courseIdNumber,
   });
   const { data: courseLessons } = useGetLessonsOfCourseQuery({
+    courseId: courseIdNumber,
+  });
+
+  const { data: courseWorkshops } = useGetWorkshopsOfCourseQuery({
     courseId: courseIdNumber,
   });
 
@@ -133,6 +139,24 @@ export const Course: FC<Props> = ({ courseId }) => {
           {courseLessons &&
             courseLessons.map((lesson, index) => (
               <LessonCard key={index} lesson={lesson} />
+            ))}
+        </div>
+      </div>
+      <div className={styles.workshops}>
+        <h2>Workshops</h2>
+        <div className={styles.workshopList}>
+          {user?.userType === "contractor" &&
+            user.contractorId === courseData.contractorId && (
+              <Link
+                href={`/courses/${courseId}/workshop/new`}
+                className={styles.createButton}
+              >
+                +
+              </Link>
+            )}
+          {courseWorkshops &&
+            courseWorkshops.map((workshop, index) => (
+              <EventCard key={index} event={workshop} />
             ))}
         </div>
       </div>

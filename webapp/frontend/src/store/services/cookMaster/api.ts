@@ -81,4 +81,6 @@ export const {
   useGetMyConversationsQuery,
   usePrefetch,
   usePatchMeMutation,
+  useAddWorkshopToCourseQuery,
+  useGetWorkshopsOfCourseQuery,
 } = api;

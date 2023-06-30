@@ -16,9 +16,9 @@ model User {
   firstName         String?
   lastName          String?
   userType          String
-  profilePicture String      @default("https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg")
-  sentMessages      Message[]   @relation("SentMessages") // Relation name is specified here
-  receivedMessages  Message[]   @relation("ReceivedMessages") // Relation name is specified here
+  profilePicture    String      @default("https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg")
+  sentMessages      Message[]   @relation("SentMessages")
+  receivedMessages  Message[]   @relation("ReceivedMessages")
   admin             Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
   client            Client?     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   contractor        Contractor? @relation(fields: [contractorId], references: [id], onDelete: Cascade)
@@ -91,11 +91,13 @@ model Event {
   description String?     @default("")
   startTime   DateTime
   durationMin Int
+  course      Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
   animator    Contractor? @relation(fields: [contractorId], references: [id])
   clients     Client[]
 
   // relation fields
   contractorId Int?
+  courseId Int?
 
   @@map("events")
 }
@@ -106,6 +108,7 @@ model Course {
   name        String
   description String
   lessons     Lesson[]
+  workshops   Event[]
   Contractor  Contractor? @relation(fields: [contractorId], references: [id])
 
   contractorId Int?
