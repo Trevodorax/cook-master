@@ -11,12 +11,14 @@ interface Props {
   isSelected: boolean;
   onClick: () => void;
   subscription: CookMasterSubscription;
+  isCurrentUserSubscription: boolean;
 }
 
 export const SubscriptionCard: FC<Props> = ({
   isSelected,
   subscription,
   onClick,
+  isCurrentUserSubscription,
 }) => {
   const { t } = useTranslation();
 
@@ -25,6 +27,7 @@ export const SubscriptionCard: FC<Props> = ({
       onClick={onClick}
       className={cx(styles.container, { [styles.selected]: isSelected })}
     >
+      {isCurrentUserSubscription && <p>Your current subscription</p>}
       <h3 className={styles.title}>{subscription.displayedName}</h3>
       <table className={styles.benefits}>
         <tbody>

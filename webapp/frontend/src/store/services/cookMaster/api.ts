@@ -80,4 +80,5 @@ export const {
   useGetMyMessagesWithMutation,
   useGetMyConversationsQuery,
   usePrefetch,
+  usePatchMeMutation,
 } = api;

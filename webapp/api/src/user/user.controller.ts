@@ -63,6 +63,12 @@ export class UserController {
     return await this.userService.deleteUserById(id);
   }
 
+  @UseGuards(JwtGuard)
+  @Patch('me')
+  async patchMe(@GetUser() user: User, @Body() data: Partial<User>) {
+    return await this.userService.patchUser(user.id.toString(), data);
+  }
+
   @UseGuards(JwtGuard, RolesGuard)
   @AllowedUserTypes(['admin'])
   @Patch(':id')

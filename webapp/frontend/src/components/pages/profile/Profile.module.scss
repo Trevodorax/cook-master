@@ -1,0 +1,27 @@
+.container {
+  display: flex;
+  margin-top: 16px;
+
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  flex-grow: 0;
+
+  .subscriptionLevel {
+    cursor: pointer;
+  }
+
+  img {
+    height: 150px;
+    aspect-ratio: 1/1;
+    margin: 16px;
+
+    border-radius: 100%;
+  }
+  
+  p {
+    margin: 8px;
+    
+    font-size: 16px;
+  }
+}

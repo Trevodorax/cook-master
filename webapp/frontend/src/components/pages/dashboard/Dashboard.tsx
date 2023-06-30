@@ -9,6 +9,7 @@ import {
   CalendarIcon,
   KeyIcon,
   MessageIcon,
+  SettingsIcon,
   UserIcon,
 } from "@/components/svgs";
 
@@ -38,8 +39,8 @@ export const Dashboard = () => {
       link: "/events/my",
     },
     {
-      title: "My profile",
-      icon: UserIcon,
+      title: "Profile",
+      icon: SettingsIcon,
       link: "/profile",
     },
     {
@@ -59,6 +60,11 @@ export const Dashboard = () => {
       title: "Users",
       icon: UserIcon,
       link: "/users",
+    },
+    {
+      title: "Profile",
+      icon: SettingsIcon,
+      link: "/profile",
     },
   ];
 
@@ -82,6 +88,11 @@ export const Dashboard = () => {
       title: "Conversations",
       icon: MessageIcon,
       link: "/chat",
+    },
+    {
+      title: "Profile",
+      icon: SettingsIcon,
+      link: "/profile",
     },
   ];
 

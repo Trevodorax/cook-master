@@ -14,7 +14,7 @@ interface Props {
   type: setterType;
   initialValue: ReactNode;
   mutateValue: (value: any) => void;
-  isEditable?: boolean;
+  isEditable: boolean;
 }
 
 export const EditableField: FC<Props> = ({
@@ -24,7 +24,7 @@ export const EditableField: FC<Props> = ({
   getOptions,
   textField,
   options,
-  isEditable = false,
+  isEditable,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,7 +42,10 @@ export const EditableField: FC<Props> = ({
         options={options}
         textField={textField}
       />
-      {initialValue}
+      {type === "image" && (
+        <img className={styles.image} src={initialValue as string} />
+      )}
+      {type !== "image" && initialValue}
       {isEditable && (
         <Button onClick={() => setIsOpen(true)} className={styles.editButton}>
           <PenIcon />

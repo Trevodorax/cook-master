@@ -81,6 +81,14 @@ export const userEndpoints = (
     }),
     invalidatesTags: (_, __, arg) => [{ type: "User", id: arg.id }],
   }),
+  patchMe: builder.mutation<User, { data: Partial<User> }>({
+    query: ({ data }) => ({
+      url: "users/me",
+      method: "PATCH",
+      body: data,
+    }),
+    invalidatesTags: ["User"],
+  }),
   confirmAdmin: builder.mutation<UserInfo, { id: string }>({
     query: ({ id }) => ({
       url: "users/confirmAdmin",

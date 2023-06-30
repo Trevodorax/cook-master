@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
-import { UserType } from 'src/auth/dto';
 
+import { UserType } from 'src/auth/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -93,9 +93,28 @@ export class UserService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
+    // data preparation
+    const updatedData: Partial<User> = {};
+
+    if (data.firstName) {
+      updatedData.firstName = data.firstName;
+    }
+
+    if (data.lastName) {
+      updatedData.lastName = data.lastName;
+    }
+
+    if (data.email) {
+      updatedData.email = data.email;
+    }
+
+    if (data.profilePicture) {
+      updatedData.profilePicture = data.profilePicture;
+    }
+
     const updatedUser = await this.prisma.user.update({
       where: { id: idAsNumber },
-      data,
+      data: updatedData,
     });
 
     return updatedUser;
