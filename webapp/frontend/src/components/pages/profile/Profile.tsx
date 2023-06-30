@@ -8,9 +8,9 @@ import {
   usePatchMeMutation,
 } from "@/store/services/cookMaster/api";
 
-import styles from "./Settings.module.scss";
+import styles from "./Profile.module.scss";
 
-export const Settings: FC = () => {
+export const Profile: FC = () => {
   const router = useRouter();
   const [patchMe] = usePatchMeMutation();
   const [getMe, { data: userData }] = useGetMeMutation();
@@ -69,7 +69,7 @@ export const Settings: FC = () => {
         }}
         isEditable={true}
       />
-      <p>
+      <p title={userData?.userType}>
         {userData?.userType === "contractor"
           ? "👨‍🍳"
           : userData?.userType === "client"

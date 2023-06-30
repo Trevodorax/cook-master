@@ -41,7 +41,7 @@ export const Dashboard = () => {
     {
       title: "Profile",
       icon: SettingsIcon,
-      link: "/settings",
+      link: "/profile",
     },
     {
       title: "Conversations",
@@ -64,7 +64,7 @@ export const Dashboard = () => {
     {
       title: "Profile",
       icon: SettingsIcon,
-      link: "/settings",
+      link: "/profile",
     },
   ];
 
@@ -92,7 +92,7 @@ export const Dashboard = () => {
     {
       title: "Profile",
       icon: SettingsIcon,
-      link: "/settings",
+      link: "/profile",
     },
   ];
 
