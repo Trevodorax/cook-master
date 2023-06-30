@@ -19,7 +19,7 @@ export const SubscriptionBooking = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [clientSecret, setClientSecret] = useState("");
 
-  const userId = useSelector((state: RootState) => state.user.userInfo?.id);
+  const user = useSelector((state: RootState) => state.user.userInfo);
 
   const [createBillingIntent, { isError: isBillingDataError }] =
     useCreateBillingIntentMutation();
@@ -32,7 +32,7 @@ export const SubscriptionBooking = () => {
 
     const result = await createBillingIntent({
       productName: subscriptions[selectedCardIndex].productName,
-      userId: userId || -1,
+      userId: user?.id || -1,
     });
 
     if (isBillingDataError) {
@@ -75,13 +75,32 @@ export const SubscriptionBooking = () => {
         successMessage={`Thank you for purchasing the ${subscriptions[selectedCardIndex].displayedName} subscription.`}
       />
       <div className={styles.cards}>
-        {subscriptions.map((subscription, index) => (
-          <SubscriptionCard
-            isSelected={index === selectedCardIndex}
-            subscription={subscription}
-            onClick={() => setSelectedCardIndex(index)}
-          />
-        ))}
+        {subscriptions.map((subscription, index) => {
+          const isCurrentUserSubscription =
+            user?.client?.subscriptionLevel === subscription.subscriptionLevel;
+
+          const isBelowCurrentUserSubscription =
+            (user?.client?.subscriptionLevel || 0) >
+            subscription.subscriptionLevel;
+
+          return (
+            <SubscriptionCard
+              isSelected={index === selectedCardIndex}
+              subscription={subscription}
+              onClick={() => {
+                if (
+                  isCurrentUserSubscription ||
+                  isBelowCurrentUserSubscription
+                ) {
+                  toast.success("You already have these advantages !");
+                  return;
+                }
+                setSelectedCardIndex(index);
+              }}
+              isCurrentUserSubscription={isCurrentUserSubscription}
+            />
+          );
+        })}
       </div>
     </div>
   );

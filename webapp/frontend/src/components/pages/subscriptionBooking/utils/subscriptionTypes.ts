@@ -1,6 +1,7 @@
 export interface CookMasterSubscription {
   displayedName: string;
   productName: string;
+  subscriptionLevel: number;
   price: number;
   benefits: {
     noAds: boolean;
@@ -23,6 +24,7 @@ export const subscriptions: CookMasterSubscription[] = [
   {
     displayedName: "Starter Subscription",
     productName: "subStarter",
+    subscriptionLevel: 1,
     price: 9.9,
     benefits: {
       noAds: true,
@@ -43,6 +45,7 @@ export const subscriptions: CookMasterSubscription[] = [
   {
     displayedName: "Master Subscription",
     productName: "subMaster",
+    subscriptionLevel: 2,
     price: 19,
     benefits: {
       noAds: true,
@@ -63,6 +66,7 @@ export const subscriptions: CookMasterSubscription[] = [
   {
     displayedName: "Free Subscription",
     productName: "subFree",
+    subscriptionLevel: 0,
     price: 0,
     benefits: {
       noAds: false,
