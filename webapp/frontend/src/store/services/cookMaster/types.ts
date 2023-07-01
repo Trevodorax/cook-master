@@ -134,3 +134,7 @@ export interface Message {
   recipientId: number;
   recipient: User;
 }
+
+export type serializedCookMasterEvent = Omit<CookMasterEvent, "startTime"> & {
+  startTime: string;
+};

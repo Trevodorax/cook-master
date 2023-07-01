@@ -1,37 +1,35 @@
-import { FC, useEffect } from "react";
+import { FC } from "react";
+import { useSelector } from "react-redux";
+import Link from "next/link";
+import { Scheduler } from "@aldabil/react-scheduler";
+import { toast } from "react-hot-toast";
 
 import {
+  useAddWorkshopToCourseMutation,
   useApplyToCourseMutation,
+  useDeleteEventMutation,
   useGetClientsOfCourseQuery,
   useGetCourseByIdQuery,
   useGetLessonsOfCourseQuery,
+  useGetWorkshopsOfCourseQuery,
   usePatchCourseMutation,
+  usePatchEventMutation,
   useResignFromCourseMutation,
 } from "@/store/services/cookMaster/api";
 import { EditableField } from "@/components/editableField/EditableField";
-
-import styles from "./Course.module.scss";
-import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
-import { useRouter } from "next/router";
 import { LessonCard } from "@/components/lessonCard/LessonCard";
-import Link from "next/link";
 import { Button } from "@/components/button/Button";
+
+import { formatEventForScheduler } from "./utils";
+import styles from "./Course.module.scss";
 
 interface Props {
   courseId: string;
 }
 
 export const Course: FC<Props> = ({ courseId }) => {
-  const router = useRouter();
-
   const user = useSelector((state: RootState) => state.user.userInfo);
-
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  });
 
   const courseIdNumber = parseInt(courseId);
   if (isNaN(courseIdNumber)) {
@@ -41,6 +39,9 @@ export const Course: FC<Props> = ({ courseId }) => {
   const [patchCourse] = usePatchCourseMutation();
   const [applyToCourse] = useApplyToCourseMutation();
   const [resignFromCourse] = useResignFromCourseMutation();
+  const [addWorkshopToCourse] = useAddWorkshopToCourseMutation();
+  const [patchEvent] = usePatchEventMutation();
+  const [deleteEvent] = useDeleteEventMutation();
 
   const { data: courseData } = useGetCourseByIdQuery({
     courseId: courseIdNumber,
@@ -48,6 +49,11 @@ export const Course: FC<Props> = ({ courseId }) => {
   const { data: courseLessons } = useGetLessonsOfCourseQuery({
     courseId: courseIdNumber,
   });
+
+  const { data: courseWorkshops, refetch: refetchWorkshops } =
+    useGetWorkshopsOfCourseQuery({
+      courseId: courseIdNumber,
+    });
 
   const { data: clientsInCourse } = useGetClientsOfCourseQuery({
     courseId: courseIdNumber,
@@ -101,7 +107,6 @@ export const Course: FC<Props> = ({ courseId }) => {
           </div>
         )}
       </div>
-
       <EditableField
         type="text"
         initialValue={<p>{courseData.description}</p>}
@@ -134,6 +139,85 @@ export const Course: FC<Props> = ({ courseId }) => {
             courseLessons.map((lesson, index) => (
               <LessonCard key={index} lesson={lesson} />
             ))}
+        </div>
+      </div>
+      <div className={styles.workshops}>
+        <h2>Workshops</h2>
+        <div className={styles.workshopList}>
+          {courseWorkshops && (
+            <>
+              <Scheduler
+                onDelete={async (deletedId) => {
+                  const deletedEvent = await deleteEvent(deletedId.toString());
+                  if ("data" in deletedEvent && deletedEvent.data) {
+                    refetchWorkshops();
+                    return deletedEvent.data.id;
+                  } else {
+                    toast.error("Error deleting event");
+                  }
+                }}
+                onConfirm={async (event, action) => {
+                  switch (action) {
+                    case "create":
+                      const createdWorkshop = await addWorkshopToCourse({
+                        courseId: courseIdNumber,
+                        workshop: {
+                          name: event.title,
+                          type: "workshop",
+                          startTime: event.start,
+                          durationMin: Math.floor(
+                            (event.end.getTime() - event.start.getTime()) /
+                              (1000 * 60)
+                          ),
+                        },
+                      });
+
+                      refetchWorkshops();
+
+                      if ("data" in createdWorkshop && createdWorkshop.data) {
+                        return formatEventForScheduler(createdWorkshop.data);
+                      } else {
+                        toast.error("Error creating event");
+                        return event;
+                      }
+
+                    case "edit":
+                      const modifiedWorkshop = await patchEvent({
+                        id: event.event_id.toString(),
+                        data: {
+                          name: event.title,
+                          startTime: event.start,
+                          durationMin: Math.floor(
+                            (event.end.getTime() - event.start.getTime()) /
+                              (1000 * 60)
+                          ),
+                        },
+                      });
+                      refetchWorkshops();
+
+                      if ("data" in modifiedWorkshop && modifiedWorkshop.data) {
+                        return formatEventForScheduler(modifiedWorkshop.data);
+                      } else {
+                        toast.error("Error editing event");
+                        return event;
+                      }
+                  }
+                }}
+                events={courseWorkshops?.map((workshop) => {
+                  const isEditable =
+                    courseData.contractorId === user?.contractor?.id;
+
+                  const formattedWorkshop = formatEventForScheduler(workshop);
+
+                  formattedWorkshop.draggable = isEditable;
+                  formattedWorkshop.deletable = isEditable;
+                  formattedWorkshop.editable = isEditable;
+
+                  return formattedWorkshop;
+                })}
+              />
+            </>
+          )}
         </div>
       </div>
     </div>

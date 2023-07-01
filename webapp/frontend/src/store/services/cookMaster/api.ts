@@ -81,4 +81,7 @@ export const {
   useGetMyConversationsQuery,
   usePrefetch,
   usePatchMeMutation,
+  useAddWorkshopToCourseMutation,
+  useGetWorkshopsOfCourseQuery,
+  useDeleteEventMutation,
 } = api;

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -47,6 +48,11 @@ export class EventController {
   @Patch(':id')
   patchEvent(@Param('id') id: string, @Body() data: PatchEventDto) {
     return this.eventService.patchEvent(parseInt(id), data);
+  }
+
+  @Delete(':id')
+  deleteEvent(@Param('id') id: string) {
+    return this.eventService.deleteEvent(id);
   }
 
   @Post(':eventId/clients')

@@ -45,7 +45,7 @@ export const eventEndpoints = (
     providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
   }),
   patchEvent: builder.mutation<
-    CookMasterEvent,
+    serializedCookMasterEvent,
     { id: string; data: Partial<CookMasterEvent> }
   >({
     query: ({ id, data }) => ({
@@ -69,5 +69,12 @@ export const eventEndpoints = (
   getClientsFromEvent: builder.query<Client[], string>({
     query: (eventId) => `events/${eventId}/clients`,
     providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
+  }),
+  deleteEvent: builder.mutation<CookMasterEvent, string>({
+    query: (id) => ({
+      url: `events/${id}`,
+      method: "DELETE",
+    }),
+    invalidatesTags: ["Event"],
   }),
 });

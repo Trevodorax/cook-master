@@ -180,6 +180,28 @@ export class EventService {
     return updatedEvent;
   }
 
+  async deleteEvent(eventId: string) {
+    const eventIdNumber = parseInt(eventId);
+
+    if (isNaN(eventIdNumber)) {
+      throw new BadRequestException('Event id must be an integer.');
+    }
+
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventIdNumber },
+    });
+
+    if (!event) {
+      throw new NotFoundException(`Could not find event with id ${eventId}.`);
+    }
+
+    const deletedEvent = this.prisma.event.delete({
+      where: { id: eventIdNumber },
+    });
+
+    return deletedEvent;
+  }
+
   async getClientsFromEvent(eventId: string) {
     const eventIdNumber = parseInt(eventId);
 

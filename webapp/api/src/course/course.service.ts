@@ -6,10 +6,12 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateCourseDto, PatchCourseDto, GetCourseDto } from './dto';
 import { SearchCourseDto } from './dto/searchCourse.dto';
+import { EventService } from 'src/event/event.service';
+import { CreateEventDto } from 'src/event/dto';
 
 @Injectable()
 export class CourseService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private events: EventService) {}
 
   async getAllCourses({ filters }) {
     let where = {};
@@ -131,6 +133,58 @@ export class CourseService {
     }
 
     return this.prisma.course.delete({ where: { id: idNumber } });
+  }
+
+  async addWorkshop(courseId: string, workshop: CreateEventDto) {
+    const courseIdNumber = parseInt(courseId);
+
+    if (isNaN(courseIdNumber)) {
+      throw new BadRequestException('Course id must be a number.');
+    }
+
+    const createdWorkshop = await this.events.createEvent(workshop);
+
+    const foundCourse = await this.prisma.course.findUnique({
+      where: { id: courseIdNumber },
+    });
+
+    if (!foundCourse) {
+      throw new NotFoundException(`Could not find course with id ${courseId}`);
+    }
+
+    await this.prisma.course.update({
+      where: { id: courseIdNumber },
+      data: {
+        workshops: {
+          connect: { id: createdWorkshop.id },
+        },
+      },
+    });
+
+    return createdWorkshop;
+  }
+
+  async getWorkshopsFromCourse(courseId: string) {
+    const courseIdNumber = parseInt(courseId);
+
+    if (isNaN(courseIdNumber)) {
+      throw new BadRequestException('Course id must be a number.');
+    }
+
+    const foundCourse = await this.prisma.course.findUnique({
+      where: { id: courseIdNumber },
+    });
+
+    if (!foundCourse) {
+      throw new NotFoundException(`Could not fiind course with id ${courseId}`);
+    }
+
+    const course = await this.prisma.course.findUnique({
+      where: { id: courseIdNumber },
+      select: { workshops: true },
+    });
+
+    return course.workshops;
   }
 
   async searchCourses(searchDto: SearchCourseDto) {

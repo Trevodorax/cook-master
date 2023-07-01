@@ -17,6 +17,7 @@ import {
   GetAllCoursesDto,
 } from './dto';
 import { SearchCourseDto } from './dto/searchCourse.dto';
+import { CreateEventDto, unparsedCreateEventDto } from 'src/event/dto';
 
 @Controller('courses')
 export class CourseController {
@@ -35,6 +36,26 @@ export class CourseController {
   @Get('search')
   searchLessons(@Query() searchDto: SearchCourseDto) {
     return this.courseService.searchCourses(searchDto);
+  }
+
+  @Post(':courseId/workshops')
+  addWorkshop(
+    @Param('courseId') courseId: string,
+    @Body() workshop: unparsedCreateEventDto,
+  ) {
+    const parsedCreateEventDto: CreateEventDto = {
+      ...workshop,
+      durationMin: workshop.durationMin,
+      startTime: new Date(workshop.startTime),
+      animator: workshop.animator ? workshop.animator : undefined,
+    };
+
+    return this.courseService.addWorkshop(courseId, parsedCreateEventDto);
+  }
+
+  @Get(':courseId/workshops')
+  getWorkshopsFromCourse(@Param('courseId') courseId: string) {
+    return this.courseService.getWorkshopsFromCourse(courseId);
   }
 
   @Get(':courseId')
