@@ -61,7 +61,7 @@ export interface CookMasterEvent {
   contractorId?: number | null;
 }
 
-export type serializedCookMasterEvent = Omit<CookMasterEvent, "startTime"> & {
+export type SerializedCookMasterEvent = Omit<CookMasterEvent, "startTime"> & {
   startTime: string;
 };
 
@@ -134,7 +134,3 @@ export interface Message {
   recipientId: number;
   recipient: User;
 }
-
-export type serializedCookMasterEvent = Omit<CookMasterEvent, "startTime"> & {
-  startTime: string;
-};

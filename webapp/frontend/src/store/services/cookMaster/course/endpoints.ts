@@ -12,7 +12,7 @@ import {
   PatchCourseDto,
   SearchCourseDto,
 } from "./dto";
-import { Client, Course, Lesson, serializedCookMasterEvent } from "../types";
+import { Client, Course, Lesson, SerializedCookMasterEvent } from "../types";
 import { buildQueryParams } from "../../utils/buildQueryParams";
 import { CreateEventDto } from "../event/dto";
 
@@ -66,14 +66,14 @@ export const courseEndpoints = (
     providesTags: (_, __, arg) => [{ type: "Course", id: arg.courseId }],
   }),
   getWorkshopsOfCourse: builder.query<
-    serializedCookMasterEvent[],
+    SerializedCookMasterEvent[],
     GetCourseDto
   >({
     query: ({ courseId }) => `courses/${courseId}/workshops`,
     providesTags: ["Event"],
   }),
   addWorkshopToCourse: builder.mutation<
-    serializedCookMasterEvent,
+    SerializedCookMasterEvent,
     { courseId: number; workshop: CreateEventDto }
   >({
     query: ({ courseId, workshop }) => ({

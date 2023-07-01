@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit/dist/query";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
-import { Client, CookMasterEvent, serializedCookMasterEvent } from "../types";
+import { Client, CookMasterEvent, SerializedCookMasterEvent } from "../types";
 import { buildQueryParams } from "../../utils/buildQueryParams";
 import { CreateEventDto, serializeCreateEventDto } from "./dto";
 import { tagTypes } from "../api";
@@ -40,12 +40,12 @@ export const eventEndpoints = (
     }),
     invalidatesTags: ["Event"],
   }),
-  getEventById: builder.query<serializedCookMasterEvent, string>({
+  getEventById: builder.query<SerializedCookMasterEvent, string>({
     query: (id) => `events/${id}`,
     providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
   }),
   patchEvent: builder.mutation<
-    serializedCookMasterEvent,
+    SerializedCookMasterEvent,
     { id: string; data: Partial<CookMasterEvent> }
   >({
     query: ({ id, data }) => ({

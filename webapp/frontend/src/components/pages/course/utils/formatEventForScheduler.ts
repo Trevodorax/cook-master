@@ -1,4 +1,4 @@
-import { serializedCookMasterEvent } from "@/store/services/cookMaster/types";
+import { SerializedCookMasterEvent } from "@/store/services/cookMaster/types";
 
 interface CalendarEvent {
   event_id: number | string;
@@ -14,7 +14,7 @@ interface CalendarEvent {
 }
 
 export const formatEventForScheduler = (
-  event: serializedCookMasterEvent
+  event: SerializedCookMasterEvent
 ): CalendarEvent => {
   const startTime = new Date(event.startTime);
 
