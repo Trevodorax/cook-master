@@ -134,6 +134,19 @@ export class ClientService {
         },
       },
     });
+
+    // Create a new entry in the ClientCourseProgress table
+    await this.prisma.clientCourseProgress.create({
+      data: {
+        client: {
+          connect: { id: clientId },
+        },
+        course: {
+          connect: { id: courseId },
+        },
+        progression: 0, // Assuming the client starts at the beginning of the course
+      },
+    });
   }
 
   async resignFromCourse(clientId: number, courseId: number) {
@@ -162,5 +175,33 @@ export class ClientService {
         },
       },
     });
+  }
+
+  async getClientProgressInCourse(
+    clientId: number,
+    courseId: string,
+  ): Promise<number> {
+    const courseIdNumber = parseInt(courseId);
+    if (isNaN(courseIdNumber)) {
+      throw new BadRequestException(`Incorrect course id: ${courseId}`);
+    }
+
+    // Find the ClientCourseProgress with the provided clientId and courseId
+    const progress = await this.prisma.clientCourseProgress.findUnique({
+      where: {
+        clientId_courseId: {
+          clientId: clientId,
+          courseId: courseIdNumber,
+        },
+      },
+    });
+
+    if (!progress) {
+      throw new NotFoundException(
+        `No course progress found for client ${clientId} in course ${courseId}`,
+      );
+    }
+
+    return progress.progression;
   }
 }

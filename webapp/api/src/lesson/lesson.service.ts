@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -11,6 +12,7 @@ import {
   GetLessonDto,
   SearchLessonDto,
 } from './dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class LessonService {
@@ -29,10 +31,30 @@ export class LessonService {
       throw new NotFoundException(`Course with ID ${dto.courseId} not found`);
     }
 
-    return this.prisma.lesson.create({ data: dto });
+    // Find the lesson with the highest index in this course
+    const maxIndexLesson = await this.prisma.lesson.findFirst({
+      where: { courseId: dto.courseId },
+      orderBy: { index: 'desc' },
+    });
+
+    const newIndex = maxIndexLesson ? maxIndexLesson.index + 1 : 1;
+
+    return this.prisma.lesson.create({
+      data: {
+        name: dto.name,
+        description: dto.description,
+        content: dto.content,
+        index: newIndex,
+        Course: {
+          connect: {
+            id: dto.courseId,
+          },
+        },
+      },
+    });
   }
 
-  async getLessonById(dto: GetLessonDto) {
+  async getLessonById(user: User, dto: GetLessonDto) {
     const idNumber = parseInt(dto.lessonId);
 
     if (isNaN(idNumber)) {
@@ -41,13 +63,50 @@ export class LessonService {
 
     const lesson = await this.prisma.lesson.findUnique({
       where: { id: idNumber },
+      include: {
+        Course: {
+          select: {
+            contractorId: true,
+            id: true, // include course id for later use
+          },
+        },
+      },
     });
 
     if (!lesson) {
       throw new NotFoundException('Lesson not found');
     }
 
-    return lesson;
+    // check permission to access the lesson
+    if (user.clientId) {
+      // Fetch the client's progress in the course
+      const progress = await this.prisma.clientCourseProgress.findUnique({
+        where: {
+          clientId_courseId: {
+            clientId: user.clientId,
+            courseId: lesson.Course.id,
+          },
+        },
+      });
+
+      // Throw a forbidden exception if there is no progress table found
+      if (!progress) {
+        throw new ForbiddenException('You are not enrolled in this course.');
+      }
+
+      // Compare the client's progression with the lesson's index
+      if (progress.progression >= lesson.index) {
+        return lesson;
+      } else {
+        throw new ForbiddenException("You haven't unlocked this lesson yet.");
+      }
+    } else if (user.contractorId) {
+      if (user.contractorId === lesson.Course.contractorId) {
+        return lesson;
+      }
+    }
+
+    throw new ForbiddenException('You cannot access this lesson');
   }
 
   async patchLesson(dto: GetLessonDto, data: PatchLessonDto) {

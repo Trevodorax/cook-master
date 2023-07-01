@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -57,6 +58,24 @@ export class ClientController {
   @Delete('me/courses')
   resignFromCourse(@GetUser() user: User, @Body() dto: { courseId: number }) {
     return this.clientService.resignFromCourse(user.clientId, dto.courseId);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get('me/courses/:courseId/progress')
+  getMyProgressInCourse(
+    @GetUser() user: User,
+    @Param('courseId') courseId: string,
+  ) {
+    if (!user.clientId) {
+      throw new ForbiddenException(
+        'You must be a client to perform this operation',
+      );
+    }
+
+    return this.clientService.getClientProgressInCourse(
+      user.clientId,
+      courseId,
+    );
   }
 
   @Get(':clientId/events')

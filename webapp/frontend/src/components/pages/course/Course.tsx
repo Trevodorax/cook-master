@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import { Scheduler } from "@aldabil/react-scheduler";
@@ -46,9 +46,11 @@ export const Course: FC<Props> = ({ courseId }) => {
   const { data: courseData } = useGetCourseByIdQuery({
     courseId: courseIdNumber,
   });
-  const { data: courseLessons } = useGetLessonsOfCourseQuery({
-    courseId: courseIdNumber,
-  });
+
+  const { data: courseLessons, refetch: refetchLessons } =
+    useGetLessonsOfCourseQuery({
+      courseId: courseIdNumber,
+    });
 
   const { data: courseWorkshops, refetch: refetchWorkshops } =
     useGetWorkshopsOfCourseQuery({
@@ -58,6 +60,10 @@ export const Course: FC<Props> = ({ courseId }) => {
   const { data: clientsInCourse } = useGetClientsOfCourseQuery({
     courseId: courseIdNumber,
   });
+
+  useEffect(() => {
+    refetchLessons();
+  }, []);
 
   if (!courseData) {
     return <div>Could not get course.</div>;

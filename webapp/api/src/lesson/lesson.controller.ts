@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { LessonService } from './lesson.service';
 import {
@@ -15,6 +16,9 @@ import {
   GetLessonDto,
   SearchLessonDto,
 } from './dto/';
+import { JwtGuard } from 'src/auth/guard';
+import { GetUser } from 'src/auth/decorator';
+import { User } from '@prisma/client';
 
 @Controller('lessons')
 export class LessonController {
@@ -35,9 +39,10 @@ export class LessonController {
     return this.lessonService.searchLessons(searchDto);
   }
 
+  @UseGuards(JwtGuard)
   @Get(':lessonId')
-  getLessonById(@Param() dto: GetLessonDto) {
-    return this.lessonService.getLessonById(dto);
+  getLessonById(@GetUser() user: User, @Param() dto: GetLessonDto) {
+    return this.lessonService.getLessonById(user, dto);
   }
 
   @Patch(':lessonId')

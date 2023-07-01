@@ -52,6 +52,7 @@ model Client {
   Address           Address? @relation(fields: [addressId], references: [id])
   events            Event[]
   courses           Course[]
+  progressions      ClientCourseProgress[]
 
   // relation fileds
   addressId Int? @unique
@@ -102,6 +103,18 @@ model Event {
   @@map("events")
 }
 
+model ClientCourseProgress {
+  client   Client  @relation(fields: [clientId], references: [id])
+  course   Course  @relation(fields: [courseId], references: [id])
+  progression Int  @default(0)
+
+  clientId Int
+  courseId Int
+
+  @@id([clientId, courseId])
+  @@map("client_course_progress")
+}
+
 model Course {
   id Int @id @default(autoincrement())
 
@@ -110,9 +123,10 @@ model Course {
   lessons     Lesson[]
   workshops   Event[]
   Contractor  Contractor? @relation(fields: [contractorId], references: [id])
+  clients     Client[]
 
   contractorId Int?
-  clients      Client[]
+  progressions ClientCourseProgress[]
 
   @@map("courses")
 }
@@ -123,9 +137,12 @@ model Lesson {
   name        String
   description String
   content     String
+  index       Int 
   Course      Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   courseId Int?
+
+  @@unique([courseId, index])
 
   @@map("lessons")
 }
