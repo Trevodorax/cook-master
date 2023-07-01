@@ -5,60 +5,44 @@
   text-decoration: none;
 
   .container {
-    height: 200px;
+    height: 50px;
     width: 200px;
     margin: 8px;
 
     border-radius: 8px;
     background-color: $neutral_1;
     box-shadow: 0 0 1px .5px $neutral_2;
+    border-left: solid 8px $primary_5;
 
     transition: all .3s;
-
+    
     &:hover {
       box-shadow: 0 0 5px 2px $neutral_2;
     }
+    
+    &.locked {
+      border-left: solid 8px $secondary_5;
 
-    .header {
-      padding: 8px;
-      border-bottom: 1px solid $neutral_5;
-
-      .title {
-        height: 30px;
-        overflow-y: hidden;
-
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        font-size: 16px;
-        color: $neutral_5;
-      }
-
-      .type {
-        height: 30px;
-        overflow-y: hidden;
-
-        font-size: 14px;
-        color: $neutral_4;
-      }
-
-      .animator {
-        font-size: 14px;
-        color: $neutral_4;
+      &:hover {
+        cursor:not-allowed;
+        box-shadow: 0 0 1px .5px $neutral_2;
       }
     }
 
-    .body {
-      height: 100px;
-
+    .title {
+      height: 100%;
+      height: 100%;
+      display: flex;
       overflow-y: hidden;
-      padding: 8px;
 
-      .description {
-        font-size: 14px;
-        color: $neutral_4;
-      }
+      padding-inline-start: 8px;
+      align-items: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      font-size: 16px;
+      color: $neutral_5;
     }
   }
 }

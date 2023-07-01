@@ -11,6 +11,7 @@ import {
   useGetClientsOfCourseQuery,
   useGetCourseByIdQuery,
   useGetLessonsOfCourseQuery,
+  useGetMyProgressInCourseQuery,
   useGetWorkshopsOfCourseQuery,
   usePatchCourseMutation,
   usePatchEventMutation,
@@ -60,6 +61,9 @@ export const Course: FC<Props> = ({ courseId }) => {
   const { data: clientsInCourse } = useGetClientsOfCourseQuery({
     courseId: courseIdNumber,
   });
+
+  const { data: progressInCourse } =
+    useGetMyProgressInCourseQuery(courseIdNumber);
 
   useEffect(() => {
     refetchLessons();
@@ -132,6 +136,16 @@ export const Course: FC<Props> = ({ courseId }) => {
       <div className={styles.lessons}>
         <h2>Lessons</h2>
         <div className={styles.lessonList}>
+          {courseLessons &&
+            courseLessons.map((lesson, index) => (
+              <LessonCard
+                key={index}
+                lesson={lesson}
+                isLocked={
+                  user?.clientId ? index + 1 > (progressInCourse || 0) : false
+                }
+              />
+            ))}
           {user?.userType === "contractor" &&
             user.contractorId === courseData.contractorId && (
               <Link
@@ -141,10 +155,6 @@ export const Course: FC<Props> = ({ courseId }) => {
                 +
               </Link>
             )}
-          {courseLessons &&
-            courseLessons.map((lesson, index) => (
-              <LessonCard key={index} lesson={lesson} />
-            ))}
         </div>
       </div>
       <div className={styles.workshops}>

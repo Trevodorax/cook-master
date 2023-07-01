@@ -3,7 +3,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Param,
   Post,
@@ -67,9 +66,7 @@ export class ClientController {
     @Param('courseId') courseId: string,
   ) {
     if (!user.clientId) {
-      throw new ForbiddenException(
-        'You must be a client to perform this operation',
-      );
+      return 0;
     }
 
     return this.clientService.getClientProgressInCourse(

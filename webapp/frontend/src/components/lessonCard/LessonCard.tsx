@@ -1,4 +1,5 @@
 import Link from "next/link";
+import cx from "classnames";
 
 import { Lesson } from "@/store/services/cookMaster/types";
 
@@ -6,18 +7,17 @@ import styles from "./LessonCard.module.scss";
 
 interface Props {
   lesson: Lesson;
+  isLocked: boolean;
 }
 
-export const LessonCard = ({ lesson }: Props) => {
+export const LessonCard = ({ lesson, isLocked }: Props) => {
   return (
-    <Link className={styles.link} href={`/lesson/${lesson.id}`}>
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.title}>{lesson.name}</div>
-        </div>
-        <div className={styles.body}>
-          <div className={styles.description}>{lesson.description}</div>
-        </div>
+    <Link
+      className={styles.link}
+      href={isLocked ? "#" : `/lesson/${lesson.id}`}
+    >
+      <div className={cx(styles.container, { [styles.locked]: isLocked })}>
+        <div className={styles.title}>{lesson.name}</div>
       </div>
     </Link>
   );

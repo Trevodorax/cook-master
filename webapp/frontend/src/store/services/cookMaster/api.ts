@@ -84,4 +84,5 @@ export const {
   useAddWorkshopToCourseMutation,
   useGetWorkshopsOfCourseQuery,
   useDeleteEventMutation,
+  useGetMyProgressInCourseQuery,
 } = api;
