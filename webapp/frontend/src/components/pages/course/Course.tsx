@@ -20,7 +20,6 @@ import { EditableField } from "@/components/editableField/EditableField";
 import { RootState } from "@/store/store";
 import { LessonCard } from "@/components/lessonCard/LessonCard";
 import { Button } from "@/components/button/Button";
-import { serializedCookMasterEvent } from "@/store/services/cookMaster/types";
 
 import { formatEventForScheduler } from "./utils";
 import styles from "./Course.module.scss";
@@ -51,9 +50,10 @@ export const Course: FC<Props> = ({ courseId }) => {
     courseId: courseIdNumber,
   });
 
-  const { data: courseWorkshops } = useGetWorkshopsOfCourseQuery({
-    courseId: courseIdNumber,
-  });
+  const { data: courseWorkshops, refetch: refetchWorkshops } =
+    useGetWorkshopsOfCourseQuery({
+      courseId: courseIdNumber,
+    });
 
   const { data: clientsInCourse } = useGetClientsOfCourseQuery({
     courseId: courseIdNumber,
@@ -150,6 +150,7 @@ export const Course: FC<Props> = ({ courseId }) => {
                 onDelete={async (deletedId) => {
                   const deletedEvent = await deleteEvent(deletedId.toString());
                   if ("data" in deletedEvent && deletedEvent.data) {
+                    refetchWorkshops();
                     return deletedEvent.data.id;
                   } else {
                     toast.error("Error deleting event");
@@ -171,13 +172,16 @@ export const Course: FC<Props> = ({ courseId }) => {
                         },
                       });
 
-                      const formattedEvent = formatEventForScheduler(
-                        (createdWorkshop as { data: serializedCookMasterEvent })
-                          .data
-                      );
-                      return formattedEvent;
+                      refetchWorkshops();
+
+                      if ("data" in createdWorkshop && createdWorkshop.data) {
+                        return formatEventForScheduler(createdWorkshop.data);
+                      } else {
+                        toast.error("Error creating event");
+                        return event;
+                      }
+
                     case "edit":
-                      console.log("event new value: ", event);
                       const modifiedWorkshop = await patchEvent({
                         id: event.event_id.toString(),
                         data: {
@@ -189,7 +193,14 @@ export const Course: FC<Props> = ({ courseId }) => {
                           ),
                         },
                       });
-                      return formatEventForScheduler(modifiedWorkshop.data);
+                      refetchWorkshops();
+
+                      if ("data" in modifiedWorkshop && modifiedWorkshop.data) {
+                        return formatEventForScheduler(modifiedWorkshop.data);
+                      } else {
+                        toast.error("Error editing event");
+                        return event;
+                      }
                   }
                 }}
                 events={courseWorkshops?.map((workshop) => {

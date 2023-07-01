@@ -45,7 +45,7 @@ export const eventEndpoints = (
     providesTags: (_, __, arg) => [{ type: "Event", id: arg }],
   }),
   patchEvent: builder.mutation<
-    CookMasterEvent,
+    serializedCookMasterEvent,
     { id: string; data: Partial<CookMasterEvent> }
   >({
     query: ({ id, data }) => ({

@@ -102,8 +102,6 @@ export class EventService {
       },
     });
 
-    console.log('PONEY', newEvent);
-
     return newEvent;
   }
 
