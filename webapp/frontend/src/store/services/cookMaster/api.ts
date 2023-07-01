@@ -85,4 +85,6 @@ export const {
   useGetWorkshopsOfCourseQuery,
   useDeleteEventMutation,
   useGetMyProgressInCourseQuery,
+  useGetLessonOfCourseAtIndexQuery,
+  useRequestNextCourseAccessMutation,
 } = api;

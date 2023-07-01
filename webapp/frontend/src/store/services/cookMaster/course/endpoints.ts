@@ -95,4 +95,18 @@ export const courseEndpoints = (
     }),
     invalidatesTags: (_, __, arg) => [{ type: "Course", id: arg.courseId }],
   }),
+  getLessonOfCourseAtIndex: builder.query<
+    Lesson,
+    { courseId: number; lessonIndex: number }
+  >({
+    query: ({ courseId, lessonIndex }) =>
+      `courses/${courseId}/lessons/${lessonIndex}`,
+  }),
+  requestNextCourseAccess: builder.mutation<number, { courseId: number }>({
+    query: ({ courseId }) => ({
+      url: `courses/${courseId}/requestNextCourseAccess`,
+      method: "GET",
+    }),
+    invalidatesTags: ["Course"],
+  }),
 });

@@ -98,7 +98,7 @@ export class LessonService {
       if (progress.progression >= lesson.index) {
         return lesson;
       } else {
-        throw new ForbiddenException("You haven't unlocked this lesson yet.");
+        return -1;
       }
     } else if (user.contractorId) {
       if (user.contractorId === lesson.Course.contractorId) {

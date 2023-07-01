@@ -8,10 +8,16 @@ import { CreateCourseDto, PatchCourseDto, GetCourseDto } from './dto';
 import { SearchCourseDto } from './dto/searchCourse.dto';
 import { EventService } from 'src/event/event.service';
 import { CreateEventDto } from 'src/event/dto';
+import { User } from '@prisma/client';
+import { LessonService } from 'src/lesson/lesson.service';
 
 @Injectable()
 export class CourseService {
-  constructor(private prisma: PrismaService, private events: EventService) {}
+  constructor(
+    private prisma: PrismaService,
+    private events: EventService,
+    private lessonService: LessonService,
+  ) {}
 
   async getAllCourses({ filters }) {
     let where = {};
@@ -102,6 +108,43 @@ export class CourseService {
     }
 
     return course.lessons;
+  }
+
+  async getLessonOfCourseAtIndex(
+    user: User,
+    courseId: string,
+    lessonIndex: string,
+  ) {
+    const courseIdNumber = parseInt(courseId);
+
+    if (isNaN(courseIdNumber)) {
+      throw new BadRequestException('course id must be an integer');
+    }
+
+    const lessonIndexNumber = parseInt(lessonIndex);
+
+    if (isNaN(lessonIndexNumber)) {
+      throw new BadRequestException('lesson index must be an integer');
+    }
+
+    // Fetch the lesson with the given index in the specified course
+    const lesson = await this.prisma.lesson.findFirst({
+      where: {
+        courseId: courseIdNumber,
+        index: lessonIndexNumber,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!lesson) {
+      return null;
+    }
+
+    return this.lessonService.getLessonById(user, {
+      lessonId: lesson.id.toString(),
+    });
   }
 
   async getClientsOfCourse(dto: GetCourseDto) {

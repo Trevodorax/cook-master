@@ -97,6 +97,20 @@ export class CourseController {
     return this.courseService.getLessonsOfCourse(dto);
   }
 
+  @UseGuards(JwtGuard)
+  @Get(':courseId/lessons/:lessonIndex')
+  getLessonOfCourseAtIndex(
+    @GetUser() user: User,
+    @Param()
+    { courseId, lessonIndex }: { courseId: string; lessonIndex: string },
+  ) {
+    return this.courseService.getLessonOfCourseAtIndex(
+      user,
+      courseId,
+      lessonIndex,
+    );
+  }
+
   @Get(':courseId/clients')
   getClientsOfCourse(@Param() dto: GetCourseDto) {
     return this.courseService.getClientsOfCourse(dto);
