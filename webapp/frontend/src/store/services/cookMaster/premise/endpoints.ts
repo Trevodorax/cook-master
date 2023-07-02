@@ -54,6 +54,19 @@ export const premiseEndpoints = (
       url: `premises/${premiseId}`,
       method: "DELETE",
     }),
-    invalidatesTags: (_, __, arg) => [{ type: "Premise", id: arg.premiseId }],
+    invalidatesTags: ["Premise"],
+  }),
+  createRoomInPremise: builder.mutation<
+    Room,
+    { premiseId: number; capacity: number }
+  >({
+    query: ({ premiseId, capacity }) => ({
+      url: `premises/${premiseId}/rooms`,
+      method: "POST",
+      body: {
+        capacity,
+      },
+    }),
+    invalidatesTags: ["Premise"],
   }),
 });

@@ -1,0 +1,33 @@
+@import "@/styles/theme.scss";
+
+.container {
+  .createButton {
+    display: flex;
+    height: 60px;
+    width: 300px;
+    margin: 8px;
+
+    justify-content: center;
+    align-items: center;
+
+    color: $neutral_5;
+    text-decoration: none;
+    font-size: 32px;
+    border-radius: 8px;
+    background-color: $primary_1;
+    cursor: pointer;
+    transition: all .3s;
+
+    &:hover {
+      filter: brightness(0.9);
+    }
+  }
+
+  .premisesList {
+    display: flex;
+
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+}

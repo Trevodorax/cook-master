@@ -1,10 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { PremiseService } from './premise.service';
 import { CreatePremiseDto } from './dto';
+import { AllowedUserTypes } from 'src/auth/decorator';
+import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
 
 @Controller('premises')
 export class PremiseController {
   constructor(private readonly premiseService: PremiseService) {}
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Post()
   createPremise(@Body() data: CreatePremiseDto) {
     return this.premiseService.createPremise(data);
@@ -25,6 +38,8 @@ export class PremiseController {
     return this.premiseService.getRoomsOfPremise(premiseId);
   }
 
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Post(':premiseId/rooms')
   createRoomInPremise(
     @Param('premiseId') premiseId: string,
@@ -33,6 +48,8 @@ export class PremiseController {
     return this.premiseService.createRoomInPremise(premiseId, data.capacity);
   }
 
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Delete(':premiseId')
   deletePremiseById(@Param('premiseId') premiseId: string) {
     return this.premiseService.deletePremiseById(premiseId);

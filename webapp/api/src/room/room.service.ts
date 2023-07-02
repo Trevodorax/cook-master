@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -12,7 +12,8 @@ export class RoomService {
     });
 
     if (!room) {
-      throw new NotFoundException(`No room found with id ${roomId}`);
+      //throw new NotFoundException(`No room found with id ${roomId}`);
+      return null;
     }
 
     return room;

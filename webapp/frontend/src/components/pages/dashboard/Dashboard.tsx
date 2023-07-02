@@ -7,6 +7,7 @@ import { RootState } from "@/store/store";
 import {
   BookIcon,
   CalendarIcon,
+  HouseIcon,
   KeyIcon,
   MessageIcon,
   SettingsIcon,
@@ -65,6 +66,11 @@ export const Dashboard = () => {
       title: "Profile",
       icon: SettingsIcon,
       link: "/profile",
+    },
+    {
+      title: "Premises",
+      icon: HouseIcon,
+      link: "/premises/browse",
     },
   ];
 

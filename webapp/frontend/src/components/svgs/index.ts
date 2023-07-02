@@ -18,3 +18,4 @@ export * from "./SettingsIcon";
 export * from "./LeftTriangleIcon";
 export * from "./RightTriangleIcon";
 export * from "./UnlockIcon";
+export * from "./HouseIcon";

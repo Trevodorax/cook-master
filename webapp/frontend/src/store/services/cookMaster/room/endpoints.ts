@@ -14,11 +14,11 @@ export const roomEndpoints = (
     string
   >
 ) => ({
-  getRoomById: builder.query<Room, string>({
+  getRoomById: builder.query<Room, number>({
     query: (roomId) => `rooms/${roomId}`,
     providesTags: (_, __, roomId) => [{ type: "Room", id: roomId }],
   }),
-  patchRoomById: builder.mutation<Room, { roomId: string; capacity: number }>({
+  patchRoomById: builder.mutation<Room, { roomId: number; capacity: number }>({
     query: ({ roomId, capacity }) => ({
       url: `rooms/${roomId}`,
       method: "PATCH",
@@ -26,11 +26,11 @@ export const roomEndpoints = (
     }),
     invalidatesTags: (_, __, { roomId }) => [{ type: "Room", id: roomId }],
   }),
-  deleteRoomById: builder.mutation<void, string>({
+  deleteRoomById: builder.mutation<void, number>({
     query: (roomId) => ({
       url: `rooms/${roomId}`,
       method: "DELETE",
     }),
-    invalidatesTags: (_, __, roomId) => [{ type: "Room", id: roomId }],
+    invalidatesTags: ["Room"],
   }),
 });
