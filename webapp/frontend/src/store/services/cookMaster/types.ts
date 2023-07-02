@@ -135,3 +135,15 @@ export interface Message {
   recipientId: number;
   recipient: User;
 }
+
+export interface Room {
+  id: number;
+  capacity: number;
+  premiseId: number;
+}
+
+export interface Premise {
+  id: number;
+  addressId: number;
+  rooms: Room[];
+}

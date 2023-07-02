@@ -1,0 +1,166 @@
+{
+  "info": {
+      "name": "Premises API",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+      {
+          "name": "Create a new Premise",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "name": "Content-Type",
+                      "type": "text",
+                      "value": "application/json"
+                  }
+              ],
+              "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"streetName\": \"Main Street\",\n    \"streetNumber\": \"123\",\n    \"city\": \"Springfield\",\n    \"postalCode\": \"12345\",\n    \"country\": \"USA\"\n}",
+                  "options": {
+                      "raw": {
+                          "language": "json"
+                      }
+                  }
+              },
+              "url": {
+                  "raw": "http://localhost:3333/api/premises",
+                  "protocol": "http",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3333",
+                  "path": [
+                      "api",
+                      "premises"
+                  ]
+              }
+          },
+          "response": []
+      },
+      {
+          "name": "Fetch all Premises",
+          "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                  "raw": "http://localhost:3333/api/premises",
+                  "protocol": "http",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3333",
+                  "path": [
+                      "api",
+                      "premises"
+                  ]
+              }
+          },
+          "response": []
+      },
+      {
+          "name": "Fetch Premise by ID",
+          "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                  "raw": "http://localhost:3333/api/premises/1",
+                  "protocol": "http",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3333",
+                  "path": [
+                      "api",
+                      "premises",
+                      "1"
+                  ]
+              }
+          },
+          "response": []
+      },
+      {
+          "name": "Get Rooms of a Premise",
+          "request": {
+              "method": "GET",
+              "header": [],
+              "url": {
+                  "raw": "http://localhost:3333/api/premises/1/rooms",
+                  "protocol": "http",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3333",
+                  "path": [
+                      "api",
+                      "premises",
+                      "1",
+                      "rooms"
+                  ]
+              }
+          },
+          "response": []
+      },
+      {
+          "name": "Create Room in a Premise",
+          "request": {
+              "method": "POST",
+              "header": [
+                  {
+                      "key": "Content-Type",
+                      "name": "Content-Type",
+                      "type": "text",
+                      "value": "application/json"
+                  }
+              ],
+              "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"capacity\": 50\n}",
+                  "options": {
+                      "raw": {
+                          "language": "json"
+                      }
+                  }
+              },
+              "url": {
+                  "raw": "http://localhost:3333/api/premises/1/rooms",
+                  "protocol": "http",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3333",
+                  "path": [
+                      "api",
+                      "premises",
+                      "1",
+                      "rooms"
+                  ]
+              }
+          },
+          "response": []
+      },
+      {
+          "name": "Delete Premise by ID",
+          "request": {
+              "method": "DELETE",
+              "header": [],
+              "url": {
+                  "raw": "http://localhost:3333/api/premises/1",
+                  "protocol": "http",
+                  "host": [
+                      "localhost"
+                  ],
+                  "port": "3333",
+                  "path": [
+                      "api",
+                      "premises",
+                      "1"
+                  ]
+              }
+          },
+          "response": []
+      }
+  ]
+}

@@ -19,6 +19,8 @@ export const tagTypes = [
   "Course",
   "Client",
   "Chat",
+  "Premise",
+  "Room",
 ] as const;
 
 export const api = createApi({
