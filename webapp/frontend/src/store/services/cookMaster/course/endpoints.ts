@@ -96,7 +96,7 @@ export const courseEndpoints = (
     invalidatesTags: (_, __, arg) => [{ type: "Course", id: arg.courseId }],
   }),
   getLessonOfCourseAtIndex: builder.query<
-    Lesson,
+    Lesson | number,
     { courseId: number; lessonIndex: number }
   >({
     query: ({ courseId, lessonIndex }) =>

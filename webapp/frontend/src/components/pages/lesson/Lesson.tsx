@@ -66,7 +66,7 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
 
   const handleNextLessonClick = async () => {
     console.log(nextLesson);
-    if (nextLesson?.id) {
+    if (typeof nextLesson === "object" && "id" in nextLesson) {
       router.push(`${nextLesson?.id}`);
       return;
     }
@@ -75,7 +75,7 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
       const response = await requestNextCourseAccess({
         courseId: lessonData.courseId || 0,
       });
-      if (response.data > 0) {
+      if ("data" in response && response.data > 0) {
         toast.success("Unlocked next lesson");
         refetchNextLesson();
       }
@@ -121,7 +121,9 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
           className={cx(styles.navigationButton, {
             [styles.hidden]: !previousLesson,
           })}
-          onClick={() => router.push(`${previousLesson?.id}`)}
+          onClick={() =>
+            router.push(`${(previousLesson as { id: number })?.id}`)
+          }
         >
           <LeftTriangleIcon />
         </Button>
