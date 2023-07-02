@@ -1,0 +1,12 @@
+.container {
+  .actions {
+    margin-bottom: 16px;
+  }
+  
+  .capacity {
+    display: flex;
+    .fieldName {
+      margin-inline-end: 8px;
+    }
+  }
+}

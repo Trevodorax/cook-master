@@ -9,6 +9,8 @@ import { lessonEndpoints } from "./lesson/endpoints";
 import { courseEndpoints } from "./course/endpoints";
 import { clientEndpoints } from "./client/endpoints";
 import { chatEndpoints } from "./chat/endpoints";
+import { premiseEndpoints } from "./premise/endpoints";
+import { roomEndpoints } from "./room/endpoints";
 
 export const apiName = "cookMaster";
 export const tagTypes = [
@@ -36,6 +38,8 @@ export const api = createApi({
     ...courseEndpoints(builder),
     ...clientEndpoints(builder),
     ...chatEndpoints(builder),
+    ...premiseEndpoints(builder),
+    ...roomEndpoints(builder),
   }),
 });
 
@@ -89,4 +93,14 @@ export const {
   useGetMyProgressInCourseQuery,
   useGetLessonOfCourseAtIndexQuery,
   useRequestNextCourseAccessMutation,
+  useCreatePremiseMutation,
+  useDeletePremiseMutation,
+  useDeleteRoomByIdMutation,
+  useGetAllPremisesQuery,
+  useGetPremiseByIdQuery,
+  useGetRoomByIdQuery,
+  useGetRoomsOfPremiseQuery,
+  usePatchRoomByIdMutation,
+  usePatchPremiseMutation,
+  useCreateRoomInPremiseMutation,
 } = api;

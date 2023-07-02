@@ -146,4 +146,5 @@ export interface Premise {
   id: number;
   addressId: number;
   rooms: Room[];
+  address: Address;
 }

@@ -1,0 +1,11 @@
+.container {
+  .form {
+    & > * {
+      margin: 16px 0;
+    }
+  }
+
+  .createButton {
+    padding: 8px;
+  }
+}

@@ -1,5 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { RoomService } from './room.service';
+import { JwtGuard } from 'src/auth/guard';
+import { RolesGuard } from 'src/auth/guard/roles.guard';
+import { AllowedUserTypes } from 'src/auth/decorator';
 
 @Controller('rooms')
 export class RoomController {
@@ -9,6 +20,8 @@ export class RoomController {
     return this.roomService.getRoomById(roomId);
   }
 
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Patch(':roomId')
   patchRoomById(
     @Param('roomId') roomId: string,
@@ -17,6 +30,8 @@ export class RoomController {
     return this.roomService.patchRoomById(roomId, data.capacity);
   }
 
+  @UseGuards(JwtGuard, RolesGuard)
+  @AllowedUserTypes(['admin'])
   @Delete(':roomId')
   deleteRoomById(@Param('roomId') roomId: string) {
     return this.roomService.deleteRoomById(roomId);

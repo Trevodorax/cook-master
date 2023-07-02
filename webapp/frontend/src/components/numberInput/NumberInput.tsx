@@ -6,7 +6,7 @@ import styles from "./NumberInput.module.scss";
 interface Props {
   className?: string;
   value: string;
-  setValue: React.Dispatch<React.SetStateAction<string>>;
+  setValue: (value: string) => void;
   label?: string;
 }
 
