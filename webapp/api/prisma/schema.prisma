@@ -80,6 +80,7 @@ model Address {
   postalCode   String
   country      String
   client       Client?
+  premise      Premise?
 
   @@map("addresses")
 }
@@ -159,4 +160,22 @@ model Message {
   recipient   User @relation(fields: [recipientId], references: [id], name: "ReceivedMessages")
 
   @@map("messages")
+}
+
+model Premise {
+  id Int @id @default(autoincrement())
+
+  rooms   Room[]
+  address Address @relation(fields: [addressId], references: [id])
+
+  addressId Int @unique
+}
+
+model Room {
+  id Int @id @default(autoincrement())
+
+  Premise   Premise @relation(fields: [premiseId], references: [id], onDelete: Cascade)
+  capacity  Int
+
+  premiseId Int
 }
