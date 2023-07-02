@@ -163,6 +163,21 @@ export const Course: FC<Props> = ({ courseId }) => {
           {courseWorkshops && (
             <>
               <Scheduler
+                day={{
+                  startHour: 7,
+                  endHour: 19,
+                  step: 30,
+                  navigation: true,
+                }}
+                week={{
+                  weekDays: [0, 1, 2, 3, 4, 5, 6],
+                  weekStartOn: 1,
+                  startHour: 7,
+                  endHour: 19,
+                  step: 30,
+                }}
+                hourFormat="24"
+                editable={false}
                 onDelete={async (deletedId) => {
                   const deletedEvent = await deleteEvent(deletedId.toString());
                   if ("data" in deletedEvent && deletedEvent.data) {
