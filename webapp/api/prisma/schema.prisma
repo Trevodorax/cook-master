@@ -47,12 +47,13 @@ model Client {
   id Int @id @default(autoincrement())
 
   user              User?
-  subscriptionLevel Int      @default(0)
-  fidelityPoints    Int      @default(25)
-  Address           Address? @relation(fields: [addressId], references: [id])
-  events            Event[]
+  subscriptionLevel Int                     @default(0)
+  fidelityPoints    Int                     @default(25)
+  Address           Address?                @relation(fields: [addressId], references: [id])
+  events            Event[]                 @relation(name: "Participant")
   courses           Course[]
   progressions      ClientCourseProgress[]
+  atHomeWorkshops   Event[]                 @relation(name: "ParticipantAtHome")
 
   // relation fileds
   addressId Int? @unique
@@ -88,18 +89,23 @@ model Address {
 model Event {
   id Int @id @default(autoincrement())
 
-  type        String
-  name        String
-  description String?     @default("")
-  startTime   DateTime
-  durationMin Int
-  course      Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  animator    Contractor? @relation(fields: [contractorId], references: [id])
-  clients     Client[]
+  type          String
+  name          String
+  description   String?     @default("")
+  startTime     DateTime
+  durationMin   Int
+  course        Course?     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  animator      Contractor? @relation(fields: [contractorId], references: [id])
+  atHomeClient  Client?     @relation(name: "ParticipantAtHome", fields: [atHomeClientId], references: [id])
+  clients       Client[]    @relation(name: "Participant")
+  room          Room?       @relation(fields: [roomId], references: [id])
+  isOnline      Boolean     @default(false)
 
   // relation fields
   contractorId Int?
   courseId Int?
+  atHomeClientId Int?
+  roomId Int?
 
   @@map("events")
 }
@@ -176,6 +182,7 @@ model Room {
 
   Premise   Premise @relation(fields: [premiseId], references: [id], onDelete: Cascade)
   capacity  Int
+  events    Event[]
 
   premiseId Int
 }
