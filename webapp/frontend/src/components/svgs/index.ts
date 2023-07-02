@@ -15,3 +15,6 @@ export * from "./WhiteBoardIcon";
 export * from "./PanIcon";
 export * from "./SubscriptionLevelIcon";
 export * from "./SettingsIcon";
+export * from "./LeftTriangleIcon";
+export * from "./RightTriangleIcon";
+export * from "./UnlockIcon";

@@ -7,6 +7,8 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
+  ForbiddenException,
 } from '@nestjs/common';
 
 import { CourseService } from './course.service';
@@ -18,6 +20,9 @@ import {
 } from './dto';
 import { SearchCourseDto } from './dto/searchCourse.dto';
 import { CreateEventDto, unparsedCreateEventDto } from 'src/event/dto';
+import { JwtGuard } from 'src/auth/guard';
+import { GetUser } from 'src/auth/decorator';
+import { User } from '@prisma/client';
 
 @Controller('courses')
 export class CourseController {
@@ -53,6 +58,22 @@ export class CourseController {
     return this.courseService.addWorkshop(courseId, parsedCreateEventDto);
   }
 
+  // returns the id of next course if authorized, else returns -1
+  @UseGuards(JwtGuard)
+  @Get(':courseId/requestNextCourseAccess')
+  requestNextCourseAccess(
+    @GetUser() user: User,
+    @Param('courseId') courseId: string,
+  ) {
+    if (!user.clientId) {
+      throw new ForbiddenException(
+        'You must be a client to perform this operation',
+      );
+    }
+
+    return this.courseService.requestNextCourseAccess(user.clientId, courseId);
+  }
+
   @Get(':courseId/workshops')
   getWorkshopsFromCourse(@Param('courseId') courseId: string) {
     return this.courseService.getWorkshopsFromCourse(courseId);
@@ -74,6 +95,20 @@ export class CourseController {
   @Get(':courseId/lessons')
   getLessonsOfCourse(@Param() dto: GetCourseDto) {
     return this.courseService.getLessonsOfCourse(dto);
+  }
+
+  @UseGuards(JwtGuard)
+  @Get(':courseId/lessons/:lessonIndex')
+  getLessonOfCourseAtIndex(
+    @GetUser() user: User,
+    @Param()
+    { courseId, lessonIndex }: { courseId: string; lessonIndex: string },
+  ) {
+    return this.courseService.getLessonOfCourseAtIndex(
+      user,
+      courseId,
+      lessonIndex,
+    );
   }
 
   @Get(':courseId/clients')

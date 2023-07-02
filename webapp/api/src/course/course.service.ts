@@ -8,10 +8,16 @@ import { CreateCourseDto, PatchCourseDto, GetCourseDto } from './dto';
 import { SearchCourseDto } from './dto/searchCourse.dto';
 import { EventService } from 'src/event/event.service';
 import { CreateEventDto } from 'src/event/dto';
+import { User } from '@prisma/client';
+import { LessonService } from 'src/lesson/lesson.service';
 
 @Injectable()
 export class CourseService {
-  constructor(private prisma: PrismaService, private events: EventService) {}
+  constructor(
+    private prisma: PrismaService,
+    private events: EventService,
+    private lessonService: LessonService,
+  ) {}
 
   async getAllCourses({ filters }) {
     let where = {};
@@ -88,7 +94,13 @@ export class CourseService {
 
     const course = await this.prisma.course.findUnique({
       where: { id: idNumber },
-      include: { lessons: true },
+      include: {
+        lessons: {
+          orderBy: {
+            index: 'asc',
+          },
+        },
+      },
     });
 
     if (!course) {
@@ -96,6 +108,43 @@ export class CourseService {
     }
 
     return course.lessons;
+  }
+
+  async getLessonOfCourseAtIndex(
+    user: User,
+    courseId: string,
+    lessonIndex: string,
+  ) {
+    const courseIdNumber = parseInt(courseId);
+
+    if (isNaN(courseIdNumber)) {
+      throw new BadRequestException('course id must be an integer');
+    }
+
+    const lessonIndexNumber = parseInt(lessonIndex);
+
+    if (isNaN(lessonIndexNumber)) {
+      throw new BadRequestException('lesson index must be an integer');
+    }
+
+    // Fetch the lesson with the given index in the specified course
+    const lesson = await this.prisma.lesson.findFirst({
+      where: {
+        courseId: courseIdNumber,
+        index: lessonIndexNumber,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!lesson) {
+      return null;
+    }
+
+    return this.lessonService.getLessonById(user, {
+      lessonId: lesson.id.toString(),
+    });
   }
 
   async getClientsOfCourse(dto: GetCourseDto) {
@@ -162,6 +211,69 @@ export class CourseService {
     });
 
     return createdWorkshop;
+  }
+
+  // increases the index of the user for this course
+  // returns the id of the newly available course or -1 if there is an error (course not exist ...)
+  async requestNextCourseAccess(
+    clientId: number,
+    courseId: string,
+  ): Promise<number> {
+    const courseIdNumber = parseInt(courseId);
+    if (isNaN(courseIdNumber)) {
+      throw new BadRequestException(`Incorrect course id: ${courseId}`);
+    }
+
+    // Start a transaction to ensure data consistency
+    const transaction = await this.prisma.$transaction([
+      this.prisma.course.findUnique({
+        where: { id: courseIdNumber },
+        select: { lessons: true },
+      }),
+      this.prisma.clientCourseProgress.findUnique({
+        where: {
+          clientId_courseId: {
+            clientId: clientId,
+            courseId: courseIdNumber,
+          },
+        },
+      }),
+    ]);
+
+    const course = transaction[0];
+    const progress = transaction[1];
+
+    if (!course) {
+      throw new NotFoundException(`Course with ID ${courseId} not found`);
+    }
+
+    if (!progress) {
+      throw new NotFoundException(
+        `No course progress found for client ${clientId} in course ${courseId}`,
+      );
+    }
+
+    // Check if client has already completed all lessons in the course
+    if (progress.progression >= course.lessons.length) {
+      return -1;
+    }
+
+    // Increment the progression and save it to the database
+    const newProgression = progress.progression + 1;
+    await this.prisma.clientCourseProgress.update({
+      where: {
+        clientId_courseId: {
+          clientId: clientId,
+          courseId: courseIdNumber,
+        },
+      },
+      data: {
+        progression: newProgression,
+      },
+    });
+
+    // Return the ID of the next lesson if it exists, -1 otherwise
+    return course.lessons[newProgression - 1]?.id ?? -1;
   }
 
   async getWorkshopsFromCourse(courseId: string) {

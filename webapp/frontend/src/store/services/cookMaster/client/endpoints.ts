@@ -59,4 +59,7 @@ export const clientEndpoints = (
     query: (id) => `clients/${id}/user`,
     providesTags: (_, __, arg) => [{ type: "Client", id: arg }],
   }),
+  getMyProgressInCourse: builder.query<number, number>({
+    query: (courseId) => `clients/me/courses/${courseId}/progress`,
+  }),
 });

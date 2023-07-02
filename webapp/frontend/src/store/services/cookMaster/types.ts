@@ -114,6 +114,7 @@ export interface Lesson {
   description: string;
   content: string;
   courseId?: number;
+  index: number;
 }
 
 export interface Course {

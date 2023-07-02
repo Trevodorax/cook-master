@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 
 import { useCreateCourseMutation } from "@/store/services/cookMaster/api";
 import { TextInput } from "@/components/textInput/TextInput";
@@ -9,8 +10,6 @@ import { CreateCourseDto } from "@/store/services/cookMaster/course/dto";
 import { RootState } from "@/store/store";
 
 import styles from "./CreateCourse.module.scss";
-import { useRouter } from "next/router";
-import { Course } from "@/store/services/cookMaster/types";
 
 export const CreateCourse: FC = () => {
   const router = useRouter();
@@ -43,17 +42,12 @@ export const CreateCourse: FC = () => {
   const handleSubmit = async () => {
     const result = await createCourse(newCourse);
 
-    // need "as" because ts won't let me test this fucking data prop otherwise
-    if (!(result as { data: Course }).data) {
+    if ("data" in result && result.data) {
+      toast.success("Success creating course.");
+      router.push(`/courses/${result.data.id}`);
+    } else {
       toast.error("Could not create course.");
-      return;
     }
-
-    toast.success("Success creating course.");
-
-    setTimeout(() => {
-      router.push(`/courses/${(result as { data: Course }).data.id}`); // "as" because I already tested the data prop but ts sucks
-    }, 1000);
   };
 
   return (

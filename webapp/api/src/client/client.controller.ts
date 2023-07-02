@@ -59,6 +59,22 @@ export class ClientController {
     return this.clientService.resignFromCourse(user.clientId, dto.courseId);
   }
 
+  @UseGuards(JwtGuard)
+  @Get('me/courses/:courseId/progress')
+  getMyProgressInCourse(
+    @GetUser() user: User,
+    @Param('courseId') courseId: string,
+  ) {
+    if (!user.clientId) {
+      return 0;
+    }
+
+    return this.clientService.getClientProgressInCourse(
+      user.clientId,
+      courseId,
+    );
+  }
+
   @Get(':clientId/events')
   getEventsByClientId(@Param('clientId') clientId: string) {
     return this.clientService.getEventsByClientId(clientId);
