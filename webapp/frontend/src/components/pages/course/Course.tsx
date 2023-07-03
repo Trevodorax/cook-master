@@ -2,10 +2,8 @@ import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import { Scheduler } from "@aldabil/react-scheduler";
-import { toast } from "react-hot-toast";
 
 import {
-  useAddWorkshopToCourseMutation,
   useApplyToCourseMutation,
   useDeleteEventMutation,
   useGetClientsOfCourseQuery,
@@ -24,6 +22,9 @@ import { Button } from "@/components/button/Button";
 
 import { formatEventForScheduler } from "./utils";
 import styles from "./Course.module.scss";
+import { PlanningEditor } from "./utils/PlanningEditor";
+import { ProcessedEvent } from "@aldabil/react-scheduler/types";
+import { toast } from "react-hot-toast";
 
 interface Props {
   courseId: string;
@@ -40,7 +41,6 @@ export const Course: FC<Props> = ({ courseId }) => {
   const [patchCourse] = usePatchCourseMutation();
   const [applyToCourse] = useApplyToCourseMutation();
   const [resignFromCourse] = useResignFromCourseMutation();
-  const [addWorkshopToCourse] = useAddWorkshopToCourseMutation();
   const [patchEvent] = usePatchEventMutation();
   const [deleteEvent] = useDeleteEventMutation();
 
@@ -76,6 +76,37 @@ export const Course: FC<Props> = ({ courseId }) => {
   const isUserInCourse = clientsInCourse?.some(
     (client) => client.id === user?.clientId
   );
+
+  const handleEventDrop = async (droppedOn: Date, event: ProcessedEvent) => {
+    const modifiedWorkshop = await patchEvent({
+      id: event.event_id.toString(),
+      data: {
+        startTime: event.start,
+        durationMin: Math.floor(
+          (event.end.getTime() - event.start.getTime()) / (1000 * 60)
+        ),
+      },
+    });
+
+    refetchWorkshops();
+
+    if ("data" in modifiedWorkshop && modifiedWorkshop.data) {
+      return formatEventForScheduler(modifiedWorkshop.data);
+    } else {
+      toast.error("Error moving event");
+      return event;
+    }
+  };
+
+  const handleEventDelete = async (deletedId: number) => {
+    const deletedEvent = await deleteEvent(deletedId.toString());
+    if ("data" in deletedEvent && deletedEvent.data) {
+      refetchWorkshops();
+      return deletedEvent.data.id;
+    } else {
+      toast.error("Error deleting event");
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -177,62 +208,22 @@ export const Course: FC<Props> = ({ courseId }) => {
                   step: 30,
                 }}
                 hourFormat="24"
-                editable={false}
-                onDelete={async (deletedId) => {
-                  const deletedEvent = await deleteEvent(deletedId.toString());
-                  if ("data" in deletedEvent && deletedEvent.data) {
-                    refetchWorkshops();
-                    return deletedEvent.data.id;
-                  } else {
-                    toast.error("Error deleting event");
-                  }
-                }}
-                onConfirm={async (event, action) => {
-                  switch (action) {
-                    case "create":
-                      const createdWorkshop = await addWorkshopToCourse({
-                        courseId: courseIdNumber,
-                        workshop: {
-                          name: event.title,
-                          type: "workshop",
-                          startTime: event.start,
-                          durationMin: Math.floor(
-                            (event.end.getTime() - event.start.getTime()) /
-                              (1000 * 60)
-                          ),
-                        },
-                      });
-
-                      refetchWorkshops();
-
-                      if ("data" in createdWorkshop && createdWorkshop.data) {
-                        return formatEventForScheduler(createdWorkshop.data);
-                      } else {
-                        toast.error("Error creating event");
-                        return event;
-                      }
-
-                    case "edit":
-                      const modifiedWorkshop = await patchEvent({
-                        id: event.event_id.toString(),
-                        data: {
-                          name: event.title,
-                          startTime: event.start,
-                          durationMin: Math.floor(
-                            (event.end.getTime() - event.start.getTime()) /
-                              (1000 * 60)
-                          ),
-                        },
-                      });
-                      refetchWorkshops();
-
-                      if ("data" in modifiedWorkshop && modifiedWorkshop.data) {
-                        return formatEventForScheduler(modifiedWorkshop.data);
-                      } else {
-                        toast.error("Error editing event");
-                        return event;
-                      }
-                  }
+                editable={courseData.contractorId === user?.contractor?.id}
+                customEditor={(scheduler) => (
+                  <PlanningEditor
+                    scheduler={scheduler}
+                    courseId={courseIdNumber}
+                  />
+                )}
+                viewerExtraComponent={(fields, event) => {
+                  return (
+                    <div>
+                      {event.isOnline && <p>Online</p>}
+                      <p>
+                        Description: {event.description || "No description"}
+                      </p>
+                    </div>
+                  );
                 }}
                 events={courseWorkshops?.map((workshop) => {
                   const isEditable =
@@ -246,6 +237,8 @@ export const Course: FC<Props> = ({ courseId }) => {
 
                   return formattedWorkshop;
                 })}
+                onEventDrop={handleEventDrop}
+                onDelete={handleEventDelete}
               />
             </>
           )}

@@ -1,4 +1,10 @@
-import { IsDateString, IsInt, IsOptional, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsDateString,
+  IsInt,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class PatchEventDto {
   @IsOptional()
@@ -24,4 +30,8 @@ export class PatchEventDto {
   @IsOptional()
   @IsInt()
   animator: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isOnline: boolean;
 }

@@ -96,6 +96,7 @@ export class EventService {
         startTime: dto.startTime,
         durationMin: dto.durationMin,
         contractorId: dto.animator ?? undefined,
+        isOnline: dto.isOnline,
       },
       include: {
         animator: true,

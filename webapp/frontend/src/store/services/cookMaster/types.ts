@@ -59,6 +59,7 @@ export interface CookMasterEvent {
   animator?: Contractor | null;
   clients: Client[];
   contractorId?: number | null;
+  isOnline: boolean;
 }
 
 export type SerializedCookMasterEvent = Omit<CookMasterEvent, "startTime"> & {
