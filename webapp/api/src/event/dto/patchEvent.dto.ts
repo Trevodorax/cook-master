@@ -34,4 +34,12 @@ export class PatchEventDto {
   @IsOptional()
   @IsBoolean()
   isOnline: boolean;
+
+  @IsOptional()
+  @IsInt()
+  roomId?: number;
+
+  @IsOptional()
+  @IsInt()
+  atHomeClientId?: number;
 }

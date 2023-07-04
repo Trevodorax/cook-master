@@ -156,7 +156,13 @@ export class CourseService {
 
     const course = await this.prisma.course.findUnique({
       where: { id: idNumber },
-      include: { clients: true },
+      include: {
+        clients: {
+          include: {
+            user: true,
+          },
+        },
+      },
     });
 
     if (!course) {

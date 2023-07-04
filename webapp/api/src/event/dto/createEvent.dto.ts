@@ -36,6 +36,14 @@ export class CreateEventDto {
   @IsOptional()
   @IsBoolean()
   isOnline?: boolean;
+
+  @IsOptional()
+  @IsInt()
+  roomId?: number;
+
+  @IsOptional()
+  @IsInt()
+  atHomeClientId?: number;
 }
 
 export type unparsedCreateEventDto = Omit<CreateEventDto, 'startTime'> & {

@@ -23,8 +23,10 @@ import { LessonCard } from "@/components/lessonCard/LessonCard";
 import { Button } from "@/components/button/Button";
 
 import { formatEventForScheduler } from "./utils";
-import { PlanningEditor } from "./utils/planningEditor/PlanningEditor";
+import { PlanningEditor } from "./components/planningEditor/PlanningEditor";
 import styles from "./Course.module.scss";
+import { PlanningEvent } from "./components/planningEvent/PlanningEvent";
+import { ColorLegend } from "./components/colorLegend/ColorLegend";
 
 interface Props {
   courseId: string;
@@ -190,22 +192,23 @@ export const Course: FC<Props> = ({ courseId }) => {
       </div>
       <div className={styles.workshops}>
         <h2>Workshops</h2>
+        <ColorLegend />
         <div className={styles.workshopList}>
           {courseWorkshops && (
             <>
               <Scheduler
                 day={{
-                  startHour: 7,
-                  endHour: 19,
-                  step: 30,
+                  startHour: 9,
+                  endHour: 17,
+                  step: 60,
                   navigation: true,
                 }}
                 week={{
                   weekDays: [0, 1, 2, 3, 4, 5, 6],
                   weekStartOn: 1,
-                  startHour: 7,
-                  endHour: 19,
-                  step: 30,
+                  startHour: 9,
+                  endHour: 17,
+                  step: 60,
                 }}
                 hourFormat="24"
                 editable={courseData.contractorId === user?.contractor?.id}
@@ -215,16 +218,7 @@ export const Course: FC<Props> = ({ courseId }) => {
                     courseId={courseIdNumber}
                   />
                 )}
-                viewerExtraComponent={(fields, event) => {
-                  return (
-                    <div>
-                      {event.isOnline && <p>Online</p>}
-                      <p>
-                        Description: {event.description || "No description"}
-                      </p>
-                    </div>
-                  );
-                }}
+                viewerExtraComponent={PlanningEvent}
                 events={courseWorkshops?.map((workshop) => {
                   const isEditable =
                     courseData.contractorId === user?.contractor?.id;

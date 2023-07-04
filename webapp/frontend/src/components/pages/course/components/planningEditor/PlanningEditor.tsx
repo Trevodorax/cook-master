@@ -9,6 +9,7 @@ import cx from "classnames";
 import {
   useAddWorkshopToCourseMutation,
   useGetAllPremisesQuery,
+  useGetClientsOfCourseQuery,
   useGetWorkshopsOfCourseQuery,
   usePatchEventMutation,
 } from "@/store/services/cookMaster/api";
@@ -16,9 +17,9 @@ import { TextInput } from "@/components/textInput/TextInput";
 import { SwitchInput } from "@/components/switchInput/SwitchInput";
 import { Button } from "@/components/button/Button";
 import { SelectInput } from "@/components/selectInput/SelectInput";
-import { Premise, Room } from "@/store/services/cookMaster/types";
+import { Client, Premise, Room } from "@/store/services/cookMaster/types";
 
-import { formatEventForScheduler } from "../formatEventForScheduler";
+import { formatEventForScheduler } from "../../utils/formatEventForScheduler";
 import styles from "./PlanningEditor.module.scss";
 
 interface Props {
@@ -33,6 +34,9 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
     courseId,
   });
   const { data: premises } = useGetAllPremisesQuery();
+  const { data: participants } = useGetClientsOfCourseQuery({
+    courseId,
+  });
 
   const event = scheduler.edited;
 
@@ -44,12 +48,24 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
 
   const [selectedPremise, setSelectedPremise] = useState<Premise | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
-  const [place, setPlace] = useState("Not sure yet");
+  const [place, setPlace] = useState(
+    event?.atHomeClientId
+      ? "At a client's home"
+      : event?.roomId
+      ? "In a collective room"
+      : "Select"
+  );
 
   const createEvent = async () => {
     const startTime = scheduler.state.start.value;
     const endTime = scheduler.state.end.value;
+
+    if (!formState.isOnline && !selectedClient && !selectedRoom) {
+      toast.error("Please fill in all the required informations.");
+      return event;
+    }
 
     const createdWorkshop = await addWorkshopToCourse({
       courseId: courseId,
@@ -62,6 +78,8 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
         durationMin: Math.floor(
           (endTime.getTime() - startTime.getTime()) / (1000 * 60)
         ),
+        roomId: selectedRoom?.id || null,
+        atHomeClientId: selectedClient?.id || null,
       },
     });
 
@@ -76,6 +94,11 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
   };
 
   const editEvent = async (event: ProcessedEvent) => {
+    if (!formState.isOnline && !selectedClient && !selectedRoom) {
+      toast.error("Please fill in all the required informations.");
+      return event;
+    }
+
     const modifiedWorkshop = await patchEvent({
       id: event.event_id.toString(),
       data: {
@@ -86,6 +109,8 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
         durationMin: Math.floor(
           (event.end.getTime() - event.start.getTime()) / (1000 * 60)
         ),
+        roomId: selectedRoom?.id || null,
+        atHomeClientId: selectedClient?.id || null,
       },
     });
 
@@ -161,11 +186,7 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
           <div>
             <SelectInput
               className={styles.placeSelector}
-              options={[
-                "Not sure yet",
-                "In a collective room",
-                "At a client's home",
-              ]}
+              options={["Select", "In a collective room", "At a client's home"]}
               value={place}
               setValue={setPlace}
             />
@@ -174,14 +195,14 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
               <div>
                 <div>
                   <h4>Choose a premise</h4>
-                  <div className={styles.premisesList}>
+                  <div className={styles.cardsList}>
                     {premises?.map((premise, index) => {
                       const isCurrentlySelected =
                         selectedPremise?.id === premise.id;
                       return (
                         <div
                           key={index}
-                          className={cx(styles.premise, {
+                          className={cx(styles.card, {
                             [styles.selected]: isCurrentlySelected,
                           })}
                           onClick={() =>
@@ -190,10 +211,10 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
                             )
                           }
                         >
-                          <p className={styles.address}>
+                          <p className={styles.bigText}>
                             {`${premise.address.streetNumber} ${premise.address.streetName} (${premise.address.city})`}
                           </p>
-                          <p className={styles.country}>
+                          <p className={styles.smallText}>
                             {premise.address.country}
                           </p>
                         </div>
@@ -204,7 +225,7 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
                 {selectedPremise && (
                   <div>
                     <h4>Choose a room</h4>
-                    <div className={styles.roomsList}>
+                    <div className={styles.cardsList}>
                       {selectedPremise?.rooms?.map((room, index) => {
                         const isCurrentlySelected =
                           selectedRoom?.id === room.id;
@@ -212,17 +233,17 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
                         return (
                           <div
                             key={index}
-                            className={cx(styles.room, {
+                            className={cx(styles.card, {
                               [styles.selected]: isCurrentlySelected,
                             })}
                             onClick={() =>
                               setSelectedRoom(isCurrentlySelected ? null : room)
                             }
                           >
-                            <p className={styles.number}>
+                            <p className={styles.bigText}>
                               {`Room n°${room.id}`}
                             </p>
-                            <p className={styles.capacity}>{room.capacity}</p>
+                            <p className={styles.smallText}>{room.capacity}</p>
                           </div>
                         );
                       })}
@@ -233,7 +254,29 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
             )}
             {place === "At a client's home" && (
               <div>
-                <div>Choose a client</div>
+                <h4>Choose a client</h4>
+                <div className={styles.cardsList}>
+                  {participants?.map((client, index) => {
+                    const isCurrentlySelected =
+                      selectedClient?.id === client.id;
+                    return (
+                      <div
+                        key={index}
+                        className={cx(styles.card, {
+                          [styles.selected]: isCurrentlySelected,
+                        })}
+                        onClick={() =>
+                          setSelectedClient(isCurrentlySelected ? null : client)
+                        }
+                      >
+                        <p className={styles.bigText}>
+                          {`${client.user?.firstName} ${client.user?.lastName}`}
+                        </p>
+                        <p className={styles.smallText}>Client address</p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
