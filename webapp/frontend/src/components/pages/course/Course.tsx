@@ -2,6 +2,8 @@ import { FC, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Link from "next/link";
 import { Scheduler } from "@aldabil/react-scheduler";
+import { ProcessedEvent } from "@aldabil/react-scheduler/types";
+import { toast } from "react-hot-toast";
 
 import {
   useApplyToCourseMutation,
@@ -21,10 +23,8 @@ import { LessonCard } from "@/components/lessonCard/LessonCard";
 import { Button } from "@/components/button/Button";
 
 import { formatEventForScheduler } from "./utils";
+import { PlanningEditor } from "./utils/planningEditor/PlanningEditor";
 import styles from "./Course.module.scss";
-import { PlanningEditor } from "./utils/PlanningEditor";
-import { ProcessedEvent } from "@aldabil/react-scheduler/types";
-import { toast } from "react-hot-toast";
 
 interface Props {
   courseId: string;

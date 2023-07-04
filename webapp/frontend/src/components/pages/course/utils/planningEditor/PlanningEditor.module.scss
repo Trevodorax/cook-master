@@ -1,0 +1,121 @@
+@import "@/styles/theme.scss";
+
+.container {
+  width: 600px;
+  max-width: 90vw;
+
+  padding: 32px;
+
+  border-radius: 8px;;
+
+  .fields {
+    display: flex;
+
+    flex-direction: column;
+
+    .isOnlineSection {
+      display: flex;
+
+      justify-content: flex-start;
+      align-items: center;
+
+      p {
+        margin: 8px;
+        margin-inline-end: 16px;
+
+        font-size: 24px;
+      }
+    }
+
+    &>* {
+      margin: 16px 0;
+    }
+
+    .placeSelector {
+      font-size: 20px;
+  
+      padding: 8px;
+    }
+
+    .premisesList {
+      display: flex;
+      
+      .premise {
+        width: 300px;
+        flex-wrap: wrap;
+
+        padding: 8px;
+
+        border: 1px solid $neutral_2;
+        border-radius: 4px;
+        
+        &:hover, &.selected {
+          background-color: $neutral_1;
+          cursor: pointer;
+        }
+
+        p {
+          margin: 4px;
+        }
+
+        .address {
+          color: $neutral_5;
+          font-size: 20px;
+        }
+
+        .country {
+          color: $neutral_4;
+          font-size: 16px;
+        }
+      }
+    }
+
+    .roomsList {
+      display: flex;
+      
+      .room {
+        width: 300px;
+        flex-wrap: wrap;
+
+        padding: 8px;
+
+        border: 1px solid $neutral_2;
+        border-radius: 4px;
+
+        &:hover, &.selected {
+          background-color: $neutral_1;
+          cursor: pointer;
+        }
+
+        p {
+          margin: 4px;
+        }
+
+        .number {
+          color: $neutral_5;
+          font-size: 20px;
+        }
+
+        .capacity {
+          color: $neutral_4;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 16px;
+
+    justify-content: flex-end;
+
+    .actionButton {
+      margin: 8px;
+  
+      padding: 8px;
+  
+      font-size: 20px;
+    }
+  }
+}
