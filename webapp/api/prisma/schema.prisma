@@ -75,6 +75,8 @@ model Contractor {
   serviceCost  Int      @default(0) // how much the service costs per hour
   events       Event[]
   courses      Course[]
+  serviceType  String   @default("courses")
+  serviceCost  Int      @default(0)
 
   @@map("contractors")
 }
