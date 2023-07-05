@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PremiseService } from './premise.service';
-import { CreatePremiseDto } from './dto';
+import { CreateAddressDto } from './dto';
 import { AllowedUserTypes } from 'src/auth/decorator';
 import { JwtGuard } from 'src/auth/guard';
 import { RolesGuard } from 'src/auth/guard/roles.guard';
@@ -19,7 +19,7 @@ export class PremiseController {
   @UseGuards(JwtGuard, RolesGuard)
   @AllowedUserTypes(['admin'])
   @Post()
-  createPremise(@Body() data: CreatePremiseDto) {
+  createPremise(@Body() data: CreateAddressDto) {
     return this.premiseService.createPremise(data);
   }
 

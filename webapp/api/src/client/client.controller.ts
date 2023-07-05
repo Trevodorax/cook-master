@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
@@ -13,6 +14,7 @@ import { User } from '@prisma/client';
 import { ClientService } from './client.service';
 import { JwtGuard } from 'src/auth/guard';
 import { GetUser } from 'src/auth/decorator';
+import { CreateAddressDto } from 'src/premise/dto';
 
 @Controller('clients')
 export class ClientController {
@@ -33,6 +35,12 @@ export class ClientController {
   @Get('me/courses')
   getMyCourses(@GetUser() user: User) {
     return this.clientService.getCoursesByClientId(user.clientId.toString());
+  }
+
+  @UseGuards(JwtGuard)
+  @Put('me/address')
+  updateMyAddress(@GetUser() user: User, @Body() address: CreateAddressDto) {
+    return this.clientService.updateClientAddress(user.clientId, address);
   }
 
   @UseGuards(JwtGuard)

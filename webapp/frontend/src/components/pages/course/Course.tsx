@@ -71,6 +71,9 @@ export const Course: FC<Props> = ({ courseId }) => {
     refetchLessons();
   }, []);
 
+  const canUserEdit =
+    !!user?.admin || user?.contractorId === courseData?.contractorId;
+
   if (!courseData) {
     return <div>Could not get course.</div>;
   }
@@ -80,6 +83,10 @@ export const Course: FC<Props> = ({ courseId }) => {
   );
 
   const handleEventDrop = async (droppedOn: Date, event: ProcessedEvent) => {
+    if (!canUserEdit) {
+      return event;
+    }
+
     const modifiedWorkshop = await patchEvent({
       id: event.event_id.toString(),
       data: {
@@ -101,6 +108,10 @@ export const Course: FC<Props> = ({ courseId }) => {
   };
 
   const handleEventDelete = async (deletedId: number) => {
+    if (!canUserEdit) {
+      return;
+    }
+
     const deletedEvent = await deleteEvent(deletedId.toString());
     if ("data" in deletedEvent && deletedEvent.data) {
       refetchWorkshops();
@@ -216,21 +227,30 @@ export const Course: FC<Props> = ({ courseId }) => {
                   <PlanningEditor
                     scheduler={scheduler}
                     courseId={courseIdNumber}
+                    canUserEdit={canUserEdit}
                   />
                 )}
                 viewerExtraComponent={PlanningEvent}
-                events={courseWorkshops?.map((workshop) => {
-                  const isEditable =
-                    courseData.contractorId === user?.contractor?.id;
+                events={courseWorkshops
+                  ?.map((workshop) => {
+                    // make sure at home events are visible only for one client and the contractor
+                    if (
+                      workshop?.atHomeClientId &&
+                      workshop.atHomeClientId !== user?.clientId &&
+                      courseData.contractorId !== user?.contractorId
+                    ) {
+                      return null as unknown as ProcessedEvent;
+                    }
 
-                  const formattedWorkshop = formatEventForScheduler(workshop);
+                    const formattedWorkshop = formatEventForScheduler(workshop);
 
-                  formattedWorkshop.draggable = isEditable;
-                  formattedWorkshop.deletable = isEditable;
-                  formattedWorkshop.editable = isEditable;
+                    formattedWorkshop.draggable = canUserEdit;
+                    formattedWorkshop.deletable = canUserEdit;
+                    formattedWorkshop.editable = canUserEdit;
 
-                  return formattedWorkshop;
-                })}
+                    return formattedWorkshop;
+                  })
+                  .filter((event) => event !== null)}
                 onEventDrop={handleEventDrop}
                 onDelete={handleEventDelete}
               />

@@ -25,9 +25,14 @@ import styles from "./PlanningEditor.module.scss";
 interface Props {
   scheduler: SchedulerHelpers;
   courseId: number;
+  canUserEdit: boolean;
 }
 
-export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
+export const PlanningEditor: FC<Props> = ({
+  scheduler,
+  courseId,
+  canUserEdit,
+}) => {
   const [addWorkshopToCourse] = useAddWorkshopToCourseMutation();
   const [patchEvent] = usePatchEventMutation();
   const { refetch: refetchWorkshops } = useGetWorkshopsOfCourseQuery({
@@ -58,7 +63,15 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
       : "Select"
   );
 
+  if (!canUserEdit) {
+    setTimeout(scheduler.close, 0);
+  }
+
   const createEvent = async () => {
+    if (!canUserEdit) {
+      return event;
+    }
+
     const startTime = scheduler.state.start.value;
     const endTime = scheduler.state.end.value;
 
@@ -94,6 +107,10 @@ export const PlanningEditor: FC<Props> = ({ scheduler, courseId }) => {
   };
 
   const editEvent = async (event: ProcessedEvent) => {
+    if (!canUserEdit) {
+      return event;
+    }
+
     if (!formState.isOnline && !selectedClient && !selectedRoom) {
       toast.error("Please fill in all the required informations.");
       return event;

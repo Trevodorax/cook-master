@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreatePremiseDto } from './dto';
+import { CreateAddressDto } from './dto';
 
 @Injectable()
 export class PremiseService {
   constructor(private prisma: PrismaService) {}
 
-  async createPremise(data: CreatePremiseDto) {
+  async createPremise(data: CreateAddressDto) {
     const { streetName, streetNumber, city, postalCode, country } = data;
 
     // Creating new address using the input data

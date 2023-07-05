@@ -6,7 +6,7 @@ import {
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 
 import { tagTypes } from "../api";
-import { CreatePremiseDto, GetPremiseDto, PatchPremiseDto } from "./dto";
+import { CreateAddressDto, GetPremiseDto, PatchPremiseDto } from "./dto";
 import { Premise, Room } from "../types";
 
 export const premiseEndpoints = (
@@ -20,7 +20,7 @@ export const premiseEndpoints = (
     query: () => "premises",
     providesTags: ["Premise"],
   }),
-  createPremise: builder.mutation<Premise, CreatePremiseDto>({
+  createPremise: builder.mutation<Premise, CreateAddressDto>({
     query: (newPremiseData) => ({
       url: "premises",
       method: "POST",

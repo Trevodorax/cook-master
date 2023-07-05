@@ -39,6 +39,12 @@ export const PlanningEvent = (fields: FieldProps[], event: ProcessedEvent) => {
 
   return (
     <div className={styles.container}>
+      <Button
+        type="primary"
+        onClick={() => router.push(`/events/${event.event_id}`)}
+      >
+        See event
+      </Button>
       <div>
         <h3>Description</h3>
         <p>Description: {event.description || "No description"}</p>

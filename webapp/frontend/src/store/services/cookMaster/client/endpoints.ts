@@ -7,6 +7,7 @@ import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions
 
 import { Client, CookMasterEvent, Course, User } from "../types";
 import { tagTypes } from "../api";
+import { CreateAddressDto } from "../premise/dto";
 
 export const clientEndpoints = (
   builder: EndpointBuilder<
@@ -34,6 +35,13 @@ export const clientEndpoints = (
       body: { eventId },
     }),
     invalidatesTags: ["Event"],
+  }),
+  updateMyAddress: builder.mutation<void, CreateAddressDto>({
+    query: (address) => ({
+      url: "clients/me/address",
+      method: "PUT",
+      body: address,
+    }),
   }),
   resignFromEvent: builder.mutation<void, { eventId: number }>({
     query: ({ eventId }) => ({
