@@ -1,0 +1,16 @@
+.colorLegend {
+  display: flex;
+  flex-direction: column;
+}
+
+.colorItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.colorBox {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}

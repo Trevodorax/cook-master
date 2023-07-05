@@ -1,0 +1,99 @@
+@import "@/styles/theme.scss";
+
+.container {
+  width: 800px;
+  max-width: 90vw;
+
+  padding: 32px;
+
+  border-radius: 8px;;
+
+  .fields {
+    display: flex;
+
+    flex-direction: column;
+
+    .isOnlineSection {
+      display: flex;
+
+      justify-content: flex-start;
+      align-items: center;
+
+      p {
+        margin: 8px;
+        margin-inline-end: 16px;
+
+        font-size: 24px;
+      }
+    }
+
+    &>* {
+      margin: 16px 0;
+    }
+
+    .placeSelector {
+      font-size: 20px;
+  
+      padding: 8px;
+    }
+
+    .cardsList {
+      display: flex;
+
+      flex-wrap: wrap;
+      
+      .card {
+        height: 80px;
+        width: 300px;
+        display: flex;
+        margin: 8px;
+        margin-inline-start: 0;
+
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 8px;
+
+        border: 1px solid $neutral_2;
+        border-radius: 4px;
+        
+        &:hover, &.selected {
+          background-color: $neutral_1;
+          cursor: pointer;
+        }
+
+        p {
+          margin: 4px;
+        }
+
+        .bigText {
+          max-height: 50px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          color: $neutral_5;
+          font-size: 20px;
+        }
+
+        .smallText {
+          color: $neutral_4;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .actions {
+    display: flex;
+    margin-top: 16px;
+
+    justify-content: flex-end;
+
+    .actionButton {
+      margin: 8px;
+  
+      padding: 8px;
+  
+      font-size: 20px;
+    }
+  }
+}

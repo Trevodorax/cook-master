@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreatePremiseDto {
+export class CreateAddressDto {
   @IsString()
   @IsNotEmpty()
   streetName: string;

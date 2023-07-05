@@ -5,6 +5,9 @@ export interface CreateEventDto {
   startTime: Date;
   durationMin: number;
   animator?: number;
+  isOnline?: boolean;
+  roomId?: number | null;
+  atHomeClientId?: number | null;
 }
 
 export type serializedCreateEventDto = Omit<CreateEventDto, "startTime"> & {

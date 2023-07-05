@@ -1,4 +1,4 @@
-export interface CreatePremiseDto {
+export interface CreateAddressDto {
   streetNumber: string;
   streetName: string;
   city: string;

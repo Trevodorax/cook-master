@@ -2,12 +2,12 @@ import styles from "./SwitchInput.module.scss";
 
 interface Props {
   isChecked: boolean;
-  setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsChecked: (isChecked: boolean) => void;
 }
 
 export const SwitchInput = ({ isChecked, setIsChecked }: Props) => {
   const handleChange = () => {
-    setIsChecked((prev) => !prev);
+    setIsChecked(!isChecked);
   };
 
   return (

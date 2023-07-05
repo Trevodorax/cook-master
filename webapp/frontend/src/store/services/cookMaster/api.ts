@@ -103,4 +103,6 @@ export const {
   usePatchRoomByIdMutation,
   usePatchPremiseMutation,
   useCreateRoomInPremiseMutation,
+  useGetClientByIdQuery,
+  useUpdateMyAddressMutation,
 } = api;

@@ -96,6 +96,9 @@ export class EventService {
         startTime: dto.startTime,
         durationMin: dto.durationMin,
         contractorId: dto.animator ?? undefined,
+        isOnline: dto.isOnline,
+        atHomeClientId: dto.atHomeClientId || undefined,
+        roomId: dto.roomId || undefined,
       },
       include: {
         animator: true,
@@ -138,12 +141,29 @@ export class EventService {
       throw new NotFoundException(`Event with ID ${id} not found`);
     }
 
+    const workshopType = dto.roomId
+      ? 'inPremise'
+      : dto.atHomeClientId
+      ? 'atClientHome'
+      : 'other';
+
     /* ===== UPDATE ===== */
-    const modifiedEventData = {
+    const modifiedEventData: any = {
       ...dto,
       animator: dto.animator ? { connect: { id: dto.animator } } : undefined,
       startTime: dto.startTime ? new Date(dto.startTime) : undefined,
     };
+
+    // make sure it is not both in premise and at client home
+    if (workshopType === 'atClientHome') {
+      modifiedEventData.atHomeClientId = dto.atHomeClientId;
+      modifiedEventData.roomId = null;
+    }
+
+    if (workshopType === 'inPremise') {
+      modifiedEventData.roomId = dto.roomId;
+      modifiedEventData.atHomeClientId = null;
+    }
 
     const updatedEvent = await this.prisma.event.update({
       where: { id },
@@ -221,7 +241,7 @@ export class EventService {
     });
 
     if (!event) {
-      throw new NotFoundException(`Could not find event with id ${eventId}`);
+      return [];
     }
 
     return event.clients;

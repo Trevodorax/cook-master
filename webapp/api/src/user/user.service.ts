@@ -19,7 +19,11 @@ export class UserService {
       },
       include: {
         admin: true,
-        client: true,
+        client: {
+          include: {
+            Address: true,
+          },
+        },
         contractor: true,
       },
     });

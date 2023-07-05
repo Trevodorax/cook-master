@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { CreateAddressDto } from 'src/premise/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class ClientService {
   async getClientById(clientId: string) {
     const client = await this.prisma.client.findUnique({
       where: { id: Number(clientId) },
+      include: { user: true, Address: true },
     });
 
     if (!client) {
@@ -19,6 +21,53 @@ export class ClientService {
     }
 
     return client;
+  }
+
+  async updateClientAddress(clientId: number, address: CreateAddressDto) {
+    const existingClient = await this.prisma.client.findUnique({
+      where: { id: clientId },
+      include: {
+        Address: true,
+      },
+    });
+
+    if (!existingClient) {
+      throw new NotFoundException(`Client with id ${clientId} not found`);
+    }
+
+    if (!existingClient.Address) {
+      // create the new address
+      const newAddress = await this.prisma.address.create({
+        data: {
+          ...address,
+          client: {
+            connect: {
+              id: clientId,
+            },
+          },
+        },
+      });
+
+      // update client with new addressId
+      const updatedClient = await this.prisma.client.update({
+        where: { id: clientId },
+        data: {
+          addressId: newAddress.id,
+        },
+      });
+
+      return updatedClient;
+    } else {
+      // replace the address
+      const updatedAddress = await this.prisma.address.update({
+        where: {
+          id: existingClient.Address.id,
+        },
+        data: address,
+      });
+
+      return updatedAddress;
+    }
   }
 
   async getEventsByClientId(clientId: string) {
