@@ -8,6 +8,7 @@ import {
 import { EditableField } from "@/components/editableField/EditableField";
 import { Button } from "@/components/button/Button";
 import { useRouter } from "next/router";
+import { RoomPlanning } from "@/components/roomPlanning/RoomPlanning";
 
 interface Props {
   roomId: number;
@@ -45,6 +46,7 @@ export const Room: FC<Props> = ({ roomId }) => {
           isEditable
         />
       </div>
+      <RoomPlanning roomId={roomId} />
     </div>
   );
 };

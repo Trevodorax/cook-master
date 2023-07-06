@@ -19,6 +19,22 @@ export class RoomService {
     return room;
   }
 
+  async getEventsFromRoom(roomId: string) {
+    const room = await this.prisma.room.findUnique({
+      where: { id: Number(roomId) },
+      include: {
+        events: true,
+      },
+    });
+
+    if (!room) {
+      //throw new NotFoundException(`No room found with id ${roomId}`);
+      return null;
+    }
+
+    return room.events;
+  }
+
   async patchRoomById(roomId: string, capacity: number) {
     return await this.prisma.room.update({
       where: { id: Number(roomId) },

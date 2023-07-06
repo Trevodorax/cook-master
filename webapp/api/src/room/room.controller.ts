@@ -20,6 +20,11 @@ export class RoomController {
     return this.roomService.getRoomById(roomId);
   }
 
+  @Get(':roomId/events')
+  getEventsFromRoom(@Param('roomId') roomId: string) {
+    return this.roomService.getEventsFromRoom(roomId);
+  }
+
   @UseGuards(JwtGuard, RolesGuard)
   @AllowedUserTypes(['admin'])
   @Patch(':roomId')

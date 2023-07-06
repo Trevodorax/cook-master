@@ -105,4 +105,5 @@ export const {
   useCreateRoomInPremiseMutation,
   useGetClientByIdQuery,
   useUpdateMyAddressMutation,
+  useGetEventsFromRoomQuery,
 } = api;
