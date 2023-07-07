@@ -80,6 +80,8 @@ model Address {
   city         String
   postalCode   String
   country      String
+  longitude    Float?
+  latitude     Float?
   client       Client?
   premise      Premise?
 

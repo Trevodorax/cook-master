@@ -21,8 +21,6 @@ export class AddressService {
       1,
     );
 
-    console.log(coords);
-
     const newAddress = await this.prisma.address.create({
       data: {
         streetName: address.streetName,
@@ -30,6 +28,8 @@ export class AddressService {
         city: address.city,
         postalCode: address.postalCode,
         country: address.country,
+        longitude: coords.confidence > 0.9 ? coords.lon : null,
+        latitude: coords.confidence > 0.9 ? coords.lat : null,
       },
     });
 
@@ -43,7 +43,7 @@ export class AddressService {
     city: string,
     country: string,
     nbResultsMax: number,
-  ): Promise<{ lon: string; lat: string; confidence: number }> {
+  ): Promise<{ lon: number; lat: number; confidence: number }> {
     const geocodingAPIKey = this.configService.get('GEOCODING_API_KEY');
 
     const rawResponse = await fetch(
