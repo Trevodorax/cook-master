@@ -3,12 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { AddressService } from 'src/address/address.service';
 import { CreateAddressDto } from 'src/premise/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ClientService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private addressService: AddressService,
+  ) {}
 
   async getClientById(clientId: string) {
     const client = await this.prisma.client.findUnique({
@@ -37,9 +41,10 @@ export class ClientService {
 
     if (!existingClient.Address) {
       // create the new address
-      const newAddress = await this.prisma.address.create({
+      const newAddress = await this.addressService.createAddress(address);
+      const newAddressWithClient = await this.prisma.address.update({
+        where: { id: newAddress.id },
         data: {
-          ...address,
           client: {
             connect: {
               id: clientId,
@@ -52,7 +57,7 @@ export class ClientService {
       const updatedClient = await this.prisma.client.update({
         where: { id: clientId },
         data: {
-          addressId: newAddress.id,
+          addressId: newAddressWithClient.id,
         },
       });
 

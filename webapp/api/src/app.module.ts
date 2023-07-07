@@ -13,6 +13,7 @@ import { ClientModule } from './client/client.module';
 import { ChatModule } from './chat/chat.module';
 import { PremiseModule } from './premise/premise.module';
 import { RoomModule } from './room/room.module';
+import { AddressModule } from './address/address.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RoomModule } from './room/room.module';
     ChatModule,
     PremiseModule,
     RoomModule,
+    AddressModule,
   ],
 })
 export class AppModule {}
