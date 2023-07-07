@@ -87,7 +87,7 @@ export const PlanningEditor: FC<Props> = ({
         description: formState.description,
         isOnline: formState.isOnline,
         type: "workshop",
-        startTime: scheduler.state.start.value,
+        startTime: startTime,
         durationMin: Math.floor(
           (endTime.getTime() - startTime.getTime()) / (1000 * 60)
         ),

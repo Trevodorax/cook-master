@@ -29,9 +29,7 @@ export const formatEventForScheduler = (
     description: event.description,
     isOnline: event.isOnline,
     start: startTime,
-    end: new Date(
-      startTime.getTime() + event.durationMin * 60000 // Convert minutes to milliseconds
-    ),
+    end: new Date(startTime.getTime() + event.durationMin * 60000),
     roomId: event.roomId,
     atHomeClientId: event.atHomeClientId,
     color,

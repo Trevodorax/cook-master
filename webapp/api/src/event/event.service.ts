@@ -12,10 +12,11 @@ import {
   GetEventByIdDto,
   PatchEventDto,
 } from './dto';
+import { RoomService } from 'src/room/room.service';
 
 @Injectable()
 export class EventService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private room: RoomService) {}
 
   async getAllEvents({ filters }: GetAllEventsDto) {
     let where = {};
@@ -88,6 +89,20 @@ export class EventService {
   }
 
   async createEvent(dto: CreateEventDto) {
+    const endTime = new Date(dto.startTime.getTime() + dto.durationMin * 60000);
+
+    if (
+      dto.roomId &&
+      !(await this.room.checkRoomAvailability(
+        dto.roomId,
+        dto.startTime,
+        endTime,
+      ))
+    ) {
+      throw new BadRequestException(
+        'This room is already booked at this moment.',
+      );
+    }
     const newEvent = await this.prisma.event.create({
       data: {
         type: dto.type,

@@ -61,6 +61,10 @@
           cursor: pointer;
         }
 
+        &.unavailable {
+          background-color: red;
+        }
+
         p {
           margin: 4px;
         }

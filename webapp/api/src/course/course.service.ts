@@ -199,6 +199,10 @@ export class CourseService {
 
     const createdWorkshop = await this.events.createEvent(workshop);
 
+    if (!createdWorkshop) {
+      return null;
+    }
+
     const foundCourse = await this.prisma.course.findUnique({
       where: { id: courseIdNumber },
     });
