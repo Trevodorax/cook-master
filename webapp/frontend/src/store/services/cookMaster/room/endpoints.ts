@@ -5,7 +5,7 @@ import {
 } from "@reduxjs/toolkit/dist/query";
 import { EndpointBuilder } from "@reduxjs/toolkit/dist/query/endpointDefinitions";
 import { tagTypes } from "../api";
-import { Room } from "../types";
+import { Room, SerializedCookMasterEvent } from "../types";
 
 export const roomEndpoints = (
   builder: EndpointBuilder<
@@ -16,6 +16,10 @@ export const roomEndpoints = (
 ) => ({
   getRoomById: builder.query<Room, number>({
     query: (roomId) => `rooms/${roomId}`,
+    providesTags: (_, __, roomId) => [{ type: "Room", id: roomId }],
+  }),
+  getEventsFromRoom: builder.query<SerializedCookMasterEvent[], number>({
+    query: (roomId) => `rooms/${roomId}/events`,
     providesTags: (_, __, roomId) => [{ type: "Room", id: roomId }],
   }),
   patchRoomById: builder.mutation<Room, { roomId: number; capacity: number }>({

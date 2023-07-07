@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -18,6 +19,35 @@ export class RoomController {
   @Get(':roomId')
   getRoomById(@Param('roomId') roomId: string) {
     return this.roomService.getRoomById(roomId);
+  }
+
+  @Get(':roomId/events')
+  getEventsFromRoom(@Param('roomId') roomId: string) {
+    return this.roomService.getEventsFromRoom(roomId);
+  }
+
+  @Get(':roomId/isAvailable')
+  isRoomAvailable(
+    @Param('roomId') roomId: string,
+    @Body() data: { startTime: string; endTime: string },
+  ) {
+    const roomIdNumber = Number(roomId);
+    const startTimeObject = new Date(data.startTime);
+    const endTimeObject = new Date(data.endTime);
+
+    if (
+      isNaN(roomIdNumber) ||
+      isNaN(startTimeObject.getTime()) ||
+      isNaN(endTimeObject.getTime())
+    ) {
+      throw new BadRequestException();
+    }
+
+    return this.roomService.checkRoomAvailability(
+      roomIdNumber,
+      startTimeObject,
+      endTimeObject,
+    );
   }
 
   @UseGuards(JwtGuard, RolesGuard)
