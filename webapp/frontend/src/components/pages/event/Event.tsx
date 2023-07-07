@@ -16,6 +16,7 @@ import { RootState } from "@/store/store";
 import { Button } from "@/components/button/Button";
 
 import styles from "./Event.module.scss";
+import { RoomPlanning } from "@/components/roomPlanning/RoomPlanning";
 
 interface Props {
   eventId: string;
@@ -117,8 +118,23 @@ export const Event = ({ eventId }: Props) => {
             </div>
           </>
         )}
-        <div className={styles.middleBlock}>
-          <div />
+        <div className={styles.middlePart}>
+          <h2 className={styles.title}>
+            {event?.roomId
+              ? `Events in room ${event?.roomId}`
+              : event?.atHomeClientId
+              ? `Events for client ${event?.atHomeClientId}`
+              : event?.isOnline
+              ? `Video class starting in : ${
+                  new Date(event?.startTime).getTime() - new Date().getTime()
+                }`
+              : "This is an event"}
+          </h2>
+          <div className={styles.middleBlock}>
+            {event?.roomId && (
+              <RoomPlanning roomId={event.roomId} coloredEventId={event.id} />
+            )}
+          </div>
         </div>
       </div>
       <div className={styles.sideBar}>

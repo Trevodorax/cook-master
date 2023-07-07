@@ -31,14 +31,18 @@
       background-color: $primary_1;
     }
   
-    .middleBlock {
-      width: 800px;
-      max-width: 90vw;
-      margin: 64px;
-      margin-inline-start: 0;
-      aspect-ratio: 16/9;
-  
-      background-color: $neutral_5;
+    .middlePart {
+      .title {
+        margin-bottom: 0;
+      }
+      .middleBlock {
+        width: 800px;
+        max-width: 90vw;
+        margin: 64px 0;
+        aspect-ratio: 16/9;
+    
+        background-color: $neutral_1;
+      }
     }
   }
 
