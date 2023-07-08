@@ -10,6 +10,7 @@ import {
   useGetClientsFromEventQuery,
   usePatchEventMutation,
   useResignFromEventMutation,
+  useGetClientByIdQuery,
 } from "@/store/services/cookMaster/api";
 import { EditableField } from "@/components/editableField/EditableField";
 import { RootState } from "@/store/store";
@@ -17,6 +18,7 @@ import { Button } from "@/components/button/Button";
 
 import styles from "./Event.module.scss";
 import { RoomPlanning } from "@/components/roomPlanning/RoomPlanning";
+import { Map } from "@/components/map/Map";
 
 interface Props {
   eventId: string;
@@ -49,6 +51,13 @@ export const Event = ({ eventId }: Props) => {
   );
 
   const { data: clientsInEvent } = useGetClientsFromEventQuery(eventId);
+
+  const { data: atHomeClient } = useGetClientByIdQuery(
+    event?.atHomeClientId || 0,
+    {
+      skip: !event?.atHomeClientId,
+    }
+  );
 
   const isUserInEvent = clientsInEvent?.some(
     (client) => client.id === user?.clientId
@@ -123,16 +132,31 @@ export const Event = ({ eventId }: Props) => {
             {event?.roomId
               ? `Events in room ${event?.roomId}`
               : event?.atHomeClientId
-              ? `Events for client ${event?.atHomeClientId}`
+              ? `Address of ${atHomeClient?.user?.firstName} ${atHomeClient?.user?.lastName}`
               : event?.isOnline
               ? `Video class starting in : ${
                   new Date(event?.startTime).getTime() - new Date().getTime()
                 }`
               : "This is an event"}
           </h2>
+          {atHomeClient?.Address && (
+            <div>
+              <h3>
+                {`${atHomeClient.Address.streetNumber} ${atHomeClient.Address.streetName}`}
+              </h3>
+              <p>{`${atHomeClient.Address.postalCode} ${atHomeClient.Address.city} - ${atHomeClient.Address.country}`}</p>
+            </div>
+          )}
           <div className={styles.middleBlock}>
             {event?.roomId && (
               <RoomPlanning roomId={event.roomId} coloredEventId={event.id} />
+            )}
+            {atHomeClient && (
+              <Map
+                longitude={atHomeClient.Address?.longitude || null}
+                latitude={atHomeClient.Address?.latitude || null}
+                noAddress={!atHomeClient.Address}
+              />
             )}
           </div>
         </div>
