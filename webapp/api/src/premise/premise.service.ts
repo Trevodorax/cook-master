@@ -1,18 +1,15 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateAddressDto } from './dto';
+import { AddressService } from 'src/address/address.service';
 
 @Injectable()
 export class PremiseService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private address: AddressService) {}
 
   async createPremise(data: CreateAddressDto) {
-    const { streetName, streetNumber, city, postalCode, country } = data;
-
     // Creating new address using the input data
-    const newAddress = await this.prisma.address.create({
-      data: { streetName, streetNumber, city, postalCode, country },
-    });
+    const newAddress = await this.address.createAddress(data);
 
     // Creating new premise using the addressId from the newly created address
     const newPremise = await this.prisma.premise.create({

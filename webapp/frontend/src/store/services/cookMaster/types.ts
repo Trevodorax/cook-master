@@ -47,6 +47,8 @@ export interface Address {
   postalCode: string;
   country: string;
   client?: Client | null;
+  longitude: number;
+  latitude: number;
 }
 
 export interface CookMasterEvent {

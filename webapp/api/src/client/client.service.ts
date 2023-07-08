@@ -3,12 +3,16 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { AddressService } from 'src/address/address.service';
 import { CreateAddressDto } from 'src/premise/dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ClientService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private addressService: AddressService,
+  ) {}
 
   async getClientById(clientId: string) {
     const client = await this.prisma.client.findUnique({
@@ -35,39 +39,37 @@ export class ClientService {
       throw new NotFoundException(`Client with id ${clientId} not found`);
     }
 
-    if (!existingClient.Address) {
-      // create the new address
-      const newAddress = await this.prisma.address.create({
-        data: {
-          ...address,
-          client: {
-            connect: {
-              id: clientId,
-            },
-          },
-        },
-      });
-
-      // update client with new addressId
-      const updatedClient = await this.prisma.client.update({
-        where: { id: clientId },
-        data: {
-          addressId: newAddress.id,
-        },
-      });
-
-      return updatedClient;
-    } else {
-      // replace the address
-      const updatedAddress = await this.prisma.address.update({
+    if (existingClient.Address) {
+      // remove the address if it exists
+      await this.prisma.address.delete({
         where: {
           id: existingClient.Address.id,
         },
-        data: address,
       });
-
-      return updatedAddress;
     }
+
+    // create the new address
+    const newAddress = await this.addressService.createAddress(address);
+
+    // create the relationship between the client and the address
+    const newAddressWithClient = await this.prisma.address.update({
+      where: { id: newAddress.id },
+      data: {
+        client: {
+          connect: {
+            id: clientId,
+          },
+        },
+      },
+    });
+    const updatedClient = await this.prisma.client.update({
+      where: { id: clientId },
+      data: {
+        addressId: newAddressWithClient.id,
+      },
+    });
+
+    return updatedClient;
   }
 
   async getEventsByClientId(clientId: string) {
