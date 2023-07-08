@@ -204,14 +204,14 @@ export const Course: FC<Props> = ({ courseId }) => {
       <div className={styles.workshops}>
         <h2>Workshops</h2>
         <ColorLegend />
-        <div className={styles.workshopList}>
+        <div className={styles.schedule}>
           {courseWorkshops && (
             <>
               <Scheduler
                 day={{
                   startHour: 9,
                   endHour: 17,
-                  step: 60,
+                  step: 30,
                   navigation: true,
                 }}
                 week={{
@@ -219,7 +219,7 @@ export const Course: FC<Props> = ({ courseId }) => {
                   weekStartOn: 1,
                   startHour: 9,
                   endHour: 17,
-                  step: 60,
+                  step: 30,
                 }}
                 hourFormat="24"
                 editable={courseData.contractorId === user?.contractor?.id}

@@ -39,4 +39,9 @@
       align-items: flex-start;
     }
   }
+  .schedule {
+    * {
+      box-sizing: content-box;
+    }
+  }
 }

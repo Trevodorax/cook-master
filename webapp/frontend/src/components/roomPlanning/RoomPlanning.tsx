@@ -20,7 +20,7 @@ export const RoomPlanning: FC<Props> = ({ roomId, coloredEventId }) => {
           day={{
             startHour: 9,
             endHour: 17,
-            step: 60,
+            step: 30,
             navigation: true,
           }}
           week={{
@@ -28,7 +28,7 @@ export const RoomPlanning: FC<Props> = ({ roomId, coloredEventId }) => {
             weekStartOn: 1,
             startHour: 9,
             endHour: 17,
-            step: 60,
+            step: 30,
           }}
           hourFormat="24"
           editable={false}
