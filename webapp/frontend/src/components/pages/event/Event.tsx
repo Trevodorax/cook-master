@@ -19,6 +19,7 @@ import { Button } from "@/components/button/Button";
 import styles from "./Event.module.scss";
 import { RoomPlanning } from "@/components/roomPlanning/RoomPlanning";
 import { Map } from "@/components/map/Map";
+import { VideoEvent } from "@/components/videoEvent/VideoEvent";
 
 interface Props {
   eventId: string;
@@ -134,9 +135,9 @@ export const Event = ({ eventId }: Props) => {
               : event?.atHomeClientId
               ? `Address of ${atHomeClient?.user?.firstName} ${atHomeClient?.user?.lastName}`
               : event?.isOnline
-              ? `Video class starting in : ${
-                  new Date(event?.startTime).getTime() - new Date().getTime()
-                }`
+              ? `Video class starting in : ${getTimeDifference(
+                  event?.startTime
+                )}`
               : "This is an event"}
           </h2>
           {atHomeClient?.Address && (
@@ -158,6 +159,7 @@ export const Event = ({ eventId }: Props) => {
                 noAddress={!atHomeClient.Address}
               />
             )}
+            {event.isOnline && <VideoEvent eventId={event.id} />}
           </div>
         </div>
       </div>
@@ -208,3 +210,24 @@ export const Event = ({ eventId }: Props) => {
     </div>
   );
 };
+
+function getTimeDifference(eventStartTime?: string) {
+  if (eventStartTime) {
+    const differenceMilliseconds =
+      new Date(eventStartTime).getTime() - new Date().getTime();
+
+    const differenceMinutes = Math.floor(
+      (differenceMilliseconds / (1000 * 60)) % 60
+    );
+    const differenceHours = Math.floor(
+      (differenceMilliseconds / (1000 * 60 * 60)) % 24
+    );
+    const differenceDays = Math.floor(
+      differenceMilliseconds / (1000 * 60 * 60 * 24)
+    );
+
+    return `${differenceDays} days, ${differenceHours} hours, ${differenceMinutes} minutes`;
+  } else {
+    return "Event start time is not defined.";
+  }
+}
