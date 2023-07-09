@@ -43,10 +43,10 @@ async function bootstrap() {
     port: 9000,
     path: '/trevodorax',
     proxied: true,
-    // ssl: {
-    //   key,
-    //   cert,
-    // },
+    ssl: {
+      key,
+      cert,
+    },
   });
 
   await app.listen(3333);
