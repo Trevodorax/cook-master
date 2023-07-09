@@ -127,7 +127,7 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
     fn();
 
     return () => {
-      socket.disconnect();
+      // socket.disconnect();
 
       // cleanup the video
       const tracks = myVideoStream?.getTracks();
