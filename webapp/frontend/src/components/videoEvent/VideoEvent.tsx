@@ -16,7 +16,7 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
   const socket = useMemo(
     () =>
       io(
-        `wss://${
+        `ws://${
           process.env.NODE_ENV === "development"
             ? "localhost:3333"
             : "cookmaster.site"
@@ -26,7 +26,26 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
   );
 
   useEffect(() => {
-    socket.emit("join-event", JSON.stringify({ token, eventId }));
+    const fn = async () => {
+      // only importing on client side
+      const { Peer } = await import("peerjs");
+
+      // undefined so peerjs gives me a UUID
+      const myPeer = new Peer(undefined as unknown as string, {
+        host: "localhost",
+        port: 9000,
+        path: "/trevodorax",
+      });
+
+      myPeer.on("open", (myPeerId) => {
+        socket.emit(
+          "join-event",
+          JSON.stringify({ token, eventId, peerId: myPeerId })
+        );
+      });
+    };
+    fn();
+
     socket.on("user-connected", (userId) => {
       console.log("user connected", userId);
     });

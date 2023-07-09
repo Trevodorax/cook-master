@@ -42,8 +42,12 @@ export class EventGateway
 
   @SubscribeMessage('join-event')
   handleAuth(@MessageBody() data: string, @ConnectedSocket() client: Socket) {
-    const dataJSON = JSON.parse(data) as { token: string; eventId: number };
-    if (!dataJSON.token || !dataJSON.eventId) {
+    const dataJSON = JSON.parse(data) as {
+      token: string;
+      eventId: number;
+      peerId: string;
+    };
+    if (!dataJSON.token || !dataJSON.eventId || !dataJSON.peerId) {
       throw new BadRequestException('Invalid message');
     }
 
@@ -54,6 +58,8 @@ export class EventGateway
     // TODO: check that the user is participating in this event
 
     client.join(`event${dataJSON.eventId}`);
-    client.to(`event${dataJSON.eventId}`).emit('user-connected');
+    client
+      .to(`event${dataJSON.eventId}`)
+      .emit('user-connected', dataJSON.peerId);
   }
 }
