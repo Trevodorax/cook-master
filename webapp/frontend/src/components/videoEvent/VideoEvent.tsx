@@ -53,14 +53,15 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       // only importing on client side
       const { Peer } = await import("peerjs");
 
-      try {
-        myVideoStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-      } catch (error) {
-        console.error("Could not get user media:", error);
-        return; // If we can't get the user media, we should probably stop trying to setup the peer.
+      if (isAnimator) {
+        try {
+          myVideoStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+          });
+        } catch (error) {
+          console.error("Could not get user media:", error);
+        }
       }
 
       if (isAnimator) {
@@ -69,13 +70,18 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
 
       // undefined so peerjs gives me a UUID
       const myPeer = new Peer(undefined as unknown as string, {
-        host: "localhost",
-        port: 9000,
+        host:
+          process.env.NODE_ENV === "development"
+            ? "localhost"
+            : "cookmaster.site",
+        port: process.env.NODE_ENV === "development" ? 9000 : 443,
         path: "/trevodorax",
       });
 
       myPeer.on("call", (call) => {
-        call.answer(myVideoStream);
+        if (isAnimator) {
+          call.answer(myVideoStream);
+        }
         call.on("stream", (peerVideoStream) => {
           if (!isAnimator) {
             setVideoStream(peerVideoStream);
@@ -91,7 +97,7 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       });
 
       myPeer.on("error", (error) => {
-        console.log("error", error);
+        console.log("PeerJS error: ", error);
       });
 
       socket.on("user-connected", (userId) => {
@@ -120,12 +126,14 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
 
     return () => {
       socket.disconnect();
-      // Assuming myVideoStream is your MediaStream object
-      const tracks = myVideoStream.getTracks(); // get all tracks from the stream
 
-      tracks.forEach(function (track) {
-        track.stop();
-      });
+      // cleanup the video
+      const tracks = myVideoStream?.getTracks();
+      if (tracks) {
+        tracks.forEach(function (track) {
+          track.stop();
+        });
+      }
     };
   }, []);
 
