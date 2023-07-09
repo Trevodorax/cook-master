@@ -64,14 +64,23 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       }
 
       if (isAnimator) {
+        console.log("USING MY OWN VIDEO STREAM");
         setVideoStream(myVideoStream);
       }
 
       // undefined so peerjs gives me a UUID
       const myPeer = new Peer(undefined as unknown as string, {
-        host: "localhost",
-        port: 9000,
-        path: "/trevodorax",
+        // host:
+        //   process.env.NODE_ENV === "development"
+        //     ? "localhost"
+        //     : "cookmaster.site",
+        // port: process.env.NODE_ENV === "development" ? 9000 : 443,
+        // path: "/trevodorax",
+        // secure: true,
+        // debug: 3,
+        host: "0.peerjs.com",
+        secure: true,
+        debug: 3,
       });
 
       myPeer.on("call", (call) => {
