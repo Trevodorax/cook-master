@@ -18,7 +18,11 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   createDefaultUser();
 
-  const peerServer = PeerServer({ port: 9000, path: '/trevodorax' });
+  const peerServer = PeerServer({
+    port: 9000,
+    path: '/trevodorax',
+    proxied: true,
+  });
 
   await app.listen(3333);
 }
