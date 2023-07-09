@@ -70,12 +70,15 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
 
       // undefined so peerjs gives me a UUID
       const myPeer = new Peer(undefined as unknown as string, {
-        host:
-          process.env.NODE_ENV === "development"
-            ? "localhost"
-            : "cookmaster.site",
-        port: process.env.NODE_ENV === "development" ? 9000 : 443,
-        path: "/trevodorax",
+        // host:
+        //   process.env.NODE_ENV === "development"
+        //     ? "localhost"
+        //     : "cookmaster.site",
+        // port: process.env.NODE_ENV === "development" ? 9000 : 443,
+        // path: "/trevodorax",
+        // secure: true,
+        // debug: 3,
+        host: "0.peerjs.com",
         secure: true,
         debug: 3,
       });
