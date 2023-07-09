@@ -99,7 +99,8 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       });
 
       myPeer.on("error", (error) => {
-        console.log("PeerJS error: ", error);
+        console.log("PeerJS error: ");
+        console.log(error);
       });
 
       socket.on("user-connected", (userId) => {
@@ -127,7 +128,7 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
     fn();
 
     return () => {
-      // socket.disconnect();
+      socket.disconnect();
 
       // cleanup the video
       const tracks = myVideoStream?.getTracks();
