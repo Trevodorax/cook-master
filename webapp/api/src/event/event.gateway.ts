@@ -42,11 +42,14 @@ export class EventGateway
 
   @SubscribeMessage('join-event')
   handleAuth(@MessageBody() data: string, @ConnectedSocket() client: Socket) {
+    console.log('PATATON');
+
     const dataJSON = JSON.parse(data) as {
       token: string;
       eventId: number;
       peerId: string;
     };
+
     if (!dataJSON.token || !dataJSON.eventId || !dataJSON.peerId) {
       throw new BadRequestException('Invalid message');
     }

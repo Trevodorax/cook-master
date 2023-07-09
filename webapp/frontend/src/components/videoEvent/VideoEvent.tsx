@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo } from "react";
+import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 
@@ -12,6 +12,24 @@ interface Props {
 
 export const VideoEvent: FC<Props> = ({ eventId }) => {
   const token = useSelector((state: RootState) => state.user.token);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const peers = {};
+
+  const setVideoStream = (stream: any) => {
+    if (videoRef?.current) {
+      videoRef.current.srcObject = stream;
+      videoRef?.current?.addEventListener("loadedmetadata", () => {
+        videoRef?.current?.play();
+      });
+    }
+  };
+
+  const removeVideoStream = () => {
+    if (videoRef?.current?.srcObject) {
+      videoRef.current.srcObject = null;
+    }
+  };
 
   const socket = useMemo(
     () =>
@@ -37,19 +55,58 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
         path: "/trevodorax",
       });
 
+      const myVideoStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+
+      myPeer.on("call", (call) => {
+        call.answer(myVideoStream);
+        call.on("stream", (peerVideoStream) => {
+          setVideoStream(peerVideoStream);
+        });
+      });
+
       myPeer.on("open", (myPeerId) => {
+        console.log("successful connection to peer server");
         socket.emit(
           "join-event",
           JSON.stringify({ token, eventId, peerId: myPeerId })
         );
       });
+
+      myPeer.on("error", (error) => {
+        console.log("error", error);
+      });
+
+      socket.on("user-connected", (userId) => {
+        const call = myPeer.call(userId, myVideoStream);
+        call.on("stream", (peerVideoStream) => {
+          setVideoStream(peerVideoStream);
+        });
+        call.on("close", () => {
+          removeVideoStream();
+        });
+
+        peers[userId] = call;
+      });
+
+      socket.on("user-disconnected", (userId) => {
+        if (peers[userId]) {
+          peers[userId].close();
+        }
+      });
     };
     fn();
 
-    socket.on("user-connected", (userId) => {
-      console.log("user connected", userId);
-    });
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
-  return <div className={styles.container}></div>;
+  return (
+    <div className={styles.container}>
+      <video ref={videoRef} id="video" className={styles.video} />
+    </div>
+  );
 };
