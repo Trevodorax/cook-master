@@ -60,7 +60,6 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
         });
       } catch (error) {
         console.error("Could not get user media:", error);
-        return; // If we can't get the user media, we should probably stop trying to setup the peer.
       }
 
       if (isAnimator) {
@@ -129,10 +128,9 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
 
     return () => {
       socket.disconnect();
-      // Assuming myVideoStream is your MediaStream object
-      const tracks = myVideoStream.getTracks(); // get all tracks from the stream
+      const tracks = myVideoStream?.getTracks(); // get all tracks from the stream
 
-      tracks.forEach(function (track) {
+      tracks?.forEach(function (track) {
         track.stop();
       });
     };
