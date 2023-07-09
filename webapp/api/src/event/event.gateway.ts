@@ -59,6 +59,7 @@ export class EventGateway
     };
 
     if (!dataJSON.token || !dataJSON.eventId || !dataJSON.peerId) {
+      console.log('Invalid message received: ', dataJSON);
       throw new BadRequestException('Invalid message');
     }
 

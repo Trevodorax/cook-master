@@ -16,6 +16,8 @@ services:
 
   api:
     build: ./api
+    volumes: 
+      - ./certs:/usr/src/app/certs
     ports:
       - 3333:3333
       - 9000:9000
