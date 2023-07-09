@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useEffect, useMemo, useRef } from "react";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 
@@ -48,16 +48,22 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
       // only importing on client side
       const { Peer } = await import("peerjs");
 
+      let myVideoStream: MediaStream;
+      try {
+        myVideoStream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+      } catch (error) {
+        console.error("Could not get user media:", error);
+        return; // If we can't get the user media, we should probably stop trying to setup the peer.
+      }
+
       // undefined so peerjs gives me a UUID
       const myPeer = new Peer(undefined as unknown as string, {
         host: "localhost",
         port: 9000,
         path: "/trevodorax",
-      });
-
-      const myVideoStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
       });
 
       myPeer.on("call", (call) => {
@@ -68,7 +74,6 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
       });
 
       myPeer.on("open", (myPeerId) => {
-        console.log("successful connection to peer server");
         socket.emit(
           "join-event",
           JSON.stringify({ token, eventId, peerId: myPeerId })
