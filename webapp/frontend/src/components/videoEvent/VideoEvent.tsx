@@ -76,7 +76,6 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
             : "cookmaster.site",
         port: process.env.NODE_ENV === "development" ? 9000 : 443,
         path: "/trevodorax",
-        key: "peerjs",
         secure: true,
         debug: 3,
       });
