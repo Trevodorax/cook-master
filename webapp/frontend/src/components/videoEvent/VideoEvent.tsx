@@ -101,6 +101,7 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       myPeer.on("error", (error) => {
         console.log("PeerJS error: ");
         console.log(error);
+        console.log((error as unknown as { type: string }).type);
       });
 
       socket.on("user-connected", (userId) => {
