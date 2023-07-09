@@ -53,18 +53,17 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       // only importing on client side
       const { Peer } = await import("peerjs");
 
-      try {
-        myVideoStream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true,
-        });
-      } catch (error) {
-        console.error("Could not get user media:", error);
-        return; // If we can't get the user media, we should probably stop trying to setup the peer.
-      }
-
       if (isAnimator) {
-        console.log("USING MY OWN VIDEO STREAM");
+        try {
+          myVideoStream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: true,
+          });
+        } catch (error) {
+          console.error("Could not get user media:", error);
+          return; // If we can't get the user media, we should probably stop trying to setup the peer.
+        }
+
         setVideoStream(myVideoStream);
       }
 
@@ -84,7 +83,9 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       });
 
       myPeer.on("call", (call) => {
-        call.answer(myVideoStream);
+        if (isAnimator) {
+          call.answer(myVideoStream);
+        }
         call.on("stream", (peerVideoStream) => {
           if (!isAnimator) {
             setVideoStream(peerVideoStream);
