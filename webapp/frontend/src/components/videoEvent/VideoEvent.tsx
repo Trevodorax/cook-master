@@ -5,16 +5,22 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 
 import styles from "./VideoEvent.module.scss";
+import { MediaConnection } from "peerjs";
 
 interface Props {
   eventId: number;
+  eventContractorId: number;
 }
 
-export const VideoEvent: FC<Props> = ({ eventId }) => {
+export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
   const token = useSelector((state: RootState) => state.user.token);
+  const myContractorId = useSelector(
+    (state: RootState) => state.user.userInfo?.contractorId
+  );
+  const isAnimator = eventContractorId === myContractorId;
 
   const videoRef = useRef<HTMLVideoElement>(null);
-  const peers = {};
+  const peers: { [userId: string]: MediaConnection } = {};
 
   const setVideoStream = (stream: any) => {
     if (videoRef?.current) {
@@ -34,21 +40,19 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
   const socket = useMemo(
     () =>
       io(
-        `ws://${
-          process.env.NODE_ENV === "development"
-            ? "localhost:3333"
-            : "cookmaster.site"
-        }`
+        process.env.NODE_ENV === "development"
+          ? "ws://localhost:3333"
+          : "wss://cookmaster.site"
       ),
     []
   );
 
   useEffect(() => {
+    let myVideoStream: MediaStream;
     const fn = async () => {
       // only importing on client side
       const { Peer } = await import("peerjs");
 
-      let myVideoStream: MediaStream;
       try {
         myVideoStream = await navigator.mediaDevices.getUserMedia({
           video: true,
@@ -57,6 +61,10 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
       } catch (error) {
         console.error("Could not get user media:", error);
         return; // If we can't get the user media, we should probably stop trying to setup the peer.
+      }
+
+      if (isAnimator) {
+        setVideoStream(myVideoStream);
       }
 
       // undefined so peerjs gives me a UUID
@@ -69,7 +77,9 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
       myPeer.on("call", (call) => {
         call.answer(myVideoStream);
         call.on("stream", (peerVideoStream) => {
-          setVideoStream(peerVideoStream);
+          if (!isAnimator) {
+            setVideoStream(peerVideoStream);
+          }
         });
       });
 
@@ -87,10 +97,14 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
       socket.on("user-connected", (userId) => {
         const call = myPeer.call(userId, myVideoStream);
         call.on("stream", (peerVideoStream) => {
-          setVideoStream(peerVideoStream);
+          if (!isAnimator) {
+            setVideoStream(peerVideoStream);
+          }
         });
         call.on("close", () => {
-          removeVideoStream();
+          if (!isAnimator) {
+            removeVideoStream();
+          }
         });
 
         peers[userId] = call;
@@ -106,6 +120,12 @@ export const VideoEvent: FC<Props> = ({ eventId }) => {
 
     return () => {
       socket.disconnect();
+      // Assuming myVideoStream is your MediaStream object
+      const tracks = myVideoStream.getTracks(); // get all tracks from the stream
+
+      tracks.forEach(function (track) {
+        track.stop();
+      });
     };
   }, []);
 

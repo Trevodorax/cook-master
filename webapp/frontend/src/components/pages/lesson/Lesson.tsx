@@ -65,7 +65,6 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
   }
 
   const handleNextLessonClick = async () => {
-    console.log(nextLesson);
     if (typeof nextLesson === "object" && "id" in nextLesson) {
       router.push(`${nextLesson?.id}`);
       return;

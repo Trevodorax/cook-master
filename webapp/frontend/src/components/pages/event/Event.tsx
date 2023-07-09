@@ -26,17 +26,10 @@ interface Props {
 }
 
 export const Event = ({ eventId }: Props) => {
-  const router = useRouter();
   const user = useSelector((state: RootState) => state.user.userInfo);
   const [patchEvent] = usePatchEventMutation();
   const [applyToEvent] = useApplyToEventMutation();
   const [resignFromEvent] = useResignFromEventMutation();
-
-  useEffect(() => {
-    if (!user) {
-      router.push("/login");
-    }
-  });
 
   if (!eventId) {
     return <div>Event not found</div>;
@@ -159,7 +152,12 @@ export const Event = ({ eventId }: Props) => {
                 noAddress={!atHomeClient.Address}
               />
             )}
-            {event.isOnline && <VideoEvent eventId={event.id} />}
+            {event.isOnline && (
+              <VideoEvent
+                eventId={event.id}
+                eventContractorId={event.contractorId || -1}
+              />
+            )}
           </div>
         </div>
       </div>

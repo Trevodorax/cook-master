@@ -5,10 +5,11 @@ import { RoomService } from 'src/room/room.service';
 import { RoomModule } from 'src/room/room.module';
 import { EventGateway } from './event.gateway';
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
 
 @Module({
   controllers: [EventController],
-  providers: [EventService, EventGateway, RoomService, JwtService],
+  providers: [EventService, UserService, EventGateway, RoomService, JwtService],
   imports: [RoomModule],
 })
 export class EventModule {}

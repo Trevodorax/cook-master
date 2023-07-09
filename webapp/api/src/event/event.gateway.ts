@@ -14,6 +14,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 
 import { EventService } from './event.service';
+import { UserService } from 'src/user/user.service';
 
 @WebSocketGateway({ cors: true })
 export class EventGateway
@@ -21,9 +22,11 @@ export class EventGateway
 {
   @WebSocketServer()
   server: Server;
+  animatorSocket: Socket | null = null;
 
   constructor(
     private readonly eventService: EventService,
+    private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private configService: ConfigService,
   ) {}
@@ -37,13 +40,18 @@ export class EventGateway
   }
 
   handleDisconnect(client: Socket) {
+    // Remove animator socket if it's the one disconnecting
+    if (this.animatorSocket === client) {
+      this.animatorSocket = null;
+    }
     console.log(`Client disconnected: ${client.id}`);
   }
 
   @SubscribeMessage('join-event')
-  handleAuth(@MessageBody() data: string, @ConnectedSocket() client: Socket) {
-    console.log('PATATON');
-
+  async handleAuth(
+    @MessageBody() data: string,
+    @ConnectedSocket() client: Socket,
+  ) {
     const dataJSON = JSON.parse(data) as {
       token: string;
       eventId: number;
@@ -59,10 +67,23 @@ export class EventGateway
     });
 
     // TODO: check that the user is participating in this event
+    const event = await this.eventService.getEventById({
+      id: dataJSON.eventId,
+    });
+    const user = await this.userService.getUserById(payload.sub);
+
+    const isAnimator =
+      user.contractorId && user.contractorId === event.contractorId;
 
     client.join(`event${dataJSON.eventId}`);
-    client
-      .to(`event${dataJSON.eventId}`)
-      .emit('user-connected', dataJSON.peerId);
+
+    if (isAnimator) {
+      this.animatorSocket = client;
+      console.log('animator connected');
+    }
+
+    if (this.animatorSocket) {
+      this.animatorSocket.emit('user-connected', dataJSON.peerId);
+    }
   }
 }

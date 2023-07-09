@@ -43,8 +43,10 @@ export class CourseController {
     return this.courseService.searchCourses(searchDto);
   }
 
+  @UseGuards(JwtGuard)
   @Post(':courseId/workshops')
   addWorkshop(
+    @GetUser() user: User,
     @Param('courseId') courseId: string,
     @Body() workshop: unparsedCreateEventDto,
   ) {
@@ -52,7 +54,11 @@ export class CourseController {
       ...workshop,
       durationMin: workshop.durationMin,
       startTime: new Date(workshop.startTime),
-      animator: workshop.animator ? workshop.animator : undefined,
+      animator: workshop.animator
+        ? workshop.animator
+        : user.contractorId
+        ? user.contractorId
+        : undefined,
     };
 
     return this.courseService.addWorkshop(courseId, parsedCreateEventDto);
