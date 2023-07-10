@@ -1,4 +1,4 @@
-import React, { FormEvent, useMemo, useState } from "react";
+import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import cx from "classnames";
@@ -9,7 +9,7 @@ import {
   useLoginMutation,
 } from "@/store/services/cookMaster/api";
 import { setToken, setUserInfo } from "@/store/user/userSlice";
-import { AppDispatch } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { SwitchInput } from "@/components/switchInput/SwitchInput";
 import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/textInput/TextInput";
@@ -24,11 +24,13 @@ import {
   LoginRequest,
   userType,
 } from "@/store/services/cookMaster/types";
+import { useSelector } from "react-redux";
 
 const userTypes: Array<userType> = ["contractor", "client", "admin"];
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
+  const token = useSelector((state: RootState) => state.user.token);
   const router = useRouter();
 
   const [alreadyHasAccount, setAlreadyHasAccount] = useState<boolean>(true);
@@ -46,6 +48,12 @@ export default function Login() {
   const [userTypeInput, setUserTypeInput] = useState<userType>(userTypes[0]);
 
   const [formSuccessMessage, setFormSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (token) {
+      router.push("dashboard");
+    }
+  });
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
