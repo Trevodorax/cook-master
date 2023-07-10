@@ -66,7 +66,6 @@ export class UserController {
   @UseGuards(JwtGuard)
   @Patch('me')
   async patchMe(@GetUser() user: User, @Body() data: Partial<User>) {
-    console.log('patching', data);
     return await this.userService.patchUser(user.id.toString(), data);
   }
 

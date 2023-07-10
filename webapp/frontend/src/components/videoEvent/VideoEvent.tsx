@@ -63,7 +63,6 @@ export const VideoEvent: FC<Props> = ({ eventId, eventContractorId }) => {
       }
 
       if (isAnimator) {
-        console.log("USING MY OWN VIDEO STREAM");
         setVideoStream(myVideoStream);
       }
 
