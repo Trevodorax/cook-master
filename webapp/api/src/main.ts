@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
+import { PeerServer } from 'peer';
+
+import { AppModule } from './app.module';
 import { createDefaultUser } from './utils/createDefaultUser';
 
 async function bootstrap() {
@@ -15,6 +17,8 @@ async function bootstrap() {
   );
   app.setGlobalPrefix('api');
   createDefaultUser();
+
+  const peerServer = PeerServer({ port: 9000, path: '/trevodorax' });
 
   await app.listen(3333);
 }

@@ -8,10 +8,10 @@ import { useGetEventsFromRoomQuery } from "@/store/services/cookMaster/api";
 
 interface Props {
   roomId: number;
-  coloredEventId: number;
+  coloredEventId?: number;
 }
 
-export const RoomPlanning: FC<Props> = ({ roomId, coloredEventId }) => {
+export const RoomPlanning: FC<Props> = ({ roomId, coloredEventId = "" }) => {
   const { data: events } = useGetEventsFromRoomQuery(roomId);
   return (
     <div className={styles.container}>

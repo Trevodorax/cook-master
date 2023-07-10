@@ -57,7 +57,10 @@ export const MyCourses = () => {
             +
           </Link>
         )}
-        {myCourses && myCourses.map((course) => <CourseCard course={course} />)}
+        {myCourses &&
+          myCourses.map((course, index) => (
+            <CourseCard key={index} course={course} />
+          ))}
       </div>
     </div>
   );
