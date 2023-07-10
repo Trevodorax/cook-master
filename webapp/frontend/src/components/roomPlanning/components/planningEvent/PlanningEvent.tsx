@@ -4,8 +4,10 @@ import { useRouter } from "next/router";
 import { Button } from "@/components/button/Button";
 
 import styles from "./PlanningEvent.module.scss";
+import { useTranslation } from "react-i18next";
 
 export const PlanningEvent = (fields: FieldProps[], event: ProcessedEvent) => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   return (
@@ -14,11 +16,13 @@ export const PlanningEvent = (fields: FieldProps[], event: ProcessedEvent) => {
         type="primary"
         onClick={() => router.push(`/events/${event.event_id}`)}
       >
-        See event
+        {t("seeEvent")}
       </Button>
       <div>
-        <h3>Description</h3>
-        <p>Description: {event.description || "No description"}</p>
+        <h3>{t("description")}</h3>
+        <p>
+          {t("description")}: {event.description || t("noDescription")}
+        </p>
       </div>
     </div>
   );

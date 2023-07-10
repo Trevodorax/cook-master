@@ -15,8 +15,10 @@ import {
 import { CookmasterMascot } from "@/components/cookmasterMascot/CookmasterMascot";
 
 import styles from "./Dashboard.module.scss";
+import { useTranslation } from "react-i18next";
 
 export const Dashboard = () => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const user = useSelector((state: RootState) => state.user.userInfo);
@@ -35,17 +37,17 @@ export const Dashboard = () => {
 
   const contractorActions: dashboardAction[] = [
     {
-      title: "Profile",
+      title: t("profile"),
       icon: SettingsIcon,
       link: "/profile",
     },
     {
-      title: "Conversations",
+      title: t("conversations"),
       icon: MessageIcon,
       link: "/chat",
     },
     {
-      title: "Courses",
+      title: t("courses"),
       icon: BookIcon,
       link: "/courses/my",
     },
@@ -53,22 +55,22 @@ export const Dashboard = () => {
 
   const adminActions: dashboardAction[] = [
     {
-      title: "Profile",
+      title: t("profile"),
       icon: SettingsIcon,
       link: "/profile",
     },
     {
-      title: "Conversations",
+      title: t("conversations"),
       icon: MessageIcon,
       link: "/chat",
     },
     {
-      title: "Users",
+      title: t("users"),
       icon: UserIcon,
       link: "/users",
     },
     {
-      title: "Premises",
+      title: t("premises"),
       icon: HouseIcon,
       link: "/premises/browse",
     },
@@ -76,22 +78,22 @@ export const Dashboard = () => {
 
   const clientActions: dashboardAction[] = [
     {
-      title: "Profile",
+      title: t("profile"),
       icon: SettingsIcon,
       link: "/profile",
     },
     {
-      title: "Conversations",
+      title: t("conversations"),
       icon: MessageIcon,
       link: "/chat",
     },
     {
-      title: "Subscriptions",
+      title: t("subscriptions"),
       icon: KeyIcon,
       link: "/subscription/booking",
     },
     {
-      title: "Courses",
+      title: t("courses"),
       icon: BookIcon,
       link: "/courses/browse",
     },
@@ -106,14 +108,14 @@ export const Dashboard = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.bigTitle}>
-        Welcome, {user?.firstName} {user?.lastName}
+        {t("welcome")}, {user?.firstName} {user?.lastName}
       </h1>
       <div>
         <CookmasterMascot
           subscriptionLevel={user?.client?.subscriptionLevel || 0}
           className={styles.mascot}
         />
-        <h2 className={styles.mediumTitle}>What can we help you with ?</h2>
+        <h2 className={styles.mediumTitle}>{t("howCanWeHelpYou")}</h2>
         {user && (
           <div className={styles.actionsContainer}>
             {actions[user.userType as "client" | "contractor" | "admin"].map(

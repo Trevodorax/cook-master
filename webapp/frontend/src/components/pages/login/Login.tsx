@@ -26,10 +26,12 @@ import {
 } from "@/store/services/cookMaster/types";
 
 import styles from "./Login.module.scss";
+import { useTranslation } from "react-i18next";
 
 const userTypes: Array<userType> = ["client", "contractor", "admin"];
 
 export default function Login() {
+  const { i18n } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const token = useSelector((state: RootState) => state.user.token);
   const router = useRouter();
@@ -122,6 +124,7 @@ export default function Login() {
 
     if ("data" in userInfo) {
       dispatch(setUserInfo(userInfo.data));
+      i18n.changeLanguage(userInfo.data.locale);
     }
   };
 

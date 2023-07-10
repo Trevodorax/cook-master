@@ -11,8 +11,10 @@ import { subscriptions } from "./utils/subscriptionTypes";
 import styles from "./SubscriptionBooking.module.scss";
 import { PaymentModal } from "@/components/paymentModal/PaymentModal";
 import { Button } from "@/components/button/Button";
+import { useTranslation } from "react-i18next";
 
 export const SubscriptionBooking = () => {
+  const { t } = useTranslation();
   const stripe = useStripe();
 
   const [selectedCardIndex, setSelectedCardIndex] = useState(0);
@@ -26,7 +28,7 @@ export const SubscriptionBooking = () => {
 
   const handleBuyClick = async () => {
     if (!stripe) {
-      toast.error("Stripe error");
+      toast.error(t("stripeError"));
       return;
     }
 
@@ -36,7 +38,7 @@ export const SubscriptionBooking = () => {
     });
 
     if (isBillingDataError) {
-      toast.error("Could not get payment information");
+      toast.error(t("stripeErrorCouldNotGetPaymentInformation"));
       return;
     }
 
@@ -49,7 +51,7 @@ export const SubscriptionBooking = () => {
     const clientSecret = (result as { data: any }).data.clientSecret;
 
     if (!clientSecret || typeof clientSecret !== "string") {
-      toast.error("Could not get payment information");
+      toast.error(t("stripeErrorCouldNotGetPaymentInformation"));
       return;
     }
 
@@ -72,7 +74,9 @@ export const SubscriptionBooking = () => {
         productPrice={subscriptions[selectedCardIndex].price}
         clientSecret={clientSecret}
         successRedirection="/dashboard"
-        successMessage={`Thank you for purchasing the ${subscriptions[selectedCardIndex].displayedName} subscription.`}
+        successMessage={`${t("thankYouForPurchasing")} ${
+          subscriptions[selectedCardIndex].displayedName
+        } ${t("subscription")}.`}
       />
       <div className={styles.cards}>
         {subscriptions.map((subscription, index) => {
@@ -92,7 +96,7 @@ export const SubscriptionBooking = () => {
                   isCurrentUserSubscription ||
                   isBelowCurrentUserSubscription
                 ) {
-                  toast.success("You already have these advantages !");
+                  toast.success(t("youAlreadyHaveTheseAdvantages"));
                   return;
                 }
                 setSelectedCardIndex(index);

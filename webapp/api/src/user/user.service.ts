@@ -116,6 +116,10 @@ export class UserService {
       updatedData.profilePicture = data.profilePicture;
     }
 
+    if (data.locale) {
+      updatedData.locale = data.locale;
+    }
+
     const updatedUser = await this.prisma.user.update({
       where: { id: idAsNumber },
       data: updatedData,

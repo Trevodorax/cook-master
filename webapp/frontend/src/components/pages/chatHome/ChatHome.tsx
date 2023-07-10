@@ -9,8 +9,10 @@ import {
 import { UserCard } from "@/components/userCard/UserCard";
 
 import styles from "./ChatHome.module.scss";
+import { useTranslation } from "react-i18next";
 
 export const ChatHome = () => {
+  const { t } = useTranslation();
   const [userSearch, setUserSearch] = useState("");
   const { data: conversations } = useGetMyConversationsQuery();
   const { data: foundUsers } = useGetAllUsersQuery({
@@ -22,7 +24,7 @@ export const ChatHome = () => {
     <div className={styles.container}>
       <h1>Chat</h1>
       <div className={styles.conversationsZone}>
-        <h2>My conversations</h2>
+        <h2>{t("myConversations")}</h2>
         <div className={styles.conversations}>
           {conversations?.map((user, index) => (
             <UserCard className={styles.userCard} key={index} user={user} />
@@ -30,7 +32,7 @@ export const ChatHome = () => {
         </div>
       </div>
       <div className={styles.searchUserZone}>
-        <h2>Start a new conversation</h2>
+        <h2>{t("startNewConversation")}</h2>
         <div className={styles.searchZone}>
           <TextInput
             type="text"

@@ -5,12 +5,14 @@ import { UserInfo } from "./userInfo/UserInfo";
 import { Button } from "@/components/button/Button";
 
 import styles from "./UserPage.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   userId: string;
 }
 
 export const UserPage = ({ userId }: Props) => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const [deleteUser] = useDeleteUserMutation();
@@ -26,7 +28,7 @@ export const UserPage = ({ userId }: Props) => {
         }}
         className={styles.button}
       >
-        Delete user
+        {t("deleteUser")}
       </Button>
     </div>
   );

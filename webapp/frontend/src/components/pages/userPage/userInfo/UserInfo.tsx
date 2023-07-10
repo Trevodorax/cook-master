@@ -9,12 +9,14 @@ import {
 } from "@/store/services/cookMaster/api";
 
 import styles from "./UserInfo.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   userId: string;
 }
 
 export const UserInfo = ({ userId }: Props) => {
+  const { t } = useTranslation();
   const { data: userData, isLoading: isUserLoading } =
     useGetUserByIdQuery(userId);
 
@@ -59,7 +61,7 @@ export const UserInfo = ({ userId }: Props) => {
           <table>
             <tbody>
               <tr>
-                <td>First name: </td>
+                <td>{t("firstName")}</td>
                 <td>
                   <TextInput
                     value={firstName || ""}
@@ -71,7 +73,7 @@ export const UserInfo = ({ userId }: Props) => {
                 </td>
               </tr>
               <tr>
-                <td>Last name: </td>
+                <td>{t("lastName")}</td>
                 <td>
                   <TextInput
                     value={lastName || ""}
@@ -83,7 +85,7 @@ export const UserInfo = ({ userId }: Props) => {
                 </td>
               </tr>
               <tr>
-                <td>Email: </td>
+                <td>{t("email")}</td>
                 <td>
                   <TextInput
                     value={email || ""}
@@ -95,21 +97,21 @@ export const UserInfo = ({ userId }: Props) => {
                 </td>
               </tr>
               <tr className={styles.userType}>
-                <td>User type: </td>
+                <td>{t("userType")}</td>
                 <td>
                   {userData.admin?.isConfirmed && "Confirmed "}
                   {userData.userType}
                   {userData.admin && !userData.admin.isConfirmed && (
                     <>
                       <span className={styles.unconfirmedAdmin}>
-                        (Not Confirmed)
+                        ({t("notConfirmed")})
                       </span>
                       <Button
                         className={styles.confirmAdminButton}
                         onClick={handleConfirmAdmin}
                         type="primary"
                       >
-                        Confirm admin
+                        {t("confirmAdmin")}
                       </Button>
                     </>
                   )}
@@ -118,7 +120,7 @@ export const UserInfo = ({ userId }: Props) => {
             </tbody>
           </table>
           <Button onClick={handleSave} type="ok">
-            {isPatchLoading ? "Loading..." : "Save modifications"}
+            {isPatchLoading ? t("loading") : t("save")}
           </Button>
         </div>
       )}

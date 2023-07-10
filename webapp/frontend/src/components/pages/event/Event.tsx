@@ -18,19 +18,21 @@ import { Map } from "@/components/map/Map";
 import { VideoEvent } from "@/components/videoEvent/VideoEvent";
 
 import styles from "./Event.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   eventId: string;
 }
 
 export const Event = ({ eventId }: Props) => {
+  const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.userInfo);
   const [patchEvent] = usePatchEventMutation();
   const [applyToEvent] = useApplyToEventMutation();
   const [resignFromEvent] = useResignFromEventMutation();
 
   if (!eventId) {
-    return <div>Event not found</div>;
+    return <div>{t("eventNotFound")}</div>;
   }
 
   const {
@@ -56,11 +58,11 @@ export const Event = ({ eventId }: Props) => {
   );
 
   if (isEventLoading) {
-    return <div>Loading...</div>;
+    return <div>{t("loading")}</div>;
   }
 
   if (isEventError || !event) {
-    return <div>An error occured.</div>;
+    return <div>{t("error")}</div>;
   }
 
   return (
@@ -109,7 +111,7 @@ export const Event = ({ eventId }: Props) => {
         />
         {eventAnimator && (
           <>
-            <h2>Animated by</h2>
+            <h2>{t("animatedBy")}</h2>
             <div className={styles.user}>
               <img
                 src={eventAnimator.user.profilePicture}
@@ -124,14 +126,17 @@ export const Event = ({ eventId }: Props) => {
         <div className={styles.middlePart}>
           <h2 className={styles.title}>
             {event?.roomId
-              ? `Events in room ${event?.roomId}`
+              ? `${t("EventsInRoom")}: ${event?.roomId}`
               : event?.atHomeClientId
-              ? `Address of ${atHomeClient?.user?.firstName} ${atHomeClient?.user?.lastName}`
+              ? `${t("addressOf")} ${atHomeClient?.user?.firstName} ${
+                  atHomeClient?.user?.lastName
+                }`
               : event?.isOnline
-              ? `Video class starting in : ${getTimeDifference(
+              ? `${t("videoEventStartingIn")} ${getTimeDifference(
+                  t,
                   event?.startTime
                 )}`
-              : "This is an event"}
+              : t("thisIsAnEvent")}
           </h2>
           {atHomeClient?.Address && (
             <div>
@@ -174,20 +179,20 @@ export const Event = ({ eventId }: Props) => {
                   }
                   className={styles.actionButton}
                 >
-                  Leave
+                  {t("leave")}
                 </Button>
               ) : (
                 <Button
                   onClick={() => applyToEvent({ eventId: parseInt(eventId) })}
                 >
-                  Join
+                  {t("join")}
                 </Button>
               )}
             </div>
           )}
         </div>
         {(!clientsInEvent || clientsInEvent.length === 0) && (
-          <div>No participants yet.</div>
+          <div>{t("noParticipants")}</div>
         )}
         {clientsInEvent && (
           <div className={styles.participantsList}>
@@ -209,7 +214,10 @@ export const Event = ({ eventId }: Props) => {
   );
 };
 
-function getTimeDifference(eventStartTime?: string) {
+function getTimeDifference(
+  t: (key: string) => string,
+  eventStartTime?: string
+) {
   if (eventStartTime) {
     const differenceMilliseconds =
       new Date(eventStartTime).getTime() - new Date().getTime();
@@ -224,8 +232,10 @@ function getTimeDifference(eventStartTime?: string) {
       differenceMilliseconds / (1000 * 60 * 60 * 24)
     );
 
-    return `${differenceDays} days, ${differenceHours} hours, ${differenceMinutes} minutes`;
+    return `${differenceDays} ${t("days")}, ${differenceHours} ${t(
+      "hours"
+    )}, ${differenceMinutes} ${t("minutes")}`;
   } else {
-    return "Event start time is not defined.";
+    return t("eventStartTimeNotDefined");
   }
 }

@@ -10,12 +10,14 @@ import { RootState } from "@/store/store";
 import { Message } from "@/store/services/cookMaster/types";
 
 import styles from "./Conversation.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   otherUserId: number;
 }
 
 export const Conversation: FC<Props> = ({ otherUserId }) => {
+  const { t } = useTranslation();
   const token = useSelector((state: RootState) => state.user.token);
   const myId = useSelector((state: RootState) => state.user.userInfo?.id);
 
@@ -108,7 +110,7 @@ export const Conversation: FC<Props> = ({ otherUserId }) => {
           className={styles.sendButton}
           onClick={handleSendMessage}
         >
-          Send
+          {t("send")}
         </Button>
       </div>
     </div>

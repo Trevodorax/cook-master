@@ -10,9 +10,11 @@ import { CreateCourseDto } from "@/store/services/cookMaster/course/dto";
 import { RootState } from "@/store/store";
 
 import styles from "./CreateCourse.module.scss";
+import { useTranslation } from "react-i18next";
 
 export const CreateCourse: FC = () => {
   const router = useRouter();
+  const { t } = useTranslation();
   const contractorId = useSelector(
     (state: RootState) => state.user.userInfo?.contractorId
   );
@@ -34,22 +36,22 @@ export const CreateCourse: FC = () => {
     const result = await createCourse(newCourse);
 
     if ("data" in result && result.data) {
-      toast.success("Success creating course.");
+      toast.success(t("successCreatingCourse"));
       router.push(`/courses/${result.data.id}`);
     } else {
-      toast.error("Could not create course.");
+      toast.error(t("errorCreatingCourse"));
     }
   };
 
   return (
     <div className={styles.container}>
-      <h1>Create a course</h1>
+      <h1>{t("createACourse")}</h1>
       <TextInput
         type="text"
         value={newCourse.name}
         setValue={setCourseName}
-        placeholder="My amazing course"
-        label="Course name"
+        placeholder={t("courseNamePlaceholder")}
+        label={t("courseNameLabel")}
         hideIcon
         className={styles.input}
       />
@@ -57,13 +59,13 @@ export const CreateCourse: FC = () => {
         type="text"
         value={newCourse.description}
         setValue={setCourseDescription}
-        placeholder="Short description of the course"
-        label="Course description"
+        placeholder={t("courseDescriptionPlaceholder")}
+        label={t("courseDescriptionLabel")}
         hideIcon
         className={styles.input}
       />
       <Button className={styles.submitButton} onClick={handleSubmit}>
-        Create course
+        {t("createCourse")}
       </Button>
     </div>
   );

@@ -22,6 +22,7 @@ model User {
   admin             Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
   client            Client?     @relation(fields: [clientId], references: [id], onDelete: Cascade)
   contractor        Contractor? @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+  locale            String      @default("en")
 
   // relation fields
   clientId     Int? @unique

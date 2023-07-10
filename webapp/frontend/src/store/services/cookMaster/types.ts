@@ -11,6 +11,7 @@ export interface User {
   clientId?: number | null;
   adminId?: number | null;
   contractorId?: number | null;
+  locale: string;
 }
 
 export interface Admin {

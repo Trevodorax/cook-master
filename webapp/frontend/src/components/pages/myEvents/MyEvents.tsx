@@ -11,8 +11,10 @@ import {
 import styles from "./MyEvents.module.scss";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export const MyEvents = () => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const userType = useSelector(
@@ -37,7 +39,7 @@ export const MyEvents = () => {
 
   return (
     <div className={styles.container}>
-      <h1>My events</h1>
+      <h1>{t("myEvents")}</h1>
       <div className={styles.events}>
         {userType === "contractor" && (
           <Link href="/events/new" className={styles.createButton}>
