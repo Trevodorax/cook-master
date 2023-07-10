@@ -186,7 +186,6 @@ export class ClientService {
       },
     });
 
-    // Create a new entry in the ClientCourseProgress table
     await this.prisma.clientCourseProgress.create({
       data: {
         client: {
@@ -195,7 +194,7 @@ export class ClientService {
         course: {
           connect: { id: courseId },
         },
-        progression: 0, // Assuming the client starts at the beginning of the course
+        progression: 1, // first course will always be acessible
       },
     });
   }
@@ -248,9 +247,7 @@ export class ClientService {
     });
 
     if (!progress) {
-      throw new NotFoundException(
-        `No course progress found for client ${clientId} in course ${courseId}`,
-      );
+      return 0;
     }
 
     return progress.progression;
