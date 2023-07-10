@@ -250,7 +250,7 @@ export class CourseService {
       where: { id: clientId },
     });
 
-    const nbAllowedDailyRequestsPerSubscriptionType = { 0: 5, 1: 10, 2: 1000 };
+    const nbAllowedDailyRequestsPerSubscriptionType = { 0: 1, 1: 5, 2: 1000 };
 
     const nbAllowedDailyRequests =
       nbAllowedDailyRequestsPerSubscriptionType[client.subscriptionLevel];

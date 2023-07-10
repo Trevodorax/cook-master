@@ -13,14 +13,18 @@ import { TextInput } from "@/components/textInput/TextInput";
 import { Button } from "@/components/button/Button";
 
 import styles from "./Profile.module.scss";
+import { SelectInput } from "@/components/selectInput/SelectInput";
+import { possibleLocales } from "@/store/services/cookMaster/constants";
+import { useTranslation } from "react-i18next";
 
 export const Profile: FC = () => {
+  const { i18n, t } = useTranslation();
   const router = useRouter();
   const [patchMe] = usePatchMeMutation();
   const [getMe, { data: userData }] = useGetMeMutation();
   const [updateMyAddress] = useUpdateMyAddressMutation();
 
-  // the deadline is near, this really is a disgusting pattern, but I have no time to find better
+  // the deadline is near, this is a really disgusting pattern, but I have no time to find better
   const patch = (value: any) => {
     patchMe(value);
     getMe();
@@ -33,6 +37,9 @@ export const Profile: FC = () => {
 
   // update the address when user data changes
   useEffect(() => {
+    if (userData?.locale) {
+      setLocale(userData.locale);
+    }
     if (userData?.client?.Address) {
       setAddress(userData.client.Address);
     }
@@ -46,14 +53,22 @@ export const Profile: FC = () => {
     country: userData?.client?.Address?.country || "",
   });
 
+  const [locale, setLocale] = useState(userData?.locale || "");
+
   const handleUpdateAddress = async () => {
     const response = await updateMyAddress(address);
 
     if ("data" in response) {
       getMe();
     } else {
-      toast.error("Error updating address");
+      toast.error(t("errorUpdatingAddress"));
     }
+  };
+
+  const handleSetLocale = (locale: string) => {
+    i18n.changeLanguage(locale);
+    patch({ data: { locale: locale } });
+    setLocale(locale);
   };
 
   const subscriptionLevelString =
@@ -107,10 +122,17 @@ export const Profile: FC = () => {
           ? "👨‍🎓"
           : "👁️"}
       </p>
+      <SelectInput
+        className={styles.localeSelectInput}
+        options={possibleLocales}
+        value={locale}
+        setValue={(value) => handleSetLocale(value)}
+        defaultIndex={possibleLocales.indexOf(locale)}
+      />
 
       {userData?.userType === "client" && (
         <div>
-          <h3>Address</h3>
+          <h3>{t("address")}</h3>
           <div className={styles.form}>
             <TextInput
               type="text"
@@ -118,7 +140,7 @@ export const Profile: FC = () => {
               setValue={(value) =>
                 setAddress((prev) => ({ ...prev, streetNumber: value }))
               }
-              label="Street number"
+              label={t("streetNumber")}
               className={styles.textInput}
               hideIcon
             />
@@ -129,7 +151,7 @@ export const Profile: FC = () => {
               setValue={(value) =>
                 setAddress((prev) => ({ ...prev, streetName: value }))
               }
-              label="Street name"
+              label={t("streetName")}
               className={styles.textInput}
               hideIcon
             />
@@ -140,7 +162,7 @@ export const Profile: FC = () => {
               setValue={(value) =>
                 setAddress((prev) => ({ ...prev, city: value }))
               }
-              label="City"
+              label={t("city")}
               className={styles.textInput}
               hideIcon
             />
@@ -151,7 +173,7 @@ export const Profile: FC = () => {
               setValue={(value) =>
                 setAddress((prev) => ({ ...prev, postalCode: value }))
               }
-              label="Postal code"
+              label={t("postalCode")}
               className={styles.textInput}
               hideIcon
             />
@@ -162,7 +184,7 @@ export const Profile: FC = () => {
               setValue={(value) =>
                 setAddress((prev) => ({ ...prev, country: value }))
               }
-              label="Country"
+              label={t("country")}
               className={styles.textInput}
               hideIcon
             />
@@ -170,7 +192,7 @@ export const Profile: FC = () => {
               className={styles.createButton}
               onClick={handleUpdateAddress}
             >
-              Update my address
+              {t("updateAddress")}
             </Button>
           </div>
         </div>

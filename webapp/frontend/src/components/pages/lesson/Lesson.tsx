@@ -22,6 +22,7 @@ import {
 } from "@/components/svgs";
 
 import styles from "./Lesson.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   lessonId: string;
@@ -29,6 +30,7 @@ interface Props {
 
 export const Lesson: FC<Props> = ({ lessonId }) => {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const user = useSelector((state: RootState) => state.user.userInfo);
 
@@ -40,7 +42,7 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
 
   const lessonIdNumber = parseInt(lessonId);
   if (isNaN(lessonIdNumber)) {
-    return <div>Invalid lesson id.</div>;
+    return <div>{t("invalidLessonId")}</div>;
   }
 
   const [patchLesson] = usePatchLessonMutation();
@@ -75,7 +77,7 @@ export const Lesson: FC<Props> = ({ lessonId }) => {
         courseId: lessonData.courseId || 0,
       });
       if ("data" in response && response.data > 0) {
-        toast.success("Unlocked next lesson");
+        toast.success(t("unlockedNextLesson"));
         refetchNextLesson();
       }
     }

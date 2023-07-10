@@ -21,6 +21,7 @@ import { Client, Premise, Room } from "@/store/services/cookMaster/types";
 
 import { formatEventForScheduler } from "../../utils/formatEventForScheduler";
 import styles from "./PlanningEditor.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   scheduler: SchedulerHelpers;
@@ -33,6 +34,7 @@ export const PlanningEditor: FC<Props> = ({
   courseId,
   canUserEdit,
 }) => {
+  const { t } = useTranslation();
   const [addWorkshopToCourse] = useAddWorkshopToCourseMutation();
   const [patchEvent] = usePatchEventMutation();
   const { refetch: refetchWorkshops } = useGetWorkshopsOfCourseQuery({
@@ -56,22 +58,16 @@ export const PlanningEditor: FC<Props> = ({
     endTime: initialEventEndDate.toISOString().slice(0, 16),
   });
 
-  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  console.log(tz);
-
-  console.log(initialEventEndDate.toISOString());
-  console.log(initialEventEndDate.toISOString().slice(0, 16));
-
   const [selectedPremise, setSelectedPremise] = useState<Premise | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   const [place, setPlace] = useState(
     event?.atHomeClientId
-      ? "At a client's home"
+      ? t("atClientHome")
       : event?.roomId
-      ? "In a collective room"
-      : "Select"
+      ? t("inPremise")
+      : t("select")
   );
 
   if (!canUserEdit) {
@@ -87,7 +83,7 @@ export const PlanningEditor: FC<Props> = ({
     const endTime = scheduler.state.end.value;
 
     if (!formState.isOnline && !selectedClient && !selectedRoom) {
-      toast.error("Please fill in all the required informations.");
+      toast.error(t("errorIncompleteInformation"));
       return event;
     }
 
@@ -112,7 +108,7 @@ export const PlanningEditor: FC<Props> = ({
     if ("data" in createdWorkshop && createdWorkshop.data) {
       return formatEventForScheduler(createdWorkshop.data);
     } else {
-      toast.error("Error creating event");
+      toast.error(t("errorCreatingEvent"));
       return event;
     }
   };
@@ -123,7 +119,7 @@ export const PlanningEditor: FC<Props> = ({
     }
 
     if (!formState.isOnline && !selectedClient && !selectedRoom) {
-      toast.error("Please fill in all the required informations.");
+      toast.error(t("errorIncompleteInformation"));
       return event;
     }
 
@@ -131,7 +127,7 @@ export const PlanningEditor: FC<Props> = ({
     const endTime = new Date(formState.endTime || "").getTime();
 
     if (endTime < startTime) {
-      toast.error("Event cannot end before it has started.");
+      toast.error(t("errorEndBeforeStart"));
       return event;
     }
 
@@ -157,7 +153,7 @@ export const PlanningEditor: FC<Props> = ({
     if ("data" in modifiedWorkshop && modifiedWorkshop.data) {
       return formatEventForScheduler(modifiedWorkshop.data);
     } else {
-      toast.error("Error editing event");
+      toast.error(t("errorEditEvent"));
       return event;
     }
   };
@@ -196,7 +192,7 @@ export const PlanningEditor: FC<Props> = ({
   return (
     <div className={styles.container}>
       <div className={styles.fields}>
-        <h2>{event ? "Editing" : "Creating"} workshop</h2>
+        <h2>{event ? t("editing") : t("creating")} workshop</h2>
         <h3>General informations</h3>
         <TextInput
           type="text"
@@ -223,9 +219,9 @@ export const PlanningEditor: FC<Props> = ({
             />
           </div>
         )}
-        <h3>Where will it happen ?</h3>
+        <h3>{t("whereWillItHappen")}</h3>
         <div className={styles.isOnlineSection}>
-          <p>Online</p>
+          <p>{t("online")}</p>
           <SwitchInput
             isChecked={formState.isOnline}
             setIsChecked={(isChecked) => handleChange(isChecked, "isOnline")}
@@ -235,12 +231,12 @@ export const PlanningEditor: FC<Props> = ({
           <div>
             <SelectInput
               className={styles.placeSelector}
-              options={["Select", "In a collective room", "At a client's home"]}
+              options={[t("select"), t("inPremise"), t("atClientHome")]}
               value={place}
               setValue={setPlace}
             />
 
-            {place === "In a collective room" && (
+            {place === t("inPremise") && (
               <div>
                 <div>
                   <h4>Choose a premise</h4>
@@ -273,7 +269,7 @@ export const PlanningEditor: FC<Props> = ({
                 </div>
                 {selectedPremise && (
                   <div>
-                    <h4>Choose a room</h4>
+                    <h4>{t("chooseARoom")}</h4>
                     <div className={styles.cardsList}>
                       {selectedPremise?.rooms?.map((room, index) => {
                         const isCurrentlySelected =
@@ -290,7 +286,7 @@ export const PlanningEditor: FC<Props> = ({
                             }
                           >
                             <p className={styles.bigText}>
-                              {`Room n°${room.id}`}
+                              {`${t("room")} n°${room.id}`}
                             </p>
                             <p className={styles.smallText}>{room.capacity}</p>
                           </div>
@@ -301,9 +297,9 @@ export const PlanningEditor: FC<Props> = ({
                 )}
               </div>
             )}
-            {place === "At a client's home" && (
+            {place === t("atClientHome") && (
               <div>
-                <h4>Choose a client</h4>
+                <h4>{t("chooseClient")}</h4>
                 <div className={styles.cardsList}>
                   {participants?.map((client, index) => {
                     const isCurrentlySelected =
@@ -338,14 +334,14 @@ export const PlanningEditor: FC<Props> = ({
           type="secondary"
           onClick={scheduler.close}
         >
-          Cancel
+          {t("cancel")}
         </Button>
         <Button
           className={styles.actionButton}
           type="primary"
           onClick={handleSubmit}
         >
-          Confirm
+          {t("confirm")}
         </Button>
       </div>
     </div>

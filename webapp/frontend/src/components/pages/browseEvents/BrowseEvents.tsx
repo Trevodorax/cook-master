@@ -7,8 +7,10 @@ import styles from "./BrowseEvents.module.scss";
 import { EventCard } from "@/components/eventCard/EventCard";
 import { Button } from "@/components/button/Button";
 import { useRouter } from "next/router";
+import { useTranslation } from "react-i18next";
 
 export const BrowseEvents = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const [filters, setFilters] = useState({ day: "", term: "" });
 
@@ -28,11 +30,11 @@ export const BrowseEvents = () => {
           setValue={(value) => {
             setFilters((prev) => ({ ...prev, term: value }));
           }}
-          label="Search"
+          label={t("search")}
           hideIcon
         />
         <div className={styles.dateInput}>
-          <label>Event date</label>
+          <label>{t("eventDate")}</label>
           <input
             className={styles.input}
             type="date"
@@ -45,7 +47,7 @@ export const BrowseEvents = () => {
           className={styles.myEventsButton}
           onClick={() => router.push("/events/my")}
         >
-          See my events
+          {t("seeMyEvents")}
         </Button>
       </div>
       <hr className={styles.separator} />

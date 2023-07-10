@@ -11,8 +11,10 @@ import { CourseCard } from "@/components/courseCard/CourseCard";
 import { Button } from "@/components/button/Button";
 
 import styles from "./MyCourses.module.scss";
+import { useTranslation } from "react-i18next";
 
 export const MyCourses = () => {
+  const { t } = useTranslation();
   const router = useRouter();
   const userType = useSelector(
     (state: RootState) => state.user.userInfo?.userType
@@ -38,14 +40,14 @@ export const MyCourses = () => {
   return (
     <div className={styles.container}>
       <div className={styles.title}>
-        <h2>My courses</h2>
+        <h2>{t("myCourses")}</h2>
         {userType === "client" && (
           <div>
             <Button
               type="secondary"
               onClick={() => router.push("/courses/browse")}
             >
-              Find courses
+              {t("findCourses")}
             </Button>
           </div>
         )}

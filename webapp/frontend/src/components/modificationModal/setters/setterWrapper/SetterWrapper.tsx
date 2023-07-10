@@ -2,6 +2,7 @@ import { Button } from "@/components/button/Button";
 import { FC, ReactNode } from "react";
 
 import styles from "./SetterWrapper.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   value: any;
@@ -16,6 +17,7 @@ export const SetterWrapper: FC<Props> = ({
   setIsOpen,
   children,
 }) => {
+  const { t } = useTranslation();
   const handleSave = () => {
     mutateValue(value);
   };
@@ -30,10 +32,10 @@ export const SetterWrapper: FC<Props> = ({
       <hr />
       <div className={styles.bottomButtons}>
         <Button onClick={handleSave}>
-          <span>Save</span>
+          <span>{t("save")}</span>
         </Button>
         <Button onClick={handleClose}>
-          <span>Close</span>
+          <span>{t("close")}</span>
         </Button>
       </div>
     </div>

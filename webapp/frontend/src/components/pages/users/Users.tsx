@@ -7,10 +7,12 @@ import { SelectInput } from "@/components/selectInput/SelectInput";
 
 import styles from "./Users.module.scss";
 import { userType } from "@/store/services/cookMaster/types";
+import { useTranslation } from "react-i18next";
 
 const userTypes: Array<userType> = ["any", "contractor", "client", "admin"];
 
 export const Users = () => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [userType, setUserType] = useState<userType>(userTypes[0]);
 
@@ -45,11 +47,11 @@ export const Users = () => {
         <table>
           <thead>
             <tr>
-              <th>First Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Type</th>
-              <th>Actions</th>
+              <th>{t("firstName")}</th>
+              <th>{t("lastName")}</th>
+              <th>{t("email")}</th>
+              <th>{t("type")}</th>
+              <th>{t("actions")}</th>
             </tr>
           </thead>
           <tbody>
@@ -60,7 +62,7 @@ export const Users = () => {
                 <td>{user.email}</td>
                 <td>{user.userType}</td>
                 <td>
-                  <Link href={`/users/${user.id}`}>More</Link>
+                  <Link href={`/users/${user.id}`}>{t("more")}</Link>
                 </td>
               </tr>
             ))}

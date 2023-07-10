@@ -5,8 +5,10 @@ import { useCreatePremiseMutation } from "@/store/services/cookMaster/api";
 import { Button } from "@/components/button/Button";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 export const CreatePremise = () => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const [createPremise] = useCreatePremiseMutation();
@@ -30,7 +32,7 @@ export const CreatePremise = () => {
 
   return (
     <div className={styles.container}>
-      <h1>Create premise</h1>
+      <h1>{t("createPremise")}</h1>
       <hr />
       <div className={styles.form}>
         <TextInput
@@ -39,7 +41,7 @@ export const CreatePremise = () => {
           setValue={(value) =>
             setAddress((prev) => ({ ...prev, streetNumber: value }))
           }
-          label="Street number"
+          label={t("streetNumber")}
           hideIcon
           className={styles.input}
         />
@@ -50,7 +52,7 @@ export const CreatePremise = () => {
           setValue={(value) =>
             setAddress((prev) => ({ ...prev, streetName: value }))
           }
-          label="Street name"
+          label={t("streetName")}
           hideIcon
           className={styles.input}
         />
@@ -59,7 +61,7 @@ export const CreatePremise = () => {
           type="text"
           value={address.city}
           setValue={(value) => setAddress((prev) => ({ ...prev, city: value }))}
-          label="City"
+          label={t("city")}
           hideIcon
           className={styles.input}
         />
@@ -70,7 +72,7 @@ export const CreatePremise = () => {
           setValue={(value) =>
             setAddress((prev) => ({ ...prev, postalCode: value }))
           }
-          label="Postal code"
+          label={t("postalCode")}
           hideIcon
           className={styles.input}
         />
@@ -81,12 +83,12 @@ export const CreatePremise = () => {
           setValue={(value) =>
             setAddress((prev) => ({ ...prev, country: value }))
           }
-          label="Country"
+          label={t("country")}
           hideIcon
           className={styles.input}
         />
         <Button className={styles.createButton} onClick={handleCreate}>
-          Create premise
+          {t("createPremise")}
         </Button>
       </div>
     </div>

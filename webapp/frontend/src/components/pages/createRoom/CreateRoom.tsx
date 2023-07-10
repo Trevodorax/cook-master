@@ -7,12 +7,14 @@ import styles from "./CreateRoom.module.scss";
 import { Button } from "@/components/button/Button";
 import { useRouter } from "next/router";
 import { toast } from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   premiseId: number;
 }
 
 export const CreateRoom: FC<Props> = ({ premiseId }) => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const [capacity, setCapacity] = useState(0);
@@ -31,7 +33,7 @@ export const CreateRoom: FC<Props> = ({ premiseId }) => {
 
   return (
     <div className={styles.container}>
-      <h1>Create room</h1>
+      <h1>{t("createRoom")}</h1>
       <hr />
       <div className={styles.form}>
         <NumberInput
@@ -41,7 +43,7 @@ export const CreateRoom: FC<Props> = ({ premiseId }) => {
           className={styles.input}
         />
         <Button className={styles.createButton} onClick={handleCreate}>
-          Create room
+          {t("createRoom")}
         </Button>
       </div>
     </div>

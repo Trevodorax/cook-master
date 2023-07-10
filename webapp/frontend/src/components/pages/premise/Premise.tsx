@@ -9,12 +9,14 @@ import {
 
 import styles from "./Premise.module.scss";
 import { RoomCard } from "@/components/roomCard/RoomCard";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   premiseId: number;
 }
 
 export const Premise: FC<Props> = ({ premiseId }) => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   const { data: premiseData } = useGetPremiseByIdQuery(
@@ -33,15 +35,17 @@ export const Premise: FC<Props> = ({ premiseId }) => {
 
   return (
     <div className={styles.container}>
-      <h1>Premise {premiseData?.id}</h1>
+      <h1>
+        {t("premise")} {premiseData?.id}
+      </h1>
       <p>{`City: ${premiseData?.address.city} (${premiseData?.address.country})`}</p>
       <div className={styles.actions}>
         <Button type="error" onClick={handleDelete}>
-          Delete
+          {t("delete")}
         </Button>
       </div>
       <hr />
-      <h2>Rooms</h2>
+      <h2>{t("rooms")}</h2>
       <div className={styles.roomsList}>
         {premiseData?.rooms.map((room, index) => (
           <RoomCard key={index} room={room} />

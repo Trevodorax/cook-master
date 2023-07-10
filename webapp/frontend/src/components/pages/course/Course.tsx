@@ -27,12 +27,14 @@ import { PlanningEditor } from "./components/planningEditor/PlanningEditor";
 import styles from "./Course.module.scss";
 import { PlanningEvent } from "./components/planningEvent/PlanningEvent";
 import { ColorLegend } from "./components/colorLegend/ColorLegend";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   courseId: string;
 }
 
 export const Course: FC<Props> = ({ courseId }) => {
+  const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.userInfo);
 
   const courseIdNumber = parseInt(courseId);
@@ -149,7 +151,7 @@ export const Course: FC<Props> = ({ courseId }) => {
                   resignFromCourse({ courseId: parseInt(courseId) })
                 }
               >
-                Remove from favorites
+                {t("removeFromFavorites")}
               </Button>
             ) : (
               <Button
@@ -160,7 +162,7 @@ export const Course: FC<Props> = ({ courseId }) => {
                   refetchProgressInCourse();
                 }}
               >
-                Add to favorites
+                {t("addToFavorites")}
               </Button>
             )}
           </div>

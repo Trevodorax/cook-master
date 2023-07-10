@@ -14,12 +14,14 @@ import { TextInput } from "@/components/textInput/TextInput";
 import { Button } from "@/components/button/Button";
 
 import styles from "./CreateLesson.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   courseId: number;
 }
 
 export const CreateLesson: FC<Props> = ({ courseId }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const contractorId = useSelector(
     (state: RootState) => state.user.userInfo?.contractorId
@@ -30,7 +32,7 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
 
   useEffect(() => {
     if (!contractorId) {
-      toast.error("This page is for contractors.");
+      toast.error(t("errorPageIsForContractor"));
       setTimeout(() => {
         router.push("/dashboard");
       }, 500);
@@ -59,11 +61,11 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
 
     // need "as" because ts won't let me test this fucking data prop otherwise
     if (!(result as { data: Lesson }).data) {
-      toast.error("Could not create lesson.");
+      toast.error(t("errorCreatingLesson"));
       return;
     }
 
-    toast.success("Success creating lesson.");
+    toast.success(t("successCreatingLesson"));
 
     setTimeout(() => {
       router.push(`/lesson/${(result as { data: Lesson }).data.id}`); // "as" because I already tested the data prop but ts sucks
@@ -72,13 +74,13 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
 
   return (
     <div className={styles.container}>
-      <h1>Create a lesson</h1>
+      <h1>{t("createLesson")}</h1>
       <TextInput
         type="text"
         value={newLesson.name}
         setValue={setLessonName}
-        placeholder="My amazing lesson"
-        label="Lesson name"
+        placeholder={t("lessonNamePlaceholder")}
+        label={t("lessonNameLabel")}
         hideIcon
         className={styles.textInput}
       />
@@ -86,13 +88,13 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
         type="text"
         value={newLesson.description}
         setValue={setLessonDescription}
-        placeholder="Short description of the lesson"
-        label="Lesson description"
+        placeholder={t("lessonDescriptionPlaceholder")}
+        label={t("lessonDescriptionLabel")}
         hideIcon
         className={styles.textInput}
       />
       <div className={styles.contentInput}>
-        <h2>Content</h2>
+        <h2>{t("content")}</h2>
         <MdEditor
           style={{ height: "500px" }}
           renderHTML={(text) => mdParser.render(text)}
@@ -100,7 +102,7 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
         />
       </div>
       <Button className={styles.submitButton} onClick={handleSubmit}>
-        Create lesson
+        {t("createLesson")}
       </Button>
     </div>
   );

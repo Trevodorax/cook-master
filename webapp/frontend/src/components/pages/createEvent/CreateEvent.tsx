@@ -8,8 +8,10 @@ import { TextInput } from "@/components/textInput/TextInput";
 import { RootState } from "@/store/store";
 
 import styles from "./CreateEvent.module.scss";
+import { useTranslation } from "react-i18next";
 
 export const CreateEvent = () => {
+  const { t } = useTranslation();
   const user = useSelector((state: RootState) => state.user.userInfo);
   const [createEvent] = useCreateEventMutation();
 
@@ -36,23 +38,23 @@ export const CreateEvent = () => {
       setDescription("");
       setStartTime(new Date());
       setDurationMin(0);
-      toast.success("Created event successfully");
+      toast.success(t("successCreatingEvent"));
     } catch (error) {
-      console.error("Failed to create event:", error);
+      console.error(t("errorCreatingEvent"), error);
     }
   };
 
   return (
     <div className={styles.container}>
-      <h2>Create an event</h2>
+      <h2>{t("createEvent")}</h2>
       <div className={styles.form}>
         <TextInput
           type="text"
           value={type}
           setValue={setType}
           hideIcon
-          label="Event type"
-          placeholder="ex: Cooking workshop"
+          label={t("eventTypeLabel")}
+          placeholder={t("eventTypePlaceholder")}
           className={styles.field}
         />
         <TextInput
@@ -60,8 +62,8 @@ export const CreateEvent = () => {
           value={name}
           setValue={setName}
           hideIcon
-          label="Event name"
-          placeholder="ex: Let's cook pizza !"
+          label={t("eventNameLabel")}
+          placeholder={t("eventNamePlaceholder")}
           className={styles.field}
         />
         <TextInput
@@ -69,12 +71,12 @@ export const CreateEvent = () => {
           value={description}
           setValue={setDescription}
           hideIcon
-          label="Event description"
-          placeholder="ex: This is an event where you'll learn how to make pasta"
+          label={t("eventDescriptionLabel")}
+          placeholder={t("eventDescriptionPlaceholder")}
           className={styles.field}
         />
         <div className={styles.field}>
-          <label className={styles.label}>Event date and time</label>
+          <label className={styles.label}>{t("eventDateAndTime")}</label>
           <input
             type="datetime-local"
             name="startTime"

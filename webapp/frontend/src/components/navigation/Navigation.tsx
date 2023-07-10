@@ -2,6 +2,7 @@ import React from "react";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   containerClassname: string;
@@ -12,19 +13,21 @@ export default function Navigation({
   containerClassname,
   itemsClassname,
 }: Props) {
+  const { t } = useTranslation();
+
   const token = useSelector((state: RootState) => state.user.token);
   const navigationItems = [
     {
       address: "/",
-      displayedName: "Home",
+      displayedName: t("home"),
     },
     {
       address: token ? "/logout" : "/login",
-      displayedName: token ? "Log out" : "Log in",
+      displayedName: token ? t("logout") : t("login"),
     },
     {
       address: "/dashboard",
-      displayedName: "Dashboard",
+      displayedName: t("dashboard"),
     },
   ];
 

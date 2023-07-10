@@ -10,8 +10,10 @@ import {
 import { Button } from "@/components/button/Button";
 
 import styles from "./PlanningEvent.module.scss";
+import { useTranslation } from "react-i18next";
 
 export const PlanningEvent = (fields: FieldProps[], event: ProcessedEvent) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const workshopType = event.roomId
     ? "inPremise"
@@ -43,25 +45,25 @@ export const PlanningEvent = (fields: FieldProps[], event: ProcessedEvent) => {
         type="primary"
         onClick={() => router.push(`/events/${event.event_id}`)}
       >
-        See event
+        {t("seeEvent")}
       </Button>
       <div>
-        <h3>Description</h3>
-        <p>Description: {event.description || "No description"}</p>
+        <h3>{t("description")}</h3>
+        <p>{event.description || t("noDescription")}</p>
       </div>
       {workshopType === "inPremise" && (
         <div className={styles.inPremiseFields}>
           <div>
-            <h3>Address</h3>
+            <h3>{t("address")}</h3>
             <p>
               {`${premise?.address.streetNumber} ${premise?.address.streetName}`}
             </p>
             <p>{`${premise?.address.city}, ${premise?.address.country}`}</p>
           </div>
           <div>
-            <h3>Spots</h3>
+            <h3>{t("spots")}</h3>
             <p>
-              Spots {`${participants?.length} / ${room?.capacity}`} (
+              {t("spots")} {`${participants?.length} / ${room?.capacity}`} (
               {(room?.capacity || 0) - (participants?.length || 0)} left)
             </p>
           </div>
@@ -70,11 +72,11 @@ export const PlanningEvent = (fields: FieldProps[], event: ProcessedEvent) => {
       {workshopType === "atClientHome" && (
         <div>
           <div>
-            <h3>Client</h3>
+            <h3>{t("client")}</h3>
             <p>{`${atHomeClient?.user?.firstName} ${atHomeClient?.user?.lastName}`}</p>
           </div>
           <div>
-            <h3>Address</h3>
+            <h3>{t("address")}</h3>
             {atHomeClient?.Address ? (
               <>
                 <p>
@@ -83,20 +85,20 @@ export const PlanningEvent = (fields: FieldProps[], event: ProcessedEvent) => {
                 <p>{`${atHomeClient?.Address?.city}, ${atHomeClient?.Address?.country}`}</p>
               </>
             ) : (
-              <p>Client has no address</p>
+              <p>{t("clientHasNoAddress")}</p>
             )}
           </div>
         </div>
       )}
       {event.isOnline && (
         <div>
-          <h3>Online</h3>
+          <h3>{t("online")}</h3>
           <Button
             type="ok"
             onClick={() => router.push(`/onlineEvents/${event?.event_id}`)}
             className={styles.joinButton}
           >
-            Join
+            {t("join")}
           </Button>
         </div>
       )}

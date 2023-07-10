@@ -1,6 +1,7 @@
 import { FC } from "react";
 import cx from "classnames";
 import styles from "./Map.module.scss";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   longitude: number | null;
@@ -15,10 +16,11 @@ export const Map: FC<Props> = ({
   noAddress,
   className = "",
 }) => {
+  const { t } = useTranslation();
   return (
     <div className={cx(styles.container, className)}>
       {noAddress ? (
-        <h3>No address</h3>
+        <h3>{t("noAddress")}</h3>
       ) : (
         <img
           width="100%"
