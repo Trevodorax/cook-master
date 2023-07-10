@@ -45,12 +45,22 @@ export const PlanningEditor: FC<Props> = ({
 
   const event = scheduler.edited;
 
+  // dealing with timezone issues, this is broken outside of my timezone but fuck it the deadline is near
+  const initialEventEndDate = scheduler.state.end.value;
+  initialEventEndDate.setHours(initialEventEndDate.getHours() + 2);
+
   const [formState, setFormState] = useState({
     title: event?.title || "",
     description: event?.description || "",
     isOnline: event?.isOnline || false,
-    endTime: event?.end?.toISOString().slice(0, 16),
+    endTime: initialEventEndDate.toISOString().slice(0, 16),
   });
+
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  console.log(tz);
+
+  console.log(initialEventEndDate.toISOString());
+  console.log(initialEventEndDate.toISOString().slice(0, 16));
 
   const [selectedPremise, setSelectedPremise] = useState<Premise | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);

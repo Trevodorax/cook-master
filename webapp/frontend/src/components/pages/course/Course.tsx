@@ -64,7 +64,7 @@ export const Course: FC<Props> = ({ courseId }) => {
     courseId: courseIdNumber,
   });
 
-  const { data: progressInCourse } =
+  const { data: progressInCourse, refetch: refetchProgressInCourse } =
     useGetMyProgressInCourseQuery(courseIdNumber);
 
   useEffect(() => {
@@ -153,7 +153,12 @@ export const Course: FC<Props> = ({ courseId }) => {
               </Button>
             ) : (
               <Button
-                onClick={() => applyToCourse({ courseId: parseInt(courseId) })}
+                onClick={async () => {
+                  await applyToCourse({
+                    courseId: parseInt(courseId),
+                  }).unwrap();
+                  refetchProgressInCourse();
+                }}
               >
                 Add to favorites
               </Button>

@@ -20,6 +20,7 @@ import { CreateAddressDto } from 'src/premise/dto';
 export class ClientController {
   constructor(private clientService: ClientService) {}
 
+  @UseGuards(JwtGuard)
   @Get(':clientId')
   getClientById(@Param('clientId') clientId: string) {
     return this.clientService.getClientById(clientId);
@@ -83,16 +84,19 @@ export class ClientController {
     );
   }
 
+  @UseGuards(JwtGuard)
   @Get(':clientId/events')
   getEventsByClientId(@Param('clientId') clientId: string) {
     return this.clientService.getEventsByClientId(clientId);
   }
 
+  @UseGuards(JwtGuard)
   @Get(':clientId/courses')
   getCoursesByClientId(@Param('clientId') clientId: string) {
     return this.clientService.getCoursesByClientId(clientId);
   }
 
+  @UseGuards(JwtGuard)
   @Get(':id/user')
   async getUserForContractor(@Param('id') id: string) {
     const idNumber = parseInt(id);

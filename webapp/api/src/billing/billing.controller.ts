@@ -18,7 +18,7 @@ export class BillingController {
   // this is where Stripe will send the events
   @Post('webhook')
   handleWebhookEvent(@Body() event: any, @Req() req: RawBodyRequest<Request>) {
-    // Pass the event data to the billing service for processing
+    // need to pass the raw body for checksum
     this.billingService.processWebhookEvent(event, req);
     return { received: true };
   }

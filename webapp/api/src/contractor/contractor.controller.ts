@@ -44,6 +44,7 @@ export class ContractorController {
     return this.contractorService.getEventsByContractorId(formattedDto);
   }
 
+  @UseGuards(JwtGuard)
   @Get(':id/user')
   async getUserForContractor(@Param('id') id: string) {
     const parsedId = parseInt(id);
