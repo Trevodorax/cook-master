@@ -187,7 +187,7 @@ export class ClientService {
     });
 
     const existingClientCourseProgress =
-      this.prisma.clientCourseProgress.findUnique({
+      await this.prisma.clientCourseProgress.findUnique({
         where: {
           clientId_courseId: {
             clientId: clientId,

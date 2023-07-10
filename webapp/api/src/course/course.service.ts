@@ -234,6 +234,42 @@ export class CourseService {
       throw new BadRequestException(`Incorrect course id: ${courseId}`);
     }
 
+    // Check the number of course requests made by the client today
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    const courseRequestsToday = await this.prisma.clientCourseRequest.count({
+      where: {
+        clientId: clientId,
+        requestedAt: {
+          gte: startOfDay,
+        },
+      },
+    });
+
+    const client = await this.prisma.client.findUnique({
+      where: { id: clientId },
+    });
+
+    const nbAllowedDailyRequestsPerSubscriptionType = { 0: 5, 1: 10, 2: 1000 };
+
+    const nbAllowedDailyRequests =
+      nbAllowedDailyRequestsPerSubscriptionType[client.subscriptionLevel];
+
+    // If the client has already requested 5 new courses today, throw an exception
+    if (courseRequestsToday >= nbAllowedDailyRequests) {
+      throw new BadRequestException(
+        'You have reached your daily limit for new course requests',
+      );
+    }
+
+    // Record the new course request
+    await this.prisma.clientCourseRequest.create({
+      data: {
+        clientId: clientId,
+        courseId: courseIdNumber,
+      },
+    });
+
     // Start a transaction to ensure data consistency
     const transaction = await this.prisma.$transaction([
       this.prisma.course.findUnique({

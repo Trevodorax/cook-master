@@ -188,3 +188,13 @@ model Room {
 
   premiseId Int
 }
+
+model ClientCourseRequest {
+  id          Int      @id @default(autoincrement())
+  
+  clientId    Int
+  courseId    Int
+  requestedAt DateTime @default(now())
+
+  @@map("client_course_requests")
+}
