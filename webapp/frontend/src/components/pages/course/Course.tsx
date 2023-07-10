@@ -209,16 +209,16 @@ export const Course: FC<Props> = ({ courseId }) => {
             <>
               <Scheduler
                 day={{
-                  startHour: 9,
-                  endHour: 17,
+                  startHour: 0,
+                  endHour: 24,
                   step: 30,
                   navigation: true,
                 }}
                 week={{
                   weekDays: [0, 1, 2, 3, 4, 5, 6],
                   weekStartOn: 1,
-                  startHour: 9,
-                  endHour: 17,
+                  startHour: 0,
+                  endHour: 24,
                   step: 30,
                 }}
                 hourFormat="24"

@@ -49,6 +49,7 @@ export const PlanningEditor: FC<Props> = ({
     title: event?.title || "",
     description: event?.description || "",
     isOnline: event?.isOnline || false,
+    endTime: event?.end?.toISOString().slice(0, 16),
   });
 
   const [selectedPremise, setSelectedPremise] = useState<Premise | null>(null);
@@ -116,6 +117,14 @@ export const PlanningEditor: FC<Props> = ({
       return event;
     }
 
+    const startTime = event.start.getTime();
+    const endTime = new Date(formState.endTime || "").getTime();
+
+    if (endTime < startTime) {
+      toast.error("Event cannot end before it has started.");
+      return event;
+    }
+
     const modifiedWorkshop = await patchEvent({
       id: event.event_id.toString(),
       data: {
@@ -124,7 +133,9 @@ export const PlanningEditor: FC<Props> = ({
         isOnline: formState.isOnline,
         startTime: event.start,
         durationMin: Math.floor(
-          (event.end.getTime() - event.start.getTime()) / (1000 * 60)
+          (new Date(formState.endTime || event.end).getTime() -
+            event.start.getTime()) /
+            (1000 * 60)
         ),
         roomId: selectedRoom?.id || null,
         atHomeClientId: selectedClient?.id || null,
@@ -191,6 +202,17 @@ export const PlanningEditor: FC<Props> = ({
           label="Description"
           hideIcon
         />
+        {event && (
+          <div className={styles.endTimeZone}>
+            <label>End time</label>
+            <input
+              type={"datetime-local"}
+              value={formState.endTime}
+              onChange={(event) => handleChange(event.target.value, "endTime")}
+              className={styles.endTimeInput}
+            />
+          </div>
+        )}
         <h3>Where will it happen ?</h3>
         <div className={styles.isOnlineSection}>
           <p>Online</p>
