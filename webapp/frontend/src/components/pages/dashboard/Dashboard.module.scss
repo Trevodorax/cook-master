@@ -1,44 +1,64 @@
 @import "@/styles/theme.scss";
 
-.actionsContainer {
-  display: flex;
 
-  flex-wrap: wrap;
-  justify-content: space-around;
+.container {
+  .bigTitle {
+    margin: 40px 0;
+  }
 
-  .actionCard {
+  .mediumTitle {
+    margin: 32px 0;
+
+    text-align: center;
+
+    color: $secondary_5;
+  }
+
+  .mascot {
+    margin: 0 auto;
+  }
+
+  .actionsContainer {
     display: flex;
-    height: 200px;
-    width: 200px;
-    margin: 16px;
-
-    padding: 16px;
-    flex-direction: column;
+  
+    flex-wrap: wrap;
     justify-content: center;
-    align-items: center;
 
-    background-color: $primary_1;
-    border-radius: 4px;
-    color: $neutral_5;
-    text-decoration: none;
-
-    transition: all .3s;
-
-    &:hover {
-      filter: brightness(90%);
-    }
-
-    svg {
-      height: 30px;
-      width: 30px;
-
-      margin: 8px;
-    }
-
-    .actionCardTitle {
-      margin: 8px;
-
-      font-size: 16px;
+    .actionCard {
+      display: flex;
+      height: 200px;
+      width: 200px;
+      margin-right: 16px;
+      margin-bottom: 16px;
+  
+      padding: 16px;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+  
+      background-color: $primary_1;
+      border-radius: 4px;
+      color: $neutral_5;
+      text-decoration: none;
+  
+      transition: all .3s;
+  
+      &:hover {
+        filter: brightness(90%);
+      }
+  
+      svg {
+        height: 30px;
+        width: 30px;
+  
+        margin: 8px;
+      }
+  
+      .actionCardTitle {
+        margin: 8px;
+  
+        font-size: 16px;
+      }
     }
   }
 }

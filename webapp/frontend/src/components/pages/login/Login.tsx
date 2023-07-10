@@ -1,7 +1,8 @@
-import React, { FormEvent, useMemo, useState } from "react";
+import React, { FormEvent, useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/router";
 import cx from "classnames";
+import { useSelector } from "react-redux";
 
 import {
   useCreateAccountMutation,
@@ -9,15 +10,14 @@ import {
   useLoginMutation,
 } from "@/store/services/cookMaster/api";
 import { setToken, setUserInfo } from "@/store/user/userSlice";
-import { AppDispatch } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { SwitchInput } from "@/components/switchInput/SwitchInput";
 import { Button } from "@/components/button/Button";
 import { TextInput } from "@/components/textInput/TextInput";
 import { getNewAccountInformationsErrors } from "./utils/checkCredentials";
 import { UserIcon } from "@/components/svgs";
 import { SelectInput } from "@/components/selectInput/SelectInput";
-
-import styles from "./Login.module.scss";
+import { Loader } from "@/components/loader/Loader";
 import {
   CreateAccountRequest,
   GenericError,
@@ -25,12 +25,16 @@ import {
   userType,
 } from "@/store/services/cookMaster/types";
 
-const userTypes: Array<userType> = ["contractor", "client", "admin"];
+import styles from "./Login.module.scss";
+
+const userTypes: Array<userType> = ["client", "contractor", "admin"];
 
 export default function Login() {
   const dispatch = useDispatch<AppDispatch>();
+  const token = useSelector((state: RootState) => state.user.token);
   const router = useRouter();
 
+  const user = useSelector((state: RootState) => state.user.userInfo);
   const [alreadyHasAccount, setAlreadyHasAccount] = useState<boolean>(true);
   const [login, { error: loginError }] = useLoginMutation();
   const [createAccount, { error: createAccountError }] =
@@ -44,8 +48,27 @@ export default function Login() {
   const [firstNameInput, setFirstNameInput] = useState("");
   const [lastNameInput, setLastNameInput] = useState("");
   const [userTypeInput, setUserTypeInput] = useState<userType>(userTypes[0]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [formSuccessMessage, setFormSuccessMessage] = useState("");
+
+  useEffect(() => {
+    async function fn() {
+      if (token) {
+        if (!user) {
+          const userInfo = await getMe();
+
+          if ("data" in userInfo) {
+            dispatch(setUserInfo(userInfo.data));
+          }
+        }
+        console.log("redirect to dashboard", token);
+        router.push("dashboard");
+      }
+    }
+
+    fn();
+  });
 
   const submitForm = async (event: FormEvent) => {
     event.preventDefault();
@@ -56,10 +79,18 @@ export default function Login() {
         email: emailInput,
         password: passwordInput,
       };
-      user = await login(credentials).unwrap();
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 100);
+
+      setIsLoading(true);
+      try {
+        user = await login(credentials).unwrap();
+        setTimeout(() => {
+          router.push("/dashboard");
+        }, 100);
+      } catch (err) {
+        return;
+      } finally {
+        setIsLoading(false);
+      }
     } else {
       // create an account
       if (inputValuesError !== "") {
@@ -73,9 +104,16 @@ export default function Login() {
         lastName: lastNameInput,
         userType: userTypeInput,
       };
-      user = await createAccount(credentials).unwrap();
-      setAlreadyHasAccount(true);
-      setFormSuccessMessage("Account created successfully");
+      setIsLoading(true);
+      try {
+        user = await createAccount(credentials).unwrap();
+        setAlreadyHasAccount(true);
+        setFormSuccessMessage("Account created successfully");
+      } catch (err) {
+        return;
+      } finally {
+        setIsLoading(false);
+      }
     }
     dispatch(setToken(user.access_token));
     localStorage.setItem("token", user.access_token);
@@ -152,6 +190,12 @@ export default function Login() {
               }
               className={styles.selectInput}
             />
+            {userTypeInput === "admin" && (
+              <p className={styles.adminWarning}>
+                Your admin account won't be effective until another admin
+                confirms it.
+              </p>
+            )}
           </div>
         )}
         <TextInput
@@ -196,7 +240,13 @@ export default function Login() {
           </>
         )}
         <Button type="secondary" isFormSubmit className={styles.submitButton}>
-          {alreadyHasAccount ? "Log in" : "Sign in"}
+          {isLoading ? (
+            <Loader className={styles.buttonLoader} />
+          ) : alreadyHasAccount ? (
+            "Log in"
+          ) : (
+            "Sign in"
+          )}
         </Button>
       </form>
       <div className={styles.errorMessage}>{formErrorMessage}</div>

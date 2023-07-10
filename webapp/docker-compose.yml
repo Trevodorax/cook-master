@@ -9,6 +9,7 @@ services:
       POSTGRES_DB: maindatabase
     ports:
       - 5432:5432
+    restart: always
     volumes:
       - postgres-nestjs-tutorial:/var/lib/postgresql/data
     networks:
@@ -21,6 +22,7 @@ services:
       - 9000:9000
     depends_on:
       - dev-db
+    restart: always
     networks:
       - app-network
 
@@ -30,6 +32,7 @@ services:
       - 3000:3000
     depends_on:
       - api
+    restart: always
     networks:
       - app-network
 
@@ -41,6 +44,7 @@ services:
     ports:
       - 80:80
       - 443:443
+    restart: always
     depends_on:
       - frontend
       - api

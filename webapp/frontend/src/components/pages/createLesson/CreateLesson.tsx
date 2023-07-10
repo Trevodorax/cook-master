@@ -99,7 +99,9 @@ export const CreateLesson: FC<Props> = ({ courseId }) => {
           onChange={handleEditorChange}
         />
       </div>
-      <Button onClick={handleSubmit}>Create lesson</Button>
+      <Button className={styles.submitButton} onClick={handleSubmit}>
+        Create lesson
+      </Button>
     </div>
   );
 };

@@ -10,16 +10,19 @@
 
     .title {
       display: flex;
+      max-width: 80vw;
+      flex-wrap: wrap;
       margin-top: 16px;
   
       align-items: center;
-  
-      .type {
-        margin-left: 64px;
+
+      .eventName {
+        margin-right: 64px;
       }
     }
   
     .description {
+      max-width: 90vw;
       margin-inline-end: 16px;
       margin-top: 32px;
       margin-bottom: 32px;

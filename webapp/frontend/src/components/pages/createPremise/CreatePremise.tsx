@@ -41,6 +41,7 @@ export const CreatePremise = () => {
           }
           label="Street number"
           hideIcon
+          className={styles.input}
         />
 
         <TextInput
@@ -51,6 +52,7 @@ export const CreatePremise = () => {
           }
           label="Street name"
           hideIcon
+          className={styles.input}
         />
 
         <TextInput
@@ -59,6 +61,7 @@ export const CreatePremise = () => {
           setValue={(value) => setAddress((prev) => ({ ...prev, city: value }))}
           label="City"
           hideIcon
+          className={styles.input}
         />
 
         <TextInput
@@ -69,6 +72,7 @@ export const CreatePremise = () => {
           }
           label="Postal code"
           hideIcon
+          className={styles.input}
         />
 
         <TextInput
@@ -79,6 +83,7 @@ export const CreatePremise = () => {
           }
           label="Country"
           hideIcon
+          className={styles.input}
         />
         <Button className={styles.createButton} onClick={handleCreate}>
           Create premise

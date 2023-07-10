@@ -56,16 +56,30 @@
 
         font-size: 20px;
       }
+
+      .adminWarning {
+        font-size: 16px;
+        font-weight: bold;
+        color: $info_warning;
+      }
     }
 
     .submitButton {
       margin: 16px;
+      min-width: 120px;
 
       padding: 16px 32px;
   
       border-radius: 16px;
       border: 0px;
       font-size: 24px;
+
+      .buttonLoader {
+        display: block;
+        margin: 0 auto;
+        height: 24px;
+        border-width: 3px;
+      }
     }
   }
 

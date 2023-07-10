@@ -186,17 +186,29 @@ export class ClientService {
       },
     });
 
-    await this.prisma.clientCourseProgress.create({
-      data: {
-        client: {
-          connect: { id: clientId },
+    const existingClientCourseProgress =
+      this.prisma.clientCourseProgress.findUnique({
+        where: {
+          clientId_courseId: {
+            clientId: clientId,
+            courseId: courseId,
+          },
         },
-        course: {
-          connect: { id: courseId },
+      });
+
+    if (!existingClientCourseProgress) {
+      await this.prisma.clientCourseProgress.create({
+        data: {
+          client: {
+            connect: { id: clientId },
+          },
+          course: {
+            connect: { id: courseId },
+          },
+          progression: 1,
         },
-        progression: 1, // first course will always be acessible
-      },
-    });
+      });
+    }
   }
 
   async resignFromCourse(clientId: number, courseId: number) {

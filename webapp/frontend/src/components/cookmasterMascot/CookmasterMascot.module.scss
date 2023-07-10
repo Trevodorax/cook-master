@@ -1,0 +1,28 @@
+.container {
+  display: flex;
+  width: 300px;
+
+  flex-direction: column;
+  align-items: center;
+  
+  .hat {
+    svg {
+      width: 200px;
+      height: 100px;
+      margin-bottom: 16px;
+    }
+  }
+
+  .eyes {
+    display: flex;
+
+    .eye1 {
+      margin-inline-end: 16px;
+    }
+
+    .eye2 {
+      margin-inline-start: 16px;
+    }
+  }
+
+}

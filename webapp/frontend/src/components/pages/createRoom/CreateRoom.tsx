@@ -31,13 +31,14 @@ export const CreateRoom: FC<Props> = ({ premiseId }) => {
 
   return (
     <div className={styles.container}>
-      <h1>Create premise</h1>
+      <h1>Create room</h1>
       <hr />
       <div className={styles.form}>
         <NumberInput
           value={capacity.toString()}
           setValue={(value) => setCapacity(Number(value))}
           label="Capacity"
+          className={styles.input}
         />
         <Button className={styles.createButton} onClick={handleCreate}>
           Create room

@@ -9,6 +9,12 @@
 
   .content {
     height: 100%;
+    width: 100vw;
+
     padding: 0 32px;
+
+    @media (max-width: 767px) {
+      padding: 0 16px;
+    }
   }
 }

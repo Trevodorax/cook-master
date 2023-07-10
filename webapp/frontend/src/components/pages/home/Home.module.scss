@@ -1,6 +1,10 @@
 @import "@/styles/theme.scss";
 
 .container {
+  .pageTitle {
+    text-align: center;
+  }
+  
   .actions {
     display: flex;
 

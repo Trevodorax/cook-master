@@ -6,13 +6,13 @@ import Link from "next/link";
 import { RootState } from "@/store/store";
 import {
   BookIcon,
-  CalendarIcon,
   HouseIcon,
   KeyIcon,
   MessageIcon,
   SettingsIcon,
   UserIcon,
 } from "@/components/svgs";
+import { CookmasterMascot } from "@/components/cookmasterMascot/CookmasterMascot";
 
 import styles from "./Dashboard.module.scss";
 
@@ -35,11 +35,6 @@ export const Dashboard = () => {
 
   const contractorActions: dashboardAction[] = [
     {
-      title: "Events",
-      icon: CalendarIcon,
-      link: "/events/my",
-    },
-    {
       title: "Profile",
       icon: SettingsIcon,
       link: "/profile",
@@ -58,14 +53,19 @@ export const Dashboard = () => {
 
   const adminActions: dashboardAction[] = [
     {
-      title: "Users",
-      icon: UserIcon,
-      link: "/users",
-    },
-    {
       title: "Profile",
       icon: SettingsIcon,
       link: "/profile",
+    },
+    {
+      title: "Conversations",
+      icon: MessageIcon,
+      link: "/chat",
+    },
+    {
+      title: "Users",
+      icon: UserIcon,
+      link: "/users",
     },
     {
       title: "Premises",
@@ -76,9 +76,14 @@ export const Dashboard = () => {
 
   const clientActions: dashboardAction[] = [
     {
-      title: "Events",
-      icon: CalendarIcon,
-      link: "/events/browse",
+      title: "Profile",
+      icon: SettingsIcon,
+      link: "/profile",
+    },
+    {
+      title: "Conversations",
+      icon: MessageIcon,
+      link: "/chat",
     },
     {
       title: "Subscriptions",
@@ -90,16 +95,6 @@ export const Dashboard = () => {
       icon: BookIcon,
       link: "/courses/browse",
     },
-    {
-      title: "Conversations",
-      icon: MessageIcon,
-      link: "/chat",
-    },
-    {
-      title: "Profile",
-      icon: SettingsIcon,
-      link: "/profile",
-    },
   ];
 
   const actions = {
@@ -110,25 +105,32 @@ export const Dashboard = () => {
 
   return (
     <div className={styles.container}>
-      <h2>
+      <h1 className={styles.bigTitle}>
         Welcome, {user?.firstName} {user?.lastName}
-      </h2>
-      {user && (
-        <div className={styles.actionsContainer}>
-          {actions[user.userType as "client" | "contractor" | "admin"].map(
-            (action, index) => (
-              <Link
-                key={index}
-                href={action.link}
-                className={styles.actionCard}
-              >
-                <action.icon />
-                <p className={styles.actionCardTitle}>{action.title}</p>
-              </Link>
-            )
-          )}
-        </div>
-      )}
+      </h1>
+      <div>
+        <CookmasterMascot
+          subscriptionLevel={user?.client?.subscriptionLevel || 0}
+          className={styles.mascot}
+        />
+        <h2 className={styles.mediumTitle}>What can we help you with ?</h2>
+        {user && (
+          <div className={styles.actionsContainer}>
+            {actions[user.userType as "client" | "contractor" | "admin"].map(
+              (action, index) => (
+                <Link
+                  key={index}
+                  href={action.link}
+                  className={styles.actionCard}
+                >
+                  <action.icon />
+                  <p className={styles.actionCardTitle}>{action.title}</p>
+                </Link>
+              )
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
