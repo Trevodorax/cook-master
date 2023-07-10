@@ -161,22 +161,24 @@ export const Course: FC<Props> = ({ courseId }) => {
           </div>
         )}
       </div>
-      <EditableField
-        type="text"
-        initialValue={<p>{courseData.description}</p>}
-        mutateValue={(value: string) => {
-          patchCourse({
-            dto: { courseId: courseIdNumber },
-            patchCourseDto: {
-              description: value,
-            },
-          });
-        }}
-        isEditable={
-          user?.contractorId === courseData.contractorId ||
-          user?.userType === "admin"
-        }
-      />
+      <div className={styles.description}>
+        <EditableField
+          type="text"
+          initialValue={<p>{courseData.description}</p>}
+          mutateValue={(value: string) => {
+            patchCourse({
+              dto: { courseId: courseIdNumber },
+              patchCourseDto: {
+                description: value,
+              },
+            });
+          }}
+          isEditable={
+            user?.contractorId === courseData.contractorId ||
+            user?.userType === "admin"
+          }
+        />
+      </div>
       <div className={styles.lessons}>
         <h2>Lessons</h2>
         <div className={styles.lessonList}>

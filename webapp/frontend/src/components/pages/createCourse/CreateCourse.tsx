@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
@@ -17,15 +17,6 @@ export const CreateCourse: FC = () => {
     (state: RootState) => state.user.userInfo?.contractorId
   );
   const [createCourse] = useCreateCourseMutation();
-
-  useEffect(() => {
-    if (!contractorId) {
-      toast.error("This page is for contractors.");
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 1000);
-    }
-  });
 
   const [newCourse, setNewCourse] = useState<CreateCourseDto>({
     name: "",
@@ -60,6 +51,7 @@ export const CreateCourse: FC = () => {
         placeholder="My amazing course"
         label="Course name"
         hideIcon
+        className={styles.input}
       />
       <TextInput
         type="text"
@@ -68,8 +60,11 @@ export const CreateCourse: FC = () => {
         placeholder="Short description of the course"
         label="Course description"
         hideIcon
+        className={styles.input}
       />
-      <Button onClick={handleSubmit}>Create course</Button>
+      <Button className={styles.submitButton} onClick={handleSubmit}>
+        Create course
+      </Button>
     </div>
   );
 };

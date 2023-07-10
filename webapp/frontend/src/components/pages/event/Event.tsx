@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import cx from "classnames";
 
@@ -15,11 +13,11 @@ import {
 import { EditableField } from "@/components/editableField/EditableField";
 import { RootState } from "@/store/store";
 import { Button } from "@/components/button/Button";
-
-import styles from "./Event.module.scss";
 import { RoomPlanning } from "@/components/roomPlanning/RoomPlanning";
 import { Map } from "@/components/map/Map";
 import { VideoEvent } from "@/components/videoEvent/VideoEvent";
+
+import styles from "./Event.module.scss";
 
 interface Props {
   eventId: string;
@@ -69,17 +67,19 @@ export const Event = ({ eventId }: Props) => {
     <div className={styles.container}>
       <div className={styles.mainPart}>
         <div className={styles.title}>
-          <EditableField
-            type="text"
-            initialValue={<h1>{event.name}</h1>}
-            mutateValue={(value: any) => {
-              patchEvent({ id: eventId, data: { name: value } });
-            }}
-            isEditable={
-              event.contractorId === user?.contractorId ||
-              user?.userType === "admin"
-            }
-          />
+          <div className={styles.eventName}>
+            <EditableField
+              type="text"
+              initialValue={<h1>{event.name}</h1>}
+              mutateValue={(value: any) => {
+                patchEvent({ id: eventId, data: { name: value } });
+              }}
+              isEditable={
+                event.contractorId === user?.contractorId ||
+                user?.userType === "admin"
+              }
+            />
+          </div>
           <div className={styles.type}>
             <EditableField
               type="text"

@@ -60,7 +60,7 @@ export const Users = () => {
                 <td>{user.email}</td>
                 <td>{user.userType}</td>
                 <td>
-                  <Link href={`/users/${user.id}`}>See this user</Link>
+                  <Link href={`/users/${user.id}`}>More</Link>
                 </td>
               </tr>
             ))}
