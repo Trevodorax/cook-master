@@ -38,9 +38,7 @@ export default function Home() {
 
   return (
     <div className={styles.container}>
-      <h1>
-        Welcome to cook master in {process.env.NODE_ENV} continuously deployed
-      </h1>
+      <h1 className={styles.pageTitle}>Welcome to cook master !</h1>
       <div className={styles.actions}>
         {landingPageActions.map((action, index) => (
           <div key={index} className={styles.action}>
