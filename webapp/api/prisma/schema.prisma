@@ -58,6 +58,7 @@ model Client {
   courses           Course[]
   progressions      ClientCourseProgress[]
   atHomeWorkshops   Event[]                @relation(name: "ParticipantAtHome")
+  invoices          Invoice[]
 
   // relation fileds
   addressId Int? @unique
@@ -70,6 +71,8 @@ model Contractor {
 
   user         User?
   presentation String?
+  serviceType  String   @default("courses") // the service provided by the contractor
+  serviceCost  Int      @default(0) // how much the service costs per hour
   events       Event[]
   courses      Course[]
 
@@ -212,4 +215,14 @@ model ClientCourseRequest {
   requestedAt DateTime @default(now())
 
   @@map("client_course_requests")
+}
+
+model Invoice {
+  id Int @id @default(autoincrement())
+
+  total    Int      @default(0)
+  boughtAt DateTime @default(now())
+  Client   Client?  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  clientId Int?
 }
