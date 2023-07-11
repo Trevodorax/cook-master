@@ -11,7 +11,7 @@ services:
       - 5432:5432
     restart: always
     volumes:
-      - postgres-nestjs-tutorial:/var/lib/postgresql/data
+      - cookmaster-postgres:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -52,7 +52,7 @@ services:
       - app-network
 
 volumes:
-  postgres-nestjs-tutorial:
+  cookmaster-postgres:
 
 
 networks:
