@@ -110,5 +110,16 @@
   "cancel": "Cancel",
   "confirm": "Confirm",
   "removeFromFavorites": "Remove from favorites",
-  "addToFavorites": "Add to favorites"
+  "addToFavorites": "Add to favorites",
+  "createLesson": "Create lesson",
+  "lessonNameLabel": "Lesson name",
+  "lessonNamePlaceholder": "My Cool lesson",
+  "lessonDescriptionLabel": "Lesson description",
+  "lessonDescriptionPlaceholder": "This is a very cool lesson",
+  "content": "Content",
+  "animatedBy": "Animated by",
+  "videoEventStartingIn": "Video event starting in ",
+  "noParticipants": "No participants",
+
+  "successCreatingLesson": "Lesson created successfully"
 }

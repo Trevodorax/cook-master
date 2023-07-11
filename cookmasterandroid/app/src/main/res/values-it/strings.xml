@@ -18,4 +18,5 @@
     <string name="password">Password</string>
     <string name="no_account_question">Non hai ancora un account?</string>
     <string name="create_account">Crea account</string>
+    <string name="lesson_not_unlocked">Non hai ancora sbloccato questa lezione.</string>
 </resources>

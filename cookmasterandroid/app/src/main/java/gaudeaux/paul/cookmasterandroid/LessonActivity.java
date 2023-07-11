@@ -91,6 +91,10 @@ public class LessonActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        if(response.equals("-1")) {
+                            Toast.makeText(LessonActivity.this, "You haven't unlocked this lesson.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         try {
                             JSONObject responseJSON = new JSONObject(response);
                             Lesson lesson = new Lesson(

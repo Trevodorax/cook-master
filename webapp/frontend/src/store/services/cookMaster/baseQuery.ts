@@ -26,14 +26,14 @@ const baseQuery = fetchBaseQuery({
   },
 });
 
-const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
+// const baseQueryWithRetry = retry(baseQuery, { maxRetries: 2 });
 
 const baseQueryWithErrorHandling: BaseQueryFn<
   string | FetchArgs,
   unknown,
   FetchBaseQueryError
 > = async (args, api, extraOptions) => {
-  const result = await baseQueryWithRetry(args, api, extraOptions);
+  const result = await baseQuery(args, api, extraOptions);
   if (result.error) {
     const error = (result.error as GenericError).data;
 
