@@ -110,5 +110,14 @@
   "cancel": "Annulla",
   "confirm": "Conferma",
   "removeFromFavorites": "Rimuovi dai preferiti",
-  "addToFavorites": "Aggiungi ai preferiti"
+  "addToFavorites": "Aggiungi ai preferiti",
+  "createLesson": "Crea lezione",
+  "lessonNameLabel": "Nome lezione",
+  "lessonNamePlaceholder": "La mia lezione fantastica",
+  "lessonDescriptionLabel": "Descrizione della lezione",
+  "lessonDescriptionPlaceholder": "Questa è una lezione molto interessante",
+  "content": "Contenuto",
+  "animatedBy": "Animato da",
+  "videoEventStartingIn": "Evento video iniziando tra ",
+  "noParticipants": "Nessun partecipante"
 }

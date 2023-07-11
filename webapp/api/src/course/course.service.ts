@@ -96,6 +96,13 @@ export class CourseService {
       where: { id: idNumber },
       include: {
         lessons: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+            index: true,
+            courseId: true,
+          },
           orderBy: {
             index: 'asc',
           },
