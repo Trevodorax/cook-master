@@ -10,14 +10,14 @@ async function main() {
   // User data
   const users = [
     {
-      email: 'user1@example.com',
+      email: 'user1@cookmaster.site',
       firstName: 'John',
       lastName: 'Doe',
       userType: 'client',
       subscriptionLevel: 1,
     },
     {
-      email: 'user2@example.com',
+      email: 'user2@cookmaster.site',
       firstName: 'Jane',
       lastName: 'Doe',
       userType: 'contractor',
@@ -25,14 +25,14 @@ async function main() {
       serviceCost: 50,
     },
     {
-      email: 'user3@example.com',
+      email: 'user3@cookmaster.site',
       firstName: 'Alice',
       lastName: 'Smith',
       userType: 'client',
       subscriptionLevel: 2,
     },
     {
-      email: 'user4@example.com',
+      email: 'user4@cookmaster.site',
       firstName: 'Bob',
       lastName: 'Smith',
       userType: 'contractor',
@@ -40,14 +40,14 @@ async function main() {
       serviceCost: 70,
     },
     {
-      email: 'user5@example.com',
+      email: 'user5@cookmaster.site',
       firstName: 'Charlie',
       lastName: 'Brown',
       userType: 'client',
       subscriptionLevel: 0,
     },
     {
-      email: 'user6@example.com',
+      email: 'user6@cookmaster.site',
       firstName: 'Lucy',
       lastName: 'Brown',
       userType: 'contractor',
@@ -55,14 +55,14 @@ async function main() {
       serviceCost: 100,
     },
     {
-      email: 'user7@example.com',
+      email: 'user7@cookmaster.site',
       firstName: 'Steve',
       lastName: 'White',
       userType: 'client',
       subscriptionLevel: 1,
     },
     {
-      email: 'user8@example.com',
+      email: 'user8@cookmaster.site',
       firstName: 'Laura',
       lastName: 'White',
       userType: 'contractor',
@@ -70,14 +70,14 @@ async function main() {
       serviceCost: 200,
     },
     {
-      email: 'user9@example.com',
+      email: 'user9@cookmaster.site',
       firstName: 'Tom',
       lastName: 'Black',
       userType: 'client',
       subscriptionLevel: 2,
     },
     {
-      email: 'user10@example.com',
+      email: 'user10@cookmaster.site',
       firstName: 'Sara',
       lastName: 'Black',
       userType: 'contractor',
@@ -123,11 +123,11 @@ async function main() {
     {
       name: 'Italian Cuisine Basics',
       description: 'Learn the basics of the Italian kitchen',
-      contractorEmail: 'user2@example.com',
+      contractorEmail: 'user2@cookmaster.site',
       clientEmails: [
-        'user1@example.com',
-        'user3@example.com',
-        'user5@example.com',
+        'user1@cookmaster.site',
+        'user3@cookmaster.site',
+        'user5@cookmaster.site',
       ],
       lessons: [
         {
@@ -156,8 +156,8 @@ async function main() {
     {
       name: 'French Patisserie',
       description: 'Master the art of French desserts',
-      contractorEmail: 'user4@example.com',
-      clientEmails: ['user7@example.com', 'user9@example.com'],
+      contractorEmail: 'user4@cookmaster.site',
+      clientEmails: ['user7@cookmaster.site', 'user9@cookmaster.site'],
       lessons: [
         {
           name: 'Macarons',
@@ -248,7 +248,7 @@ async function main() {
   // Create addresses for some clients
   const addressData = [
     {
-      email: 'user1@example.com',
+      email: 'user1@cookmaster.site',
       data: {
         streetNumber: '123',
         streetName: 'Main Street',
@@ -258,7 +258,7 @@ async function main() {
       },
     },
     {
-      email: 'user3@example.com',
+      email: 'user3@cookmaster.site',
       data: {
         streetNumber: '456',
         streetName: 'Oak Street',
@@ -287,12 +287,12 @@ async function main() {
   // Create ClientCourseProgress for some clients and courses
   const courseProgressData = [
     {
-      clientEmail: 'user1@example.com',
+      clientEmail: 'user1@cookmaster.site',
       courseTitle: 'Italian Cuisine Basics',
       progression: 2,
     },
     {
-      clientEmail: 'user3@example.com',
+      clientEmail: 'user3@cookmaster.site',
       courseTitle: 'French Patisserie',
       progression: 3,
     },
@@ -325,8 +325,8 @@ async function main() {
 
   // Create Invoices for some clients
   const invoiceData = [
-    { clientEmail: 'user1@example.com', total: 100 },
-    { clientEmail: 'user3@example.com', total: 150 },
+    { clientEmail: 'user1@cookmaster.site', total: 100 },
+    { clientEmail: 'user3@cookmaster.site', total: 150 },
   ];
 
   for (const data of invoiceData) {
