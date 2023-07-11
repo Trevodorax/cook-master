@@ -8,21 +8,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// general user with common filelds from client, contractor and admin
 model User {
   id Int @id @default(autoincrement())
 
-  email             String      @unique
-  hash              String
-  firstName         String?
-  lastName          String?
-  userType          String
-  profilePicture    String      @default("https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg")
-  sentMessages      Message[]   @relation("SentMessages")
-  receivedMessages  Message[]   @relation("ReceivedMessages")
-  admin             Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
-  client            Client?     @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  contractor        Contractor? @relation(fields: [contractorId], references: [id], onDelete: Cascade)
-  locale            String      @default("en")
+  email            String    @unique
+  hash             String // hashed password
+  firstName        String?
+  lastName         String?
+  userType         String // "client", "contractor" or "admin"
+  profilePicture   String    @default("https://t4.ftcdn.net/jpg/00/64/67/63/360_F_64676383_LdbmhiNM6Ypzb3FM4PPuFP9rHe7ri8Ju.jpg") // can be url or base64 (we'll prefer url for efficiency issues)
+  sentMessages     Message[] @relation("SentMessages")
+  receivedMessages Message[] @relation("ReceivedMessages")
+
+  // can have only one of those 3 (according to userType)
+  admin      Admin?      @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  client     Client?     @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  contractor Contractor? @relation(fields: [contractorId], references: [id], onDelete: Cascade)
+  locale     String      @default("en") // can be "en", "fr", "it" or "es"
 
   // relation fields
   clientId     Int? @unique
@@ -48,13 +51,13 @@ model Client {
   id Int @id @default(autoincrement())
 
   user              User?
-  subscriptionLevel Int                     @default(0)
-  fidelityPoints    Int                     @default(25)
-  Address           Address?                @relation(fields: [addressId], references: [id])
-  events            Event[]                 @relation(name: "Participant")
+  subscriptionLevel Int                    @default(0) // can be 0, 1 or 2
+  fidelityPoints    Int                    @default(25)
+  Address           Address?               @relation(fields: [addressId], references: [id])
+  events            Event[]                @relation(name: "Participant")
   courses           Course[]
   progressions      ClientCourseProgress[]
-  atHomeWorkshops   Event[]                 @relation(name: "ParticipantAtHome")
+  atHomeWorkshops   Event[]                @relation(name: "ParticipantAtHome")
 
   // relation fileds
   addressId Int? @unique
@@ -81,10 +84,13 @@ model Address {
   city         String
   postalCode   String
   country      String
-  longitude    Float?
-  latitude     Float?
-  client       Client?
-  premise      Premise?
+
+  // lon and lat are automatically created by the api when an address is set (don't initialize in seed)
+  longitude Float?
+  latitude  Float?
+
+  client  Client?
+  premise Premise?
 
   @@map("addresses")
 }
@@ -92,31 +98,38 @@ model Address {
 model Event {
   id Int @id @default(autoincrement())
 
-  type          String
-  name          String
-  description   String?     @default("")
-  startTime     DateTime
-  durationMin   Int
-  course        Course?     @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  animator      Contractor? @relation(fields: [contractorId], references: [id])
-  atHomeClient  Client?     @relation(name: "ParticipantAtHome", fields: [atHomeClientId], references: [id])
-  clients       Client[]    @relation(name: "Participant")
-  room          Room?       @relation(fields: [roomId], references: [id])
-  isOnline      Boolean     @default(false)
+  type        String // can be "workshop", "tasting" or whatever type of cooking event
+  name        String
+  description String?     @default("")
+  startTime   DateTime
+  durationMin Int // can range between 30 minutes and 600 minutes
+  course      Course?     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  animator    Contractor? @relation(fields: [contractorId], references: [id])
+
+  // those must not all be set at the same time.
+  // there is either:
+  // - an atHomeClient and nothing else
+  // - a room and a clients list
+  // - isOnline true and a clients list
+  atHomeClient Client?  @relation(name: "ParticipantAtHome", fields: [atHomeClientId], references: [id])
+  clients      Client[] @relation(name: "Participant")
+  room         Room?    @relation(fields: [roomId], references: [id])
+  isOnline     Boolean  @default(false)
 
   // relation fields
-  contractorId Int?
-  courseId Int?
+  contractorId   Int?
+  courseId       Int?
   atHomeClientId Int?
-  roomId Int?
+  roomId         Int?
 
   @@map("events")
 }
 
+// progress of a client in a course
 model ClientCourseProgress {
-  client   Client  @relation(fields: [clientId], references: [id])
-  course   Course  @relation(fields: [courseId], references: [id])
-  progression Int  @default(0)
+  client      Client @relation(fields: [clientId], references: [id])
+  course      Course @relation(fields: [courseId], references: [id])
+  progression Int    @default(0) // cannot be more than the number of lessons in the course
 
   clientId Int
   courseId Int
@@ -146,21 +159,20 @@ model Lesson {
 
   name        String
   description String
-  content     String
-  index       Int 
+  content     String // in markdown format
+  index       Int // index of the lesson in the course
   Course      Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   courseId Int?
 
   @@unique([courseId, index])
-
   @@map("lessons")
 }
 
 model Message {
   id Int @id @default(autoincrement())
 
-  createdAt DateTime @default(now()) // To ensure the order of messages
+  createdAt DateTime @default(now()) // to ensure the order of messages
   content   String
 
   senderId    Int
@@ -183,16 +195,18 @@ model Premise {
 model Room {
   id Int @id @default(autoincrement())
 
-  Premise   Premise @relation(fields: [premiseId], references: [id], onDelete: Cascade)
-  capacity  Int
-  events    Event[]
+  Premise  Premise @relation(fields: [premiseId], references: [id], onDelete: Cascade)
+  capacity Int
+  events   Event[]
 
   premiseId Int
 }
 
+// gets created each time a client requests access to a lesson
+// allows us to know how many accesses he got today to limit him
 model ClientCourseRequest {
-  id          Int      @id @default(autoincrement())
-  
+  id Int @id @default(autoincrement())
+
   clientId    Int
   courseId    Int
   requestedAt DateTime @default(now())
