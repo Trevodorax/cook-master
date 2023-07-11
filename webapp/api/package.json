@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "scripts": {
     "prisma:dev:deploy": "prisma migrate deploy",
     "db:dev:rm": "docker-compose rm -s -f -v dev-db",
