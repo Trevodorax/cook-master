@@ -80,7 +80,6 @@ export const PlanningEditor: FC<Props> = ({
     }
 
     const startTime = scheduler.state.start.value;
-    const endTime = scheduler.state.end.value;
 
     if (!formState.isOnline && !selectedClient && !selectedRoom) {
       toast.error(t("errorIncompleteInformation"));
@@ -95,9 +94,7 @@ export const PlanningEditor: FC<Props> = ({
         isOnline: formState.isOnline,
         type: "workshop",
         startTime: startTime,
-        durationMin: Math.floor(
-          (endTime.getTime() - startTime.getTime()) / (1000 * 60)
-        ),
+        durationMin: 30,
         roomId: selectedRoom?.id || null,
         atHomeClientId: selectedClient?.id || null,
       },
